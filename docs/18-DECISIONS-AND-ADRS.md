@@ -11,14 +11,15 @@ Format: ID · Date · Status (Accepted / Proposed / Superseded) · Context · De
 - **Consequences:** Fast delivery, one deploy, good SEO by default; limited to Livewire interactivity patterns; a public API (if ever needed) is added later deliberately.
 
 ### ADR-0002 — Framework versions verified at install time
-- **Date:** 2026-11-22 · **Status:** Proposed (finalised in Phase 1)
+- **Date:** 2026-11-22 · **Status:** Accepted (finalised 2026-11-22, Phase 1)
+- **Outcome (verified via Packagist + install + green test suite):** PHP 8.3.6 · Laravel 13.43 · Filament 5.12 (includes Livewire 4.x) · Spatie Laravel Permission 8.5 · Pest 4.7 (PHPUnit 12) · Pint · Tailwind CSS 4 + Vite 8 · Alpine.js (npm) for public-site interactivity · PostgreSQL 16. Exact resolved versions are in `composer.lock` / `package-lock.json`.
 - **Context:** Phase 0 has no code; package compatibility (Laravel × PHP × Livewire × Filament × Spatie) must be verified, not assumed. Env: PHP 8.3, Node 22, PostgreSQL 16.
 - **Decision:** In Phase 1 install the latest stable Laravel supported by PHP 8.3 **and** by Filament and Spatie Permission; record exact versions here before continuing.
 - **Alternatives:** Pin to an older LTS for stability.
 - **Consequences:** Possible need to choose a slightly older Laravel major if Filament lags. Record outcome.
 
 ### ADR-0003 — Pest for testing
-- **Date:** 2026-11-22 · **Status:** Accepted (confirm at install)
+- **Date:** 2026-11-22 · **Status:** Accepted (confirmed Phase 1: Pest 4.7 installed; tests run against PostgreSQL `pcbd_testing`)
 - **Decision:** Pest + Livewire/Filament testing helpers; PHPUnit remains the engine. **Alternatives:** plain PHPUnit. **Consequences:** concise tests; one more dev dependency.
 
 ### ADR-0004 — PostgreSQL as the only database
@@ -40,8 +41,9 @@ Format: ID · Date · Status (Accepted / Proposed / Superseded) · Context · De
 - **Decision:** All public forms create `leads` with `request_type`; minimal `leads` table created in Phase 3, extended in Phase 5. **Consequences:** single pipeline; Phase 3 must keep lead schema forward-compatible; admin UI for leads arrives Phase 5 (until then inquiries are viewable via a basic read-only list in Phase 3 to avoid lost leads).
 
 ### ADR-0008 — Auth approach & admin 2FA
-- **Date:** 2026-11-22 · **Status:** Proposed (finalised in Phase 1)
-- **Decision:** Laravel starter-kit style auth (Blade/Livewire, customised UI; no Jetstream/teams) for public users; Filament panel auth for admin with 2FA (Filament native MFA if available in chosen version, else Fortify TOTP). **Consequences:** two login screens (public & admin) sharing the `users` table and guard.
+- **Date:** 2026-11-22 · **Status:** Accepted (finalised Phase 1)
+- **Decision:** Public auth = small first-party controllers + Blade views (login, register, password reset, email verification), no starter-kit/Jetstream dependency. Admin auth = Filament panel login with **Filament's native app-based MFA** (TOTP + recovery codes, `users.app_authentication_*` encrypted columns). Because Filament's "required" flag is panel-wide and resolved at boot, per-role enforcement (Super Admin/Admin) is done by `App\Http\Middleware\EnforceAdminMfa`, which redirects un-enrolled privileged users to the profile page (where MFA is set up). Toggle: `PCBD_ADMIN_MFA_REQUIRED` (default true; false only in the test environment).
+- **Consequences:** two login screens sharing one `users` table/guard; staff accounts also need a verified email and `active` status (`User::canAccessPanel`). The complete TOTP enrolment flow is Filament's own and has been verified only up to the enforcement redirect in automated tests (see tracker).
 
 ### ADR-0009 — Owner submissions reuse `properties`
 - **Date:** 2026-11-22 · **Status:** Accepted

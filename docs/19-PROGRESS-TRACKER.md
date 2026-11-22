@@ -2,13 +2,13 @@
 
 Statuses: Not Started · In Progress · Review · Completed · Blocked. Update after every completed task. Phase detail: [04-ROADMAP](04-ROADMAP.md). Criteria: [23](23-ACCEPTANCE-CRITERIA.md).
 
-**Current phase:** Phase 1 — Application Foundation (next). **Last updated:** 2026-11-22.
+**Current phase:** Phase 1 — Application Foundation (in Review; Phase 2 not started). **Last updated:** 2026-11-22.
 
 ## Phase overview
 | Phase | Name | Status | % | Depends on | Notes / Blockers |
 |---|---|---|---|---|---|
 | 0 | Planning & Documentation | Completed | 100 | — | Reviewed 2026-11-22 (see below) |
-| 1 | Application Foundation | Not Started | 0 | 0 | Verify Laravel/Filament/Spatie compatibility first (ADR-0002) |
+| 1 | Application Foundation | Review | 95 | 0 | Implemented & tested (46 tests green). Open items listed under Phase 1 below |
 | 2 | Property & Project Management | Not Started | 0 | 1 | |
 | 3 | Public Website & Discovery | Not Started | 0 | 2 | |
 | 4 | Buyer & Seller Experience | Not Started | 0 | 3 | |
@@ -34,16 +34,28 @@ Statuses: Not Started · In Progress · Review · Completed · Blocked. Update a
 - **Verify at implementation:** exact package versions (ADR-0002), Spatie Media Library compatibility (ADR-0006), admin 2FA mechanism (ADR-0008), purifier package (14 §2).
 - **Security gaps considered:** upload scanning (P2), admin IP allow-list (P2) — accepted for MVP.
 
-## Phase 1 tasks (planned)
-| Task | Status | % | Dependencies | Notes |
-|---|---|---|---|---|
-| Verify package compatibility; record ADR-0002 | Not Started | 0 | — | |
-| Scaffold Laravel, config, PostgreSQL, `.env.example` | Not Started | 0 | above | |
-| Auth (login/register/reset/verify) | Not Started | 0 | scaffold | |
-| Spatie Permission, roles/permissions seeder, policies base | Not Started | 0 | auth | |
-| Filament panel + access control (+2FA decision) | Not Started | 0 | roles | |
-| Settings service + admin page | Not Started | 0 | panel | |
-| Audit logging | Not Started | 0 | panel | |
-| Design tokens, public layout, nav, error pages | Not Started | 0 | scaffold | |
-| Pest, Pint, CI workflow | Not Started | 0 | scaffold | |
-| Docs/changelog/acceptance sign-off | Not Started | 0 | all | |
+## Phase 1 tasks
+| Task | Status | % | Notes |
+|---|---|---|---|
+| Verify package compatibility; ADR-0002 | Completed | 100 | Laravel 13.43, Filament 5.12, Spatie Permission 8.5, Pest 4.7 |
+| Scaffold Laravel, config, PostgreSQL, `.env.example` | Completed | 100 | `.env` never committed |
+| Auth (login/register/reset/verify) | Completed | 100 | Throttling, no user enumeration, buyer-only registration |
+| Spatie Permission, roles/permissions seeder, policies base | Completed | 100 | Idempotent seeder; UserPolicy |
+| Filament panel + access control + 2FA | Completed | 90 | Enforcement tested; full TOTP enrolment click-through **not yet exercised manually** |
+| Settings service + admin page | Completed | 100 | Audit records changed keys only |
+| Audit logging | Completed | 100 | Staff logins, settings, user create/update; viewer for Admin/SA |
+| Design tokens, public layout, nav, error pages | Completed | 95 | Verified 375/1280 px via Playwright (no overflow); self-hosted fonts + `/dev/styleguide` deferred (backlog) |
+| Pest, Pint, CI workflow | Completed | 95 | Pint clean, 46/46 tests pass locally; **CI workflow not yet run on GitHub** |
+| Docs/changelog/acceptance sign-off | Completed | 100 | Updated README, ADR-0002/0003/0008, acceptance, changelog |
+
+### Phase 1 verification record (run in this session)
+- `vendor/bin/pint --test` → passed. `php artisan test` → 46 passed / 150 assertions.
+- `php artisan migrate:fresh --seed` and `migrate:rollback` → succeeded on PostgreSQL 16.
+- `composer audit` → no advisories. `npm run build` → succeeded.
+- Playwright at 375 px and 1280 px: `/`, `/login`, `/register` have no horizontal overflow.
+- Defect found and fixed during review: Admin could assign the Super Admin role (option filtering is not validation) → server-side rule + regression test; per-role MFA could not use Filament's boot-time flag → `EnforceAdminMfa` middleware + test.
+
+### Open items before closing Phase 1
+1. Push and confirm the GitHub Actions workflow is green.
+2. Manually enrol a Super Admin in 2FA end-to-end and view the admin UI visually.
+3. Decide brand fonts/logo (owner) — currently fallback fonts and a text wordmark.

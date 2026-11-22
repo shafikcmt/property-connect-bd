@@ -3,6 +3,9 @@
 All deferred ideas live here. Priority per [03](03-MVP-SCOPE.md). Moving an item into a phase requires updating roadmap + tracker.
 
 ## P1 (soon after launch / late MVP)
+- Self-hosted brand fonts (Inter, display serif) — Phase 1 uses system stack/serif fallbacks; `/dev/styleguide` living style guide (local only).
+- Content-Security-Policy (report-only → enforced) — Phase 9; Filament/Livewire require nonce-aware setup.
+- `php artisan test --parallel` (needs paratest) if the suite grows.
 - Bangla translations for UI and key content; `name_bn` fields exposed in UI.
 - Automated email to buyers on visit confirmation/reschedule.
 - Image sitemap; blog scheduling; related-posts.

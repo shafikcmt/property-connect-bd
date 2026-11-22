@@ -17,7 +17,7 @@ Ubuntu LTS VPS (2 vCPU / 4 GB to start), Nginx, PHP 8.3-FPM (OPcache), PostgreSQ
 `.env` (not in git) with: `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL`, DB creds, mail (SMTP/provider), `QUEUE_CONNECTION=database`, `CACHE_STORE=database|file`, `SESSION_DRIVER=database`, `FILESYSTEM_DISK`, logging. `.env.example` documents every key without secrets. Secrets in server env/GitHub Secrets only.
 
 ## 4. CI (GitHub Actions) — `.github/workflows/ci.yml` (Phase 1)
-Jobs: setup PHP 8.3 + Node 22, Postgres service, `composer install`, `npm ci && npm run build`, copy `.env.ci`, `php artisan key:generate`, `migrate --force`, `vendor/bin/pint --test`, `php artisan test --parallel`, `composer audit`. Cache composer/npm. Branch protection on `main` (PR + green CI) when team grows.
+Jobs: setup PHP 8.3 + Node 22, Postgres service, `composer install`, `npm ci && npm run build`, copy `.env.ci`, `php artisan key:generate`, `migrate --force`, `vendor/bin/pint --test`, `php artisan test`, `composer audit`. Cache composer/npm. Branch protection on `main` (PR + green CI) when team grows.
 
 ## 5. Deployment procedure (manual-first, scripted later)
 1. Merge to `main`, tag release (`v0.x.y`).

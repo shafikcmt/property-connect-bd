@@ -35,7 +35,7 @@ Pest (on PHPUnit) for unit + feature tests (ADR-0003), Livewire testing helpers,
 Role matrix · IDOR on leads/deals/files · stored XSS in all rich/plain text inputs · upload of polyglot/oversized/wrong-MIME files · brute-force throttling · mass assignment · open redirect checks (`redirect` params) · header checks · dependency audit.
 
 ## 5. Quality gates
-Local/CI on each push/PR: `vendor/bin/pint --test`, `php artisan test` (parallel), (Phase 2+) Larastan, `composer audit`, `npm run build`. Merge/phase close requires green. Coverage target (informational): ≥ 70% lines overall, ≥ 90% on commission/lead-transition/authorization code; do not chase coverage numbers over meaningful tests.
+Local/CI on each push/PR: `vendor/bin/pint --test`, `php artisan test`, (Phase 2+) Larastan, `composer audit`, `npm run build`. Merge/phase close requires green. Coverage target (informational): ≥ 70% lines overall, ≥ 90% on commission/lead-transition/authorization code; do not chase coverage numbers over meaningful tests.
 
 ## 6. Test data
 Model factories for every model; states (`published()`, `featured()`, `verified()`); no real personal data; seeded reference data via `ReferenceDataSeeder` in tests where needed. Time travel with `Carbon::setTestNow`.

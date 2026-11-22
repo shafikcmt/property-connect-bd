@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main, 'claude/**', 'feat/**', 'fix/**', 'chore/**', 'docs/**']
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: pcbd
+          POSTGRES_PASSWORD: pcbd_ci
+          POSTGRES_DB: pcbd_testing
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U pcbd" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      APP_ENV: testing
+      DB_CONNECTION: pgsql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+      DB_DATABASE: pcbd_testing
+      DB_USERNAME: pcbd
+      DB_PASSWORD: pcbd_ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pgsql, pdo_pgsql, intl, gd, mbstring, zip, bcmath
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Composer install
+        run: composer install --no-interaction --prefer-dist --no-progress
+      - name: Prepare app
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+      - name: Build assets
+        run: npm ci && npm run build
+      - name: Code style (Pint)
+        run: vendor/bin/pint --test
+      - name: Migrations (fresh + rollback)
+        run: |
+          php artisan migrate:fresh --seed --force
+          php artisan migrate:rollback --force
+      - name: Tests
+        run: php artisan test
+      - name: Dependency audit
+        run: composer audit

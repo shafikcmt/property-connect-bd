@@ -8,7 +8,7 @@ Property Connect BD is an independent **real estate marketing, marketplace and s
 We connect buyers, sellers/owners, developers, agents and investors. Revenue comes from (A) negotiated sales commissions under written agreements, (B) marketing services for developers, (C) featured listings, (D) developer digital solutions, and — much later — (E) SaaS subscriptions. Details: [docs/01-BUSINESS-STRATEGY.md](docs/01-BUSINESS-STRATEGY.md).
 
 ## Technology stack
-PHP · Laravel · Blade · Livewire · Tailwind CSS · Filament (admin) · PostgreSQL · Spatie Laravel Permission · Laravel Queue/Scheduler/Notifications · Pest · GitHub. One unified Laravel application — no microservices, no separate SPA. Exact versions are recorded in ADR-0002 once Phase 1 installs them. See [docs/09-TECHNICAL-ARCHITECTURE.md](docs/09-TECHNICAL-ARCHITECTURE.md).
+PHP 8.3 · Laravel 13 · Blade · Livewire 4 · Tailwind CSS 4 · Alpine.js · Filament 5 (admin) · PostgreSQL 16 · Spatie Laravel Permission · Laravel Queue/Scheduler/Notifications · Pest · GitHub. One unified Laravel application — no microservices, no separate SPA. Versions: ADR-0002. See [docs/09-TECHNICAL-ARCHITECTURE.md](docs/09-TECHNICAL-ARCHITECTURE.md).
 
 ## Documentation (single source of truth)
 Start with [`CLAUDE.md`](CLAUDE.md), then:
@@ -31,13 +31,42 @@ Start with [`CLAUDE.md`](CLAUDE.md), then:
 | [22 Workflow](docs/22-DEVELOPMENT-WORKFLOW.md) · [23 Acceptance](docs/23-ACCEPTANCE-CRITERIA.md) · [24 Changelog](docs/24-CHANGELOG.md) | Process |
 
 ## Current status
-See [docs/19-PROGRESS-TRACKER.md](docs/19-PROGRESS-TRACKER.md) for the live status. At the time of writing: **Phase 0 (planning & documentation) complete; application code not yet started.**
+See [docs/19-PROGRESS-TRACKER.md](docs/19-PROGRESS-TRACKER.md) for the live status. At the time of writing: **Phase 0 complete; Phase 1 (application foundation) implemented and in review.**
 
 ## Setup instructions
-There is no application to install yet. Known development prerequisites (verified in the project environment): PHP 8.3, Composer 2, Node.js 22, PostgreSQL 16. Concrete install, `.env`, migration and test commands will be added here when Phase 1 creates the application.
+Prerequisites: PHP 8.3+ (with `pdo_pgsql`, `intl`, `gd`, `mbstring`, `zip`), Composer 2, Node.js 22, PostgreSQL 16.
+
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+```
+
+Create a PostgreSQL role/database (example for local development — choose your own password) and put the credentials in `.env`:
+
+```bash
+sudo -u postgres psql -c "CREATE USER pcbd WITH PASSWORD 'change-me' CREATEDB;" \
+  -c "CREATE DATABASE pcbd OWNER pcbd;" -c "CREATE DATABASE pcbd_testing OWNER pcbd;"
+```
+
+```bash
+php artisan migrate --seed          # schema + roles/permissions (no demo data, no default users)
+php artisan pcbd:create-super-admin # prompts for a password; no default credentials exist
+npm install && npm run build
+php artisan serve                   # public site: /   ·   admin panel: /admin
+```
+
+Super Admin and Admin accounts must enrol in app-based two-factor authentication (profile page) before using the admin panel.
+
+Quality checks (run before every commit):
+
+```bash
+vendor/bin/pint --test
+php artisan test
+```
 
 ## Development roadmap (summary)
-0 Planning ✅ → 1 Foundation → 2 Property & Project Management → 3 Public Website & Discovery → 4 Buyer & Seller Experience → 5 CRM & Lead Management → 6 Sales & Commission → 7 Marketing & Analytics → 8 Partner & Agent Features → 9 Production Readiness. Full detail: [docs/04-ROADMAP.md](docs/04-ROADMAP.md).
+0 Planning ✅ → 1 Foundation 🔎 → 2 Property & Project Management → 3 Public Website & Discovery → 4 Buyer & Seller Experience → 5 CRM & Lead Management → 6 Sales & Commission → 7 Marketing & Analytics → 8 Partner & Agent Features → 9 Production Readiness. Full detail: [docs/04-ROADMAP.md](docs/04-ROADMAP.md).
 
 ## Contributing / workflow
 Documentation-first, phase-based, small commits, tests before completion, no secrets in git. See [docs/22-DEVELOPMENT-WORKFLOW.md](docs/22-DEVELOPMENT-WORKFLOW.md).

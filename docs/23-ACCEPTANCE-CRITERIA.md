@@ -8,15 +8,15 @@ Global DoD applies to every phase: tests green and actually run; Pint clean; val
 - [x] Review pass recorded in tracker; no code added.
 
 ## Phase 1 — Foundation
-- [ ] `composer install && npm ci && npm run build && php artisan migrate --seed` works on a clean PG database following README.
-- [ ] Versions recorded in ADR-0002; `.env.example` complete; `.env` not committed.
-- [ ] Register/login/logout/reset/verify work; throttling active; suspended users blocked.
-- [ ] Roles and permissions seeded idempotently; buyer default role.
-- [ ] `/admin` accessible only to admin-panel roles; others 403; Super Admin/Admin 2FA path decided & implemented or documented blocker.
-- [ ] Settings service + admin page; audit log records key events and is viewable.
-- [ ] Public layout (header/nav/footer), design tokens, error pages; responsive at 360/768/1280; skip link, focus styles.
-- [ ] Security headers present; CSRF enforced; sessions configured.
-- [ ] Pest + Pint + CI workflow; test suite green.
+- [x] `composer install && npm ci && npm run build && php artisan migrate --seed` works on a clean PG database following README.
+- [x] Versions recorded in ADR-0002; `.env.example` complete; `.env` not committed.
+- [x] Register/login/logout/reset/verify work; throttling active; suspended users blocked.
+- [x] Roles and permissions seeded idempotently; buyer default role.
+- [x] `/admin` accessible only to admin-panel roles; others 403; Super Admin/Admin 2FA enforced via middleware (ADR-0008); full TOTP enrolment click-through to be exercised manually before Phase 9.
+- [x] Settings service + admin page; audit log records key events and is viewable.
+- [x] Public layout (header/nav/footer), design tokens, error pages; checked at 375 and 1280 px (no horizontal overflow); skip link, focus styles. *(Self-hosted fonts and `/dev/styleguide` deferred — see backlog.)*
+- [x] Baseline security headers, CSRF and session configuration in place. *(CSP deferred to Phase 9 — tracked.)*
+- [x] Pest + Pint + CI workflow; test suite green.
 
 ## Phase 2 — Property & Project Management
 - [ ] CRUD for locations, types, amenities, developers, projects, units/unit types, properties, floor plans, media.

@@ -4,6 +4,21 @@ Format: newest first; grouped by date/phase. Only significant changes (architect
 
 ## [Unreleased]
 
+## 2026-11-22 — Phase 1: Application Foundation
+### Added
+- Laravel 13 application scaffold (PHP 8.3, PostgreSQL 16), Filament 5 admin at `/admin`, Spatie Laravel Permission 8, Pest 4, Pint, Tailwind 4 + Alpine (ADR-0002).
+- Public auth (register, login with throttling, logout, password reset, email verification); registrants receive only the `buyer` role.
+- Roles (super-admin, admin, property-manager, sales-manager, sales-agent, content-manager, buyer) and Phase-1 permissions via idempotent `RolesAndPermissionsSeeder`; `UserPolicy` (only Super Admin may manage Super Admins).
+- Admin: Users resource (role assignment guarded server-side), Settings page (contact/social/analytics/SEO/SLA), read-only Audit Log viewer; staff panel access requires active status + verified email + staff role.
+- App-based 2FA via Filament MFA, enforced for Super Admin/Admin by `EnforceAdminMfa` (ADR-0008); `pcbd:create-super-admin` command (no default credentials).
+- `SettingsService` (cached), `AuditLogger` (append-only, hashed IPs), login auditing for staff.
+- Public layout (header, mobile drawer, footer), design tokens (docs/08), UI components (`x-ui.button`, `x-ui.input`, `x-ui.flash`), error pages (403/404/419/429/500/503), baseline security headers.
+- Migrations: user profile fields (phone, status, last_login_at, locale, MFA columns, soft deletes, case-insensitive unique email), `settings`, `audit_logs`, Spatie tables, notifications.
+- GitHub Actions CI (Pint, migrate fresh + rollback, tests, `composer audit`) and Dependabot config.
+- 46 automated tests (auth, admin access, roles/permissions, settings/audit/users, public site).
+### Changed
+- Removed Laravel skeleton extras (AGENTS.md, upstream CHANGELOG/workflows) and the Vite font-download plugin (fonts will be self-hosted).
+
 ## 2026-11-22 — Phase 0: Planning & Documentation
 ### Added
 - Root `CLAUDE.md` project rules for all Claude Code sessions.
