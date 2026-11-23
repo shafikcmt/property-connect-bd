@@ -1,0 +1,56 @@
+# Production stack (ADR-0018). Always run via scripts/deploy-docker.sh, which passes --env-file /srv/pcbd/.env.
+# No ports are published: the only way in is the outbound Cloudflare Tunnel, so this never conflicts with other sites on the host.
+name: pcbd
+
+x-app: &app
+  build: { context: ., dockerfile: deploy/Dockerfile, target: app }
+  image: pcbd-app:latest
+  env_file: ${PCBD_ENV_FILE:-/srv/pcbd/.env}
+  restart: unless-stopped
+  depends_on: { db: { condition: service_healthy } }
+  volumes:
+    - storage:/var/www/html/storage
+    - public_storage:/var/www/html/storage/app/public
+
+services:
+  app:
+    <<: *app
+  queue:
+    <<: *app
+    command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
+  scheduler:
+    <<: *app
+    command: php artisan schedule:work
+  web:
+    build: { context: ., dockerfile: deploy/Dockerfile, target: web }
+    image: pcbd-web:latest
+    restart: unless-stopped
+    depends_on: [app]
+    volumes:
+      - public_storage:/var/www/html/public/storage:ro
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on: [web]
+
+volumes:
+  storage:
+  public_storage:
+  pgdata:

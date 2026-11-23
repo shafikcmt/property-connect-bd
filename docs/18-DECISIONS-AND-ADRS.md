@@ -84,3 +84,12 @@ Format: ID · Date · Status (Accepted / Proposed / Superseded) · Context · De
 ### ADR-0015 — Analytics consent gating
 - **Date:** 2026-11-22 · **Status:** Accepted
 - **Decision:** GA4/Meta Pixel load only after consent; internal event tracking stores minimal, hashed identifiers. **Consequences:** lower measured volumes; privacy-compliant.
+
+---
+### ADR-0018 — Docker + Cloudflare Tunnel deployment on the shared VPS (refines ADR-0011)
+- **Date:** 2026-11-23 · **Status:** Accepted (owner-approved hosting plan)
+- **Context:** The VPS already runs another production project in Docker whose Nginx owns ports 80/443; the `deploy` user has Docker access but no sudo, and the other project's Nginx config is regenerated from its releases (editing it is fragile and risks its downtime). DNS is on Cloudflare, where the owner already uses tunnels.
+- **Decision:** Run this app as its own compose project (`pcbd`): php-fpm app, nginx web, queue worker, scheduler, PostgreSQL 16 and `cloudflared`. No ports are published; traffic enters through an outbound Cloudflare Tunnel (TLS handled by Cloudflare). Deploys are manual-trigger GitHub Actions on a dedicated self-hosted runner. Secrets live only in `/srv/pcbd/.env` on the server.
+- **Alternatives:** install PHP/Nginx on the host (needs root, port conflict); add a vhost to the other project's Nginx (overwritten by its deploys, risks its downtime).
+- **Consequences:** Isolated from the other project; Docker is now a production dependency (still optional for local dev); depends on Cloudflare availability; real client IP comes from `CF-Connecting-IP`.
+

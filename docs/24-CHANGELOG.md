@@ -4,6 +4,8 @@ Format: newest first; grouped by date/phase. Only significant changes (architect
 
 ## [Unreleased]
 ### Added
+- Docker/Cloudflare-Tunnel production stack (`docker-compose.prod.yml`, `deploy/`, `scripts/deploy-docker.sh`, `scripts/backup-docker.sh`, manual `deploy.yml` workflow for a self-hosted runner), read-only `scripts/server-audit.sh`; ADR-0018. Not yet built or run on the server.
+### Added
 - Optional staff email alert on new inquiries (Settings → "Email new inquiries to"); no message body in the mail; failures are logged and never lose the lead. Tests: 171.
 
 ## 2026-11-23 — Website QA and launch preparation

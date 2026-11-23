@@ -1,0 +1,15 @@
+.git
+.github
+.env
+.env.*
+!.env.production.example
+node_modules
+vendor
+storage/*
+!storage/.gitignore
+public/build
+public/hot
+public/storage
+tests
+docs
+*.log
