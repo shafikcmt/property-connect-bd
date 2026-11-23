@@ -5,7 +5,7 @@
     $pageTitle = $title ? $title.' | '.$siteName : $siteName.' — Verified properties & projects in Bangladesh';
     $desc = $description ?: $settings->get('seo.default_description', $settings->get('general.tagline'));
     $canon = $canonical ?: url()->current();
-    $robotsFinal = app()->environment('production') ? $robots : 'noindex,nofollow';
+    $robotsFinal = app()->environment('production') && ! config('pcbd.noindex') ? $robots : 'noindex,nofollow';
     $ld = $schema;
     if ($breadcrumbs) {
         $ld[] = ['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => collect($breadcrumbs)->values()->map(fn ($b, $i) => ['@type' => 'ListItem', 'position' => $i + 1, 'name' => $b[0], 'item' => $b[1] ?? $canon])->all()];

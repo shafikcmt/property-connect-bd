@@ -88,3 +88,10 @@ it('removes demo content with pcbd:demo-clear and leaves real records alone', fu
         ->and(Location::where('name', 'Gulshan')->exists())->toBeFalse()
         ->and(Location::where('name', 'Bangladesh')->exists())->toBeTrue();
 });
+
+it('asks search engines to stay away while PCBD_NOINDEX is on', function () {
+    config(['pcbd.noindex' => true]);
+
+    $this->get('/')->assertHeader('X-Robots-Tag', 'noindex, nofollow')->assertSee('content="noindex,nofollow"', false);
+    $this->get('/robots.txt')->assertSee('Disallow: /', false);
+});

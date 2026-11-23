@@ -41,5 +41,5 @@ Website pages and flows, admin panel, search/filters, favorites/compare/inquirie
 - Map view is a link to OpenStreetMap (no embedded map) to avoid paid APIs.
 
 ## F. Before real launch
-- If `PCBD_ALLOW_DEMO=true` was used for a preview: run `php artisan pcbd:demo-clear`, set `PCBD_ALLOW_DEMO=false`, redeploy, confirm `pcbd:preflight` shows no demo warnings.
+- If `PCBD_ALLOW_DEMO=true` was used for a preview: run `php artisan pcbd:demo-clear`, set `PCBD_ALLOW_DEMO=false`, redeploy, confirm `pcbd:preflight` shows no demo warnings.- Set `PCBD_NOINDEX=false` (it hides the site from search engines) and redeploy; submit `sitemap.xml` afterwards.
 

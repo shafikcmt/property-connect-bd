@@ -12,6 +12,9 @@ return [
     // Preview-only switch (docker/staging): lets DemoSeeder run on a production-mode server. Must be false at launch.
     'allow_demo' => env('PCBD_ALLOW_DEMO', false),
 
+    // Keep search engines out (robots.txt, meta robots and X-Robots-Tag) until the owner is ready to launch.
+    'noindex' => env('PCBD_NOINDEX', false),
+
     'admin_mfa_required' => env('PCBD_ADMIN_MFA_REQUIRED', true),
 
     // Lead first-response target in minutes (used from Phase 5).

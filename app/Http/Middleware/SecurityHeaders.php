@@ -20,6 +20,10 @@ class SecurityHeaders
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self), payment=()');
 
+        if (config('pcbd.noindex')) {
+            $response->headers->set('X-Robots-Tag', 'noindex, nofollow');
+        }
+
         // CSP for the public site only (the admin panel's Livewire/Filament runtime needs a looser policy).
         // Report-only first: violations show in the browser console without breaking pages. Alpine's standard
         // build needs 'unsafe-eval'. Analytics hosts are added here only once consent-gated tags exist (Phase 10).

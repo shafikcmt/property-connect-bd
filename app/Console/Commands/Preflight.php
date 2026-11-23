@@ -40,6 +40,7 @@ class Preflight extends Command
         $check(config('database.default') === 'pgsql', 'Database is PostgreSQL');
         $check((bool) config('pcbd.admin_mfa_required'), 'Admin 2FA enforcement is enabled');
         $check(config('session.secure') === true || ! $isProd, 'Session cookie is secure-only', $isProd);
+        $check(! config('pcbd.noindex'), 'Search engines are allowed (PCBD_NOINDEX is off)', false);
         $check(! in_array(config('mail.default'), ['log', 'array'], true), 'Mail driver sends real email', false);
         $check(config('queue.default') !== 'sync', 'Queue is not sync', false);
 
