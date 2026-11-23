@@ -3,7 +3,6 @@
 name: pcbd
 
 x-app: &app
-  build: { context: ., dockerfile: deploy/Dockerfile, target: app }
   image: pcbd-app:latest
   env_file: ${PCBD_ENV_FILE:-/home/deploy/pcbd/.env}
   restart: unless-stopped
@@ -15,6 +14,7 @@ x-app: &app
 services:
   app:
     <<: *app
+    build: { context: ., dockerfile: deploy/Dockerfile, target: app }
   queue:
     <<: *app
     command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
