@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Http\Middleware\EnforceAdminMfa;
+use App\Support\InitialsAvatarProvider;
 use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -30,6 +31,8 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName('Property Connect BD')
+            ->defaultAvatarProvider(InitialsAvatarProvider::class)
+            ->navigationGroups(['Listings', 'Catalog', 'Inquiries', 'Content', 'System'])
             ->profile()
             ->multiFactorAuthentication(AppAuthentication::make()->recoverable())
             ->colors([

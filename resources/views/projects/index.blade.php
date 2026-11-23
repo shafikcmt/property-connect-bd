@@ -18,7 +18,7 @@
                 <div class="rounded-card border border-dashed border-warm-300 bg-warm-50 p-12 text-center"><x-ic name="building" class="mx-auto h-10 w-10 text-warm-500" /><h2 class="mt-4 font-display text-2xl font-semibold">{{ __('No projects found') }}</h2><p class="mt-2 text-warm-700">{{ __('Try a different status or location.') }}</p><p class="mt-6"><x-ui.button :href="route('projects.index')">{{ __('Show all projects') }}</x-ui.button></p></div>
             @else
                 @php $favs = app(\App\Services\Favorites::class)->ids(request(), 'project'); @endphp
-                <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">@foreach ($projects as $i => $p)<x-project-card :project="$p" :i="$i % 3" :favs="$favs" />@endforeach</div>
+                <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">@foreach ($projects as $i => $p)<x-project-card :project="$p" :i="$i % 3" :favs="$favs" tag="h2" :eager="$loop->first" />@endforeach</div>
                 <div class="mt-10">{{ $projects->links() }}</div>
             @endif
         </div>

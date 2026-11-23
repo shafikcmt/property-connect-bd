@@ -1,4 +1,4 @@
-@props(['project', 'i' => 0, 'favs' => null])
+@props(['project', 'i' => 0, 'favs' => null, 'tag' => 'h3', 'eager' => false])
 @php
     $favs ??= app(\App\Services\Favorites::class)->ids(request(), 'project');
     $range = $project->publicPriceRange();
@@ -7,7 +7,7 @@
 @endphp
 <article class="reveal group relative overflow-hidden rounded-card border border-warm-100 bg-white lift" style="--i: {{ $i }}">
     <div class="relative">
-        <div class="zoom-wrap aspect-[16/11]"><x-picture :media="$project->coverMedia" :alt="$project->name" sizes="(min-width:1024px) 30vw, (min-width:640px) 45vw, 100vw" /></div>
+        <div class="zoom-wrap aspect-[16/11]"><x-picture :media="$project->coverMedia" :alt="$project->name" sizes="(min-width:1024px) 30vw, (min-width:640px) 45vw, 100vw" :eager="$eager" /></div>
         <div class="absolute inset-0 bg-gradient-to-t from-navy-900/70 via-navy-900/0 to-transparent"></div>
         <div class="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-3">
             <div class="flex flex-wrap gap-1.5">
@@ -23,7 +23,7 @@
         </div>
     </div>
     <div class="p-5">
-        <h3 class="font-display text-xl font-semibold text-navy-900"><a href="{{ route('projects.show', $project->slug) }}" class="after:absolute after:inset-0 after:content-['']">{{ $project->name }}</a></h3>
+        <{{ $tag }} class="font-display text-xl font-semibold text-navy-900"><a href="{{ route('projects.show', $project->slug) }}" class="after:absolute after:inset-0 after:content-['']">{{ $project->name }}</a></{{ $tag }}>
         @if ($project->location)<p class="mt-1 flex items-center gap-1.5 text-sm text-warm-700"><x-ic name="pin" class="h-4 w-4 text-brand-600" />{{ $project->location->fullName() }}</p>@endif
         @if ($types->isNotEmpty())<p class="mt-3 line-clamp-1 text-sm text-warm-700">{{ $types->implode(' · ') }}</p>@endif
         <div class="mt-4 flex items-end justify-between border-t border-warm-100 pt-4">

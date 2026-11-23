@@ -99,8 +99,8 @@ class ProjectResource extends Resource
                 TextColumn::make('name')->searchable()->weight('medium'),
                 TextColumn::make('developer.name')->label('Developer')->searchable(),
                 TextColumn::make('location.name')->label('Location'),
-                TextColumn::make('status')->badge()->formatStateUsing(fn ($s) => $s->label()),
-                TextColumn::make('publish_status')->label('Published')->badge()->formatStateUsing(fn ($s) => $s->label())->color(fn ($s) => $s->color()),
+                TextColumn::make('status')->badge()->formatStateUsing(fn ($state) => $state->label()),
+                TextColumn::make('publish_status')->label('Published')->badge()->formatStateUsing(fn ($state) => $state->label())->color(fn ($state) => $state->color()),
                 IconColumn::make('is_verified')->label('Verified')->boolean(),
                 IconColumn::make('is_featured')->label('Featured')->boolean(),
             ])

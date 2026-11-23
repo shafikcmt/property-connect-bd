@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Projects\RelationManagers;
 
 use App\Enums\Facing;
 use App\Enums\UnitStatus;
+use App\Support\Money;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -43,9 +44,9 @@ class UnitsRelationManager extends RelationManager
             TextColumn::make('unitType.name')->label('Type'),
             TextColumn::make('floor')->sortable(),
             TextColumn::make('size_sqft')->suffix(' sqft'),
-            TextColumn::make('price')->money('BDT')->placeholder('—'),
-            TextColumn::make('status')->badge()->formatStateUsing(fn ($s) => $s->label())
-                ->color(fn ($s) => match ($s) {
+            TextColumn::make('price')->formatStateUsing(fn ($state) => $state === null ? null : Money::short($state))->placeholder('—'),
+            TextColumn::make('status')->badge()->formatStateUsing(fn ($state) => $state->label())
+                ->color(fn ($state) => match ($state) {
                     UnitStatus::Available => 'success', UnitStatus::Booked, UnitStatus::Hold => 'warning', UnitStatus::Sold => 'gray'
                 }),
         ])->filters([SelectFilter::make('status')->options(UnitStatus::options())])

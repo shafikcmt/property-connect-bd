@@ -37,7 +37,7 @@
         </nav>
 
         <div class="flex items-center gap-1">
-            <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-full text-navy-900 transition hover:bg-warm-100" @click="search = true; $nextTick(() => $refs.sq.focus())" aria-label="{{ __('Search') }}"><x-ic name="search" /></button>
+            <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-full text-navy-900 transition hover:bg-warm-100" @click="search = true; $nextTick(() => document.getElementById('hdr-sq').focus())" aria-label="{{ __('Search') }}"><x-ic name="search" /></button>
             <a href="{{ route('favorites') }}" class="relative inline-flex h-11 w-11 items-center justify-center rounded-full text-navy-900 transition hover:bg-warm-100" aria-label="{{ __('Favorites') }}">
                 <x-ic name="heart" />
                 <span x-data="{ n: {{ $favCount }} }" @favorites:count.window="n = $event.detail" x-show="n > 0" x-cloak x-text="n" class="absolute right-0.5 top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-600 px-1 text-[11px] font-semibold text-white"></span>
@@ -72,7 +72,7 @@
         <div class="mx-auto mt-16 max-w-2xl rounded-card bg-white p-4 shadow-2xl" x-data="suggest()" @click.outside="search = false">
             <form action="{{ route('search') }}" class="flex items-center gap-2">
                 <x-ic name="search" class="ml-2 h-5 w-5 text-warm-500" />
-                <input x-ref="sq" x-model="q" @input="input()" name="q" type="search" autocomplete="off" placeholder="{{ __('Search locations, projects, developers, properties…') }}" class="h-12 flex-1 border-0 bg-transparent text-base focus:outline-none focus:ring-0" aria-label="{{ __('Search') }}">
+                <input id="hdr-sq" x-model="q" @input="input()" name="q" type="search" autocomplete="off" placeholder="{{ __('Search locations, projects, developers, properties…') }}" class="h-12 flex-1 border-0 bg-transparent text-base focus:outline-none focus:ring-0" aria-label="{{ __('Search') }}">
                 <button class="rounded-input bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700">{{ __('Search') }}</button>
             </form>
             <ul x-show="open && items.length" x-cloak class="mt-2 max-h-80 divide-y divide-warm-100 overflow-y-auto border-t border-warm-100">

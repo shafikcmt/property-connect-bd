@@ -3,6 +3,10 @@
 All deferred ideas live here. Priority per [03](03-MVP-SCOPE.md). Moving an item into a phase requires updating roadmap + tracker.
 
 ## P1 (soon after launch / late MVP)
+- Enforce the Content-Security-Policy after watching report-only traffic; add analytics hosts only with the consent banner.
+- Email the sales contact when a new inquiry arrives (small; needs SMTP).
+- Manual screen-reader pass (NVDA/VoiceOver); field Core Web Vitals review after 28 days of traffic; CDN/object storage for images.
+- Pages CMS (static pages are Blade views today) and Settings-driven homepage sections.
 - Self-hosted brand fonts (Inter, display serif) — Phase 1 uses system stack/serif fallbacks; `/dev/styleguide` living style guide (local only).
 - Content-Security-Policy (report-only → enforced) — Phase 9; Filament/Livewire require nonce-aware setup.
 - `php artisan test --parallel` (needs paratest) if the suite grows.

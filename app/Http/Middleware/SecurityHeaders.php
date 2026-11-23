@@ -20,6 +20,16 @@ class SecurityHeaders
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self), payment=()');
 
+        // CSP for the public site only (the admin panel's Livewire/Filament runtime needs a looser policy).
+        // Report-only first: violations show in the browser console without breaking pages. Alpine's standard
+        // build needs 'unsafe-eval'. Analytics hosts are added here only once consent-gated tags exist (Phase 10).
+        if (! $request->is('admin', 'admin/*', 'livewire*', 'livewire-*/*')) {
+            $response->headers->set('Content-Security-Policy-Report-Only', implode('; ', [
+                "default-src 'self'", "script-src 'self' 'unsafe-eval'", "style-src 'self' 'unsafe-inline'", "img-src 'self' data:",
+                "font-src 'self'", "connect-src 'self'", "frame-ancestors 'self'", "base-uri 'self'", "form-action 'self'", "object-src 'none'",
+            ]));
+        }
+
         if ($request->isSecure()) {
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
         }

@@ -4,6 +4,13 @@ Format: newest first; grouped by date/phase. Only significant changes (architect
 
 ## [Unreleased]
 
+## 2026-11-23 — Website QA and launch preparation
+### Fixed
+- Admin list pages crashed when tables had rows; developers could not be published (`published_at` migration); developer logo upload default; skeleton `public/robots.txt` overriding the app's; listing-page layout shift; contrast, tap-target, heading-order, ARIA, focus and keyboard issues found by Lighthouse/axe; CSP inline handler; avatars no longer fetched from a third party.
+### Added
+- Self-hosted Inter/Fraunces fonts with preload and fallback metrics; branded accessible pagination; report-only CSP on public pages; admin dashboard overview (real counts, permission-aware); local initials avatar; ৳ formatting in admin tables; `tests/e2e/` browser QA scripts; `docs/26-LAUNCH-CHECKLIST.md`; gzip/cache guidance (measured).
+- Tests: 169 (admin lists with real rows, media manager, developer publishing, CSP, preflight).
+
 ## 2026-11-23 — Website-first: Phases 3–7
 ### Added
 - Public site: home (animated hero, smart search, featured/latest/projects/locations/developers/blog/CTAs), properties (filters, sort, grid/list, saved searches), property details (gallery + lightbox, specs, similar, inquiry, visit, report), projects, developers, locations, services, about, contact, FAQ, blog, legal pages, sell/rent-out/valuation/assistance/submit-property forms, search with autosuggest, favorites, compare, sitemap + robots, JSON-LD, breadcrumbs.

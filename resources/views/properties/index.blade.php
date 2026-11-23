@@ -28,10 +28,10 @@
     <div class="container-x py-8" x-data="{ filters: false }">
         <div class="flex flex-wrap items-center justify-between gap-3">
             <button type="button" class="inline-flex min-h-11 items-center gap-2 rounded-input border border-warm-300 px-4 text-sm font-semibold lg:hidden" @click="filters = true"><x-ic name="filter" class="h-5 w-5" />{{ __('Filters') }} @if (count($chips))<span class="rounded-full bg-brand-600 px-2 text-xs text-white">{{ count($chips) }}</span>@endif</button>
-            <form method="GET" class="ml-auto flex items-center gap-2">
+            <form method="GET" class="ml-auto flex items-center gap-2" x-data>
                 @foreach ($q as $k => $v) @if (! in_array($k, ['sort', 'view'])) @foreach ((array) $v as $one)<input type="hidden" name="{{ $k }}{{ is_array($v) ? '[]' : '' }}" value="{{ $one }}">@endforeach @endif @endforeach
                 <label class="sr-only" for="sort">{{ __('Sort by') }}</label>
-                <select id="sort" name="sort" class="select !h-11 w-auto min-w-44" onchange="this.form.submit()">@foreach (\App\Services\PropertySearch::SORTS as $k => $l)<option value="{{ $k }}" @selected(($f['sort'] ?? 'featured') === $k)>{{ __($l) }}</option>@endforeach</select>
+                <select id="sort" name="sort" class="select !h-11 w-auto min-w-44" @change="$el.form.submit()">@foreach (\App\Services\PropertySearch::SORTS as $k => $l)<option value="{{ $k }}" @selected(($f['sort'] ?? 'featured') === $k)>{{ __($l) }}</option>@endforeach</select>
                 <noscript><button class="rounded-input border px-3 py-2 text-sm">{{ __('Apply') }}</button></noscript>
                 <div class="hidden gap-1 rounded-input border border-warm-300 p-1 sm:flex" role="group" aria-label="{{ __('Layout') }}">
                     <a href="{{ url()->current().'?'.http_build_query($q + ['view' => 'grid']) }}" class="rounded p-2 {{ $view === 'grid' ? 'bg-navy-900 text-white' : 'text-warm-700 hover:bg-warm-100' }}" aria-label="{{ __('Grid view') }}" @if ($view === 'grid') aria-current="true" @endif><x-ic name="grid" class="h-5 w-5" /></a>
@@ -48,7 +48,7 @@
 
         <div class="mt-6 grid gap-8 lg:grid-cols-[300px_1fr]">
             {{-- Filters --}}
-            <aside :class="filters ? 'fixed inset-0 z-[70] block overflow-y-auto bg-white p-5' : 'hidden lg:block'" aria-label="{{ __('Filters') }}">
+            <aside class="hidden lg:block" :class="filters && '!fixed !block inset-0 z-[70] overflow-y-auto bg-white p-5'" aria-label="{{ __('Filters') }}">
                 <div class="mb-4 flex items-center justify-between lg:hidden"><h2 class="font-display text-xl font-semibold">{{ __('Filters') }}</h2><button type="button" @click="filters = false" class="h-11 w-11" aria-label="{{ __('Close filters') }}"><x-ic name="x" class="mx-auto" /></button></div>
                 <form method="GET" action="{{ url()->current() }}" class="space-y-5 lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:pr-2 no-scrollbar">
                     @if (request('sort'))<input type="hidden" name="sort" value="{{ request('sort') }}">@endif @if (request('view'))<input type="hidden" name="view" value="{{ request('view') }}">@endif
@@ -89,7 +89,7 @@
                         <p class="mt-6 flex flex-wrap justify-center gap-3"><x-ui.button :href="route('properties.index')">{{ __('Clear filters') }}</x-ui.button><x-ui.button variant="secondary" :href="route('forms.assistance')">{{ __('Ask for help') }}</x-ui.button></p></div>
                 @else
                     @php $favs = app(\App\Services\Favorites::class)->ids(request(), 'property'); $cmp = session('compare', []); @endphp
-                    <div class="grid gap-6 {{ $view === 'list' ? '' : 'sm:grid-cols-2 xl:grid-cols-3' }}">@foreach ($properties as $i => $p)<x-property-card :property="$p" :i="$i % 3" :list="$view === 'list'" :favs="$favs" :cmp="$cmp" />@endforeach</div>
+                    <div class="grid gap-6 {{ $view === 'list' ? '' : 'sm:grid-cols-2 xl:grid-cols-3' }}">@foreach ($properties as $i => $p)<x-property-card :property="$p" :i="$i % 3" :list="$view === 'list'" :favs="$favs" :cmp="$cmp" tag="h2" :eager="$loop->first" />@endforeach</div>
                     <div class="mt-10">{{ $properties->links() }}</div>
                 @endif
             </div>

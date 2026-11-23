@@ -26,7 +26,7 @@ class Developer extends Model
         return [
             'publish_status' => PublishStatus::class,
             'is_verified' => 'boolean', 'is_featured' => 'boolean', 'show_contact_publicly' => 'boolean',
-            'verified_at' => 'datetime', 'featured_until' => 'datetime',
+            'verified_at' => 'datetime', 'featured_until' => 'datetime', 'published_at' => 'datetime',
         ];
     }
 

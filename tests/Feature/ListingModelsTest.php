@@ -178,3 +178,16 @@ it('refuses to run the demo seeder in production', function () {
 
     expect(fn () => (new DemoSeeder)->run())->toThrow(RuntimeException::class, 'never run in production');
 });
+
+it('publishes a complete developer (logo + about) through the publisher', function () {
+    Storage::fake('public');
+    $dev = Developer::factory()->create();
+    $im = imagecreatetruecolor(300, 300);
+    $path = tempnam(sys_get_temp_dir(), 'l').'.png';
+    imagepng($im, $path);
+    app(ImageProcessor::class)->store($path, $dev, 'logo');
+
+    app(ListingPublisher::class)->publish($dev);
+
+    expect($dev->fresh()->publish_status)->toBe(PublishStatus::Published)->and($dev->fresh()->published_at)->not->toBeNull();
+});

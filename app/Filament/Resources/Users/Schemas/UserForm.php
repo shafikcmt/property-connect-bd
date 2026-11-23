@@ -29,7 +29,7 @@ class UserForm
                     ->required(fn (string $operation) => $operation === 'create')
                     ->dehydrated(fn (?string $state) => filled($state))
                     ->helperText(fn (string $operation) => $operation === 'edit' ? __('Leave blank to keep the current password.') : null),
-                Select::make('status')->options(collect(UserStatus::cases())->mapWithKeys(fn ($s) => [$s->value => ucfirst($s->value)]))
+                Select::make('status')->options(collect(UserStatus::cases())->mapWithKeys(fn ($state) => [$state->value => ucfirst($state->value)]))
                     ->required()->default(UserStatus::Active->value)
                     ->disabled(fn (?User $record) => $record?->is(auth()->user())), // cannot suspend yourself
                 Select::make('roles')->relationship('roles', 'name', fn (Builder $query) => auth()->user()?->hasRole(RoleName::SuperAdmin->value)

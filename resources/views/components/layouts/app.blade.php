@@ -2,7 +2,7 @@
 @php
     $settings = app(\App\Services\SettingsService::class);
     $siteName = $settings->get('general.site_name');
-    $pageTitle = $title ? $title.' | '.$siteName : $siteName.' — '.$settings->get('general.tagline');
+    $pageTitle = $title ? $title.' | '.$siteName : $siteName.' — Verified properties & projects in Bangladesh';
     $desc = $description ?: $settings->get('seo.default_description', $settings->get('general.tagline'));
     $canon = $canonical ?: url()->current();
     $robotsFinal = app()->environment('production') ? $robots : 'noindex,nofollow';
@@ -32,6 +32,9 @@
     <meta property="og:url" content="{{ $canon }}">
     @if ($image)<meta property="og:image" content="{{ $image }}"><meta name="twitter:card" content="summary_large_image">@endif
     <meta name="theme-color" content="#0B1F3A">
+    {{-- Preload the two latin font files used above the fold so text does not reflow when they arrive. --}}
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="{{ Vite::asset('node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') }}">
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="{{ Vite::asset('node_modules/@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @foreach ($ld as $block)<script type="application/ld+json">{!! json_encode($block, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) !!}</script>@endforeach
 </head>

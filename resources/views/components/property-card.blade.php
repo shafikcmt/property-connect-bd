@@ -1,4 +1,4 @@
-@props(['property', 'i' => 0, 'list' => false, 'favs' => null, 'cmp' => null])
+@props(['property', 'i' => 0, 'list' => false, 'favs' => null, 'cmp' => null, 'tag' => 'h3', 'eager' => false])
 @php
     $favs ??= app(\App\Services\Favorites::class)->ids(request(), 'property');
     $cmp ??= session('compare', []);
@@ -8,7 +8,7 @@
 <article class="reveal group relative overflow-hidden rounded-card border border-warm-100 bg-white lift {{ $list ? 'sm:flex' : '' }}" style="--i: {{ $i }}">
     <div class="relative {{ $list ? 'sm:w-2/5 sm:shrink-0' : '' }}">
         <div class="zoom-wrap aspect-[4/3] {{ $list ? 'sm:h-full sm:aspect-auto' : '' }}">
-            <x-picture :media="$property->coverMedia" :alt="$property->title" sizes="(min-width:1024px) 30vw, (min-width:640px) 45vw, 100vw" />
+            <x-picture :media="$property->coverMedia" :alt="$property->title" sizes="(min-width:1024px) 30vw, (min-width:640px) 45vw, 100vw" :eager="$eager" />
         </div>
         <div class="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-3">
             <div class="flex flex-wrap gap-1.5">
@@ -23,7 +23,7 @@
     <div class="flex flex-1 flex-col p-5">
         <p class="font-display text-2xl font-semibold text-navy-900">{{ \App\Support\Money::priceLabel($property->price ? (float) $property->price : null, $property->price_negotiable, $rent, $property->rent_period) }}
             @if ($property->price_negotiable && $property->price)<span class="ml-1 align-middle text-xs font-sans font-medium text-warm-500">{{ __('Negotiable') }}</span>@endif</p>
-        <h3 class="mt-1 line-clamp-1 text-base font-semibold text-navy-900"><a href="{{ route('properties.show', $property->slug) }}" class="after:absolute after:inset-0 after:content-[''] focus-visible:after:outline focus-visible:after:outline-2">{{ $property->title }}</a></h3>
+        <{{ $tag }} class="mt-1 line-clamp-1 text-base font-semibold text-navy-900"><a href="{{ route('properties.show', $property->slug) }}" class="after:absolute after:inset-0 after:content-[''] focus-visible:after:outline focus-visible:after:outline-2">{{ $property->title }}</a></{{ $tag }}>
         @if ($loc)<p class="mt-1 flex items-center gap-1.5 text-sm text-warm-700"><x-ic name="pin" class="h-4 w-4 shrink-0 text-brand-600" /><span class="line-clamp-1">{{ $loc }}</span></p>@endif
         <ul class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-warm-100 pt-4 text-sm text-warm-700">
             @if ($property->bedrooms !== null)<li class="flex items-center gap-1.5" title="{{ __('Bedrooms') }}"><x-ic name="bed" class="h-4 w-4" />{{ $property->bedrooms }} <span class="sr-only">{{ __('bedrooms') }}</span></li>@endif

@@ -31,7 +31,7 @@ Start with [`CLAUDE.md`](CLAUDE.md), then:
 | [22 Workflow](docs/22-DEVELOPMENT-WORKFLOW.md) · [23 Acceptance](docs/23-ACCEPTANCE-CRITERIA.md) · [24 Changelog](docs/24-CHANGELOG.md) | Process |
 
 ## Current status
-See [docs/19-PROGRESS-TRACKER.md](docs/19-PROGRESS-TRACKER.md) for the live status. At the time of writing: **Phases 0–2 complete; the public website (Phases 3–7) is built and in review — launch needs owner inputs (hosting, domain, real content, legal review). CRM and later phases follow after launch.** See [docs/25-DEPLOYMENT-GUIDE.md](docs/25-DEPLOYMENT-GUIDE.md).
+See [docs/19-PROGRESS-TRACKER.md](docs/19-PROGRESS-TRACKER.md) for the live status. At the time of writing: **The public website is complete and QA-passed (Lighthouse a11y/best-practices/SEO 100, axe 0 violations, 169 tests, 25-step end-to-end flow). Launch needs owner inputs (hosting, domain, real content, legal review). CRM and later phases follow after launch.** See [docs/26-LAUNCH-CHECKLIST.md](docs/26-LAUNCH-CHECKLIST.md) for what is needed to launch and [docs/25-DEPLOYMENT-GUIDE.md](docs/25-DEPLOYMENT-GUIDE.md) for the procedure.
 
 ## Setup instructions
 Prerequisites: PHP 8.3+ (with `pdo_pgsql`, `intl`, `gd`, `mbstring`, `zip`), Composer 2, Node.js 22, PostgreSQL 16.

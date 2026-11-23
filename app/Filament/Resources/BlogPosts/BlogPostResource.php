@@ -51,7 +51,7 @@ class BlogPostResource extends Resource
     {
         return $table->modifyQueryUsing(fn (Builder $query) => $query->with('category'))->columns([
             TextColumn::make('title')->searchable()->limit(50)->weight('medium'), TextColumn::make('category.name'),
-            TextColumn::make('publish_status')->label('Status')->badge()->formatStateUsing(fn ($s) => $s->label())->color(fn ($s) => $s->color()),
+            TextColumn::make('publish_status')->label('Status')->badge()->formatStateUsing(fn ($state) => $state->label())->color(fn ($state) => $state->color()),
             TextColumn::make('published_at')->dateTime()->sortable(),
         ])->defaultSort('id', 'desc')->recordActions([EditAction::make(), DeleteAction::make()]);
     }

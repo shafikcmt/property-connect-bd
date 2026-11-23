@@ -64,9 +64,9 @@ class LeadResource extends Resource
                 TextColumn::make('created_at')->label('Received')->since()->sortable(),
                 TextColumn::make('name')->searchable()->weight('medium'),
                 TextColumn::make('phone')->searchable()->copyable(),
-                TextColumn::make('request_type')->badge()->formatStateUsing(fn ($s) => $s->label()),
+                TextColumn::make('request_type')->badge()->formatStateUsing(fn ($state) => $state->label()),
                 TextColumn::make('subject')->label('About')->state(fn (Lead $l) => $l->property?->title ?? $l->project?->name ?? '—')->limit(30),
-                TextColumn::make('status')->badge()->formatStateUsing(fn ($s) => $s->label())->color(fn ($s) => $s === LeadStatus::New ? 'warning' : 'gray'),
+                TextColumn::make('status')->badge()->formatStateUsing(fn ($state) => $state->label())->color(fn ($state) => $state === LeadStatus::New ? 'warning' : 'gray'),
                 TextColumn::make('utm_source')->label('Source')->placeholder('direct')->toggleable(),
             ])
             ->defaultSort('created_at', 'desc')

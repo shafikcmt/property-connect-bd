@@ -57,3 +57,9 @@ it('fails the production preflight when the environment is unsafe', function () 
 
     $this->artisan('pcbd:preflight')->assertFailed();
 });
+
+it('sends a report-only CSP on public pages but not on the admin panel', function () {
+    $this->get('/')->assertHeader('Content-Security-Policy-Report-Only');
+    expect($this->get('/')->headers->get('Content-Security-Policy-Report-Only'))->toContain("object-src 'none'")->toContain("frame-ancestors 'self'");
+    $this->get('/admin/login')->assertHeaderMissing('Content-Security-Policy-Report-Only');
+});

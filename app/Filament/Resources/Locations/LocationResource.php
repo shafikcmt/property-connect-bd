@@ -59,7 +59,7 @@ class LocationResource extends Resource
     {
         return $table->columns([
             TextColumn::make('path')->label('Path')->searchable()->sortable()->weight('medium'),
-            TextColumn::make('type')->badge()->formatStateUsing(fn ($s) => $s->label()),
+            TextColumn::make('type')->badge()->formatStateUsing(fn ($state) => $state->label()),
             IconColumn::make('is_active')->boolean(),
             IconColumn::make('is_featured')->boolean(),
 

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Projects\RelationManagers;
 
+use App\Support\Money;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -37,7 +38,7 @@ class UnitTypesRelationManager extends RelationManager
             TextColumn::make('name')->weight('medium'),
             TextColumn::make('bedrooms')->label('Beds'),
             TextColumn::make('size_sqft_min')->label('Size')->formatStateUsing(fn ($state, $record) => $state ? number_format((float) $state).($record->size_sqft_max ? '–'.number_format((float) $record->size_sqft_max) : '').' sqft' : '—'),
-            TextColumn::make('price_from')->money('BDT')->placeholder('—'),
+            TextColumn::make('price_from')->formatStateUsing(fn ($state) => $state === null ? null : Money::short($state))->placeholder('—'),
         ])->headerActions([CreateAction::make()])->recordActions([EditAction::make(), DeleteAction::make()]);
     }
 }

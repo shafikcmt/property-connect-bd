@@ -68,7 +68,7 @@ class DeveloperResource extends Resource
             ->columns([
                 TextColumn::make('name')->searchable()->weight('medium'),
                 TextColumn::make('projects_count')->label('Projects')->sortable(),
-                TextColumn::make('publish_status')->label('Status')->badge()->formatStateUsing(fn ($s) => $s->label())->color(fn ($s) => $s->color()),
+                TextColumn::make('publish_status')->label('Status')->badge()->formatStateUsing(fn ($state) => $state->label())->color(fn ($state) => $state->color()),
                 IconColumn::make('is_verified')->label('Verified')->boolean(),
                 IconColumn::make('is_featured')->label('Featured')->boolean(),
             ])

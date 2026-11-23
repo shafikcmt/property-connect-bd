@@ -2,6 +2,7 @@
 
 namespace App\Filament\Support;
 
+use App\Models\Developer;
 use App\Services\AuditLogger;
 use App\Services\ImageProcessor;
 use Filament\Actions\Action;
@@ -42,7 +43,7 @@ class MediaRelationManager extends RelationManager
             ->reorderable('sort_order')
             ->defaultSort('sort_order')
             ->columns([
-                ImageColumn::make('thumb')->label('')->state(fn ($r) => $r->isImage() ? $r->url(480) : null)->height(56),
+                ImageColumn::make('thumb')->label('')->state(fn ($record) => $record->isImage() ? $record->url(480) : null)->height(56),
                 TextColumn::make('collection')->badge(),
                 TextColumn::make('alt')->limit(40)->placeholder('— add alt text —'),
                 IconColumn::make('is_private')->boolean()->label('Private'),
@@ -55,7 +56,8 @@ class MediaRelationManager extends RelationManager
                         Select::make('collection')->options([
                             'gallery' => 'Gallery image', 'floor_plans' => 'Floor plan', 'logo' => 'Logo', 'brochure' => 'Brochure (PDF, public)',
                             'documents' => 'Private document (never public)',
-                        ])->default('gallery')->required(),
+                        ])->default(fn () => $this->getOwnerRecord() instanceof Developer ? 'logo' : 'gallery')->required()
+                            ->helperText(fn () => $this->getOwnerRecord() instanceof Developer ? 'Upload the company logo as "Logo" — it is required to publish.' : null),
                         FileUpload::make('files')->multiple()->required()->disk('local')->directory('tmp-uploads')
                             ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'application/pdf'])->maxSize(15360)->maxFiles(30),
                         TextInput::make('alt')->label('Alt text (applies to all uploaded images)')->maxLength(255),

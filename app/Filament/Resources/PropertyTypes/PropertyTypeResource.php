@@ -48,7 +48,7 @@ class PropertyTypeResource extends Resource
     {
         return $table->columns([
             TextColumn::make('name')->searchable()->weight('medium'),
-            TextColumn::make('group')->badge()->formatStateUsing(fn ($s) => $s->label()),
+            TextColumn::make('group')->badge()->formatStateUsing(fn ($state) => $state->label()),
             TextColumn::make('sort_order')->sortable(),
             IconColumn::make('is_active')->boolean(),
 

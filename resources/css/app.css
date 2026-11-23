@@ -4,16 +4,24 @@
 @source '../../storage/framework/views/*.php';
 
 /* Design tokens — docs/08-UI-UX-DESIGN-SYSTEM.md */
+/* Self-hosted variable fonts, Latin only (Bangla/other scripts use the system font stack). */
+@font-face { font-family: 'Inter Variable'; font-style: normal; font-display: swap; font-weight: 100 900; src: url('../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2-variations'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Fraunces Variable'; font-style: normal; font-display: swap; font-weight: 100 900; src: url('../../node_modules/@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2') format('woff2-variations'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+/* Metric-adjusted fallbacks keep layout stable while the webfonts load. */
+@font-face { font-family: 'Inter Fallback'; src: local('Arial'); size-adjust: 107.4%; ascent-override: 90.2%; descent-override: 22.5%; line-gap-override: 0%; }
+@font-face { font-family: 'Fraunces Fallback'; src: local('Georgia'); size-adjust: 98%; ascent-override: 96%; descent-override: 25%; line-gap-override: 0%; }
+
 @theme {
-    --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'Noto Sans Bengali', Roboto, sans-serif;
-    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-sans: 'Inter Variable', 'Inter Fallback', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'Noto Sans Bengali', Roboto, sans-serif;
+    --font-display: 'Fraunces Variable', 'Fraunces Fallback', 'Fraunces', Georgia, 'Times New Roman', serif;
 
     --color-navy-50: #eef2f8;
     --color-navy-700: #16345c;
     --color-navy-900: #0b1f3a;
 
-    --color-brand-600: #0e8f6e;
-    --color-brand-700: #0a7459;
+    --color-brand-600: #0a7459;   /* AA: 5.6:1 on white (was #0e8f6e = 4.05:1) */
+    --color-brand-700: #075a46;
     --color-teal-500: #14b8a6;
     --color-gold-500: #c9a24b;
 
@@ -56,6 +64,7 @@
     .chip { @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold; }
     .container-x { @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8; }
     .section-y { @apply py-16 sm:py-24; }
+    footer a { display: inline-block; padding-block: .3rem; }
     .prose-pc { @apply text-warm-700 leading-relaxed; }
     .prose-pc h2 { @apply mt-10 mb-3 font-display text-2xl font-semibold; }
     .prose-pc h3 { @apply mt-6 mb-2 text-lg font-semibold; }
@@ -85,7 +94,8 @@
 .pop { animation: pop .35s ease-out; }
 .menu-in { animation: menu-in .18s ease-out; }
 
-.zoom-wrap { overflow: hidden; }
+.zoom-wrap { overflow: hidden; background: linear-gradient(100deg, var(--color-warm-100) 30%, var(--color-warm-50) 50%, var(--color-warm-100) 70%); background-size: 300% 100%; animation: skel 1.6s linear infinite; }
+@keyframes skel { from { background-position: 100% 0; } to { background-position: 0 0; } }
 .zoom-wrap img { transition: transform .7s cubic-bezier(.2,.7,.2,1); }
 .group:hover .zoom-wrap img { transform: scale(1.06); }
 .lift { transition: transform .35s ease, box-shadow .35s ease; }
@@ -104,6 +114,6 @@
 @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1; transform: none; transition: none; }
     .hero-in > * { animation: none; }
-    .float-a, .float-b, .drift-slow, .win-twinkle, .skeleton::after { animation: none; }
+    .float-a, .float-b, .drift-slow, .win-twinkle, .skeleton::after, .zoom-wrap { animation: none; }
     .zoom-wrap img, .lift { transition: none; }
 }

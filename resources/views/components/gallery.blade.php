@@ -5,7 +5,7 @@
 @else
 <div x-data="gallery({{ $n }})" @keydown.window.arrow-right="box && next()" @keydown.window.arrow-left="box && prev()" @keydown.window.escape="box && close()">
     <div class="grid gap-2 {{ $n > 1 ? 'md:grid-cols-4 md:grid-rows-2' : '' }}">
-        <button type="button" class="group relative overflow-hidden rounded-card {{ $n > 1 ? 'md:col-span-2 md:row-span-2' : '' }}" @click="open(0)" aria-label="{{ __('Open photo gallery') }}">
+        <button type="button" class="group relative overflow-hidden rounded-card {{ $n > 1 ? 'md:col-span-2 md:row-span-2' : '' }}" @click="open(0)" aria-label="{{ $n }} {{ __('photos') }} — {{ __('open photo gallery') }}">
             <div class="zoom-wrap aspect-[4/3] md:aspect-auto md:h-full md:min-h-[420px]"><x-picture :media="$images[0]" :alt="$title" sizes="(min-width:768px) 50vw, 100vw" :eager="true" /></div>
             <span class="absolute bottom-3 left-3 chip bg-navy-900/80 text-white"><x-ic name="camera" class="h-3.5 w-3.5" />{{ $n }} {{ __('photos') }}</span>
         </button>

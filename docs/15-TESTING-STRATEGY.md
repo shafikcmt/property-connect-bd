@@ -43,5 +43,8 @@ Model factories for every model; states (`published()`, `featured()`, `verified(
 ## 7. Defect handling
 Bug → failing test first → fix → note in changelog if user-visible. Known failing tests are never skipped/ignored silently: if unavoidable, record in tracker blockers with reason.
 
+## 7a. Browser QA scripts
+`tests/e2e/` holds repeatable Playwright/Lighthouse/axe scripts (route sweep, accessibility, keyboard, CSP, admin smoke, full end-to-end flow) — see its README. Lesson recorded: Filament injects closure arguments by **parameter name** (`$state`, `$record`, `$get`…); always include tests that render lists with real rows.
+
 ## 8. Completion rule
 Never claim "tests pass" unless run in this session and output seen. Record exact commands and results in the phase summary and progress tracker.

@@ -16,6 +16,7 @@ use App\Models\Location;
 use App\Models\Project;
 use App\Models\Property;
 use App\Models\PropertyType;
+use App\Support\Money;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -130,8 +131,8 @@ class PropertyResource extends Resource
                 TextColumn::make('purpose')->badge()->formatStateUsing(fn ($state) => $state->label()),
                 TextColumn::make('type.name')->label('Type'),
                 TextColumn::make('location.name')->label('Location')->searchable(),
-                TextColumn::make('price')->money('BDT')->sortable(),
-                TextColumn::make('publish_status')->label('Status')->badge()->formatStateUsing(fn ($s) => $s->label())->color(fn ($s) => $s->color()),
+                TextColumn::make('price')->formatStateUsing(fn ($state) => $state === null ? null : Money::short($state))->sortable(),
+                TextColumn::make('publish_status')->label('Status')->badge()->formatStateUsing(fn ($state) => $state->label())->color(fn ($state) => $state->color()),
                 IconColumn::make('is_verified')->label('Verified')->boolean(),
                 IconColumn::make('is_featured')->label('Featured')->boolean(),
                 TextColumn::make('updated_at')->since()->sortable()->toggleable(isToggledHiddenByDefault: true),

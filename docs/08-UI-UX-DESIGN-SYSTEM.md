@@ -8,8 +8,8 @@ Feel: premium, modern, minimal, spacious, trustworthy, mobile-first, fast, acces
 | `navy-900` | `#0B1F3A` | Primary brand, headings, header/footer bg |
 | `navy-700` | `#16345C` | Hover/active on navy |
 | `navy-50` | `#EEF2F8` | Tinted sections |
-| `emerald-600` (brand-accent) | `#0E8F6E` | Primary CTA, success, links on light |
-| `emerald-700` | `#0A7459` | CTA hover (contrast ≥ 4.5:1 with white) |
+| `brand-600` (emerald) | `#0A7459` | Primary CTA, success, links on light (5.6:1 on white — `#0E8F6E` failed AA at 4.05:1, changed after Lighthouse audit) |
+| `brand-700` | `#075A46` | CTA hover |
 | `teal-500` | `#14B8A6` | Secondary accents, charts |
 | `gold-500` | `#C9A24B` | Subtle accent: Featured badge, dividers, star/premium (never body text) |
 | `gray-50` `#F7F6F4` · `gray-100` `#EDEBE7` · `gray-300` `#CFCBC4` · `gray-500` `#6F6A62` · `gray-700` `#3D3A35` · `gray-900` `#1C1B19` | Warm grays for surfaces, borders, text |
