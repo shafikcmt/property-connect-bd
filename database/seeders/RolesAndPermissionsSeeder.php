@@ -25,10 +25,10 @@ class RolesAndPermissionsSeeder extends Seeder
         $matrix = [
             // Super Admin receives everything via Gate::before in AppServiceProvider.
             RoleName::SuperAdmin->value => Permissions::all(),
-            RoleName::Admin->value => [Permissions::USERS_MANAGE, Permissions::SETTINGS_MANAGE, Permissions::AUDIT_VIEW],
-            RoleName::PropertyManager->value => [],
-            RoleName::SalesManager->value => [],
-            RoleName::SalesAgent->value => [],
+            RoleName::Admin->value => [Permissions::USERS_MANAGE, Permissions::SETTINGS_MANAGE, Permissions::AUDIT_VIEW, ...Permissions::listingsFull()],
+            RoleName::PropertyManager->value => Permissions::listingsFull(),
+            RoleName::SalesManager->value => [Permissions::LISTINGS_VIEW],
+            RoleName::SalesAgent->value => [Permissions::LISTINGS_VIEW],
             RoleName::ContentManager->value => [],
             RoleName::Buyer->value => [],
         ];

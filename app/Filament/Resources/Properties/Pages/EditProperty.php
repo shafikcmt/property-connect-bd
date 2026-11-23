@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Filament\Resources\Properties\Pages;
+
+use App\Filament\Resources\Properties\PropertyResource;
+use App\Filament\Support\ListingActions;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\RestoreAction;
+use Filament\Resources\Pages\EditRecord;
+
+class EditProperty extends EditRecord
+{
+    protected static string $resource = PropertyResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [...ListingActions::all(), DeleteAction::make(), RestoreAction::make()];
+    }
+}

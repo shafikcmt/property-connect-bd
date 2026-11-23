@@ -4,6 +4,13 @@ Format: newest first; grouped by date/phase. Only significant changes (architect
 
 ## [Unreleased]
 
+## 2026-11-23 — Phase 2: Property & Project Foundation
+### Added
+- Roadmap re-planned website-first (ADR-0016); custom media layer replaces Spatie Media Library, which needs PHP 8.4 (ADR-0017).
+- Schema: locations, property_types, amenities, developers, projects, project_unit_types, project_units, properties, amenity pivots, media, verifications, slug_histories (pg_trgm, CHECK constraints).
+- Admin (Filament): Properties, Projects (+ unit types, units), Developers, Locations, Property Types, Amenities; media uploads; publish/unpublish, verify/revoke, feature actions; permissions `listings.*`, `catalog.manage`.
+- `ListingPublisher` publish gate, `ImageProcessor` (GD, WebP, EXIF stripped), `ReferenceDataSeeder`, `DemoSeeder` (demo artwork, production-guarded).
+
 ## 2026-11-22 — Phase 1: Application Foundation
 ### Added
 - Laravel 13 application scaffold (PHP 8.3, PostgreSQL 16), Filament 5 admin at `/admin`, Spatie Laravel Permission 8, Pest 4, Pint, Tailwind 4 + Alpine (ADR-0002).

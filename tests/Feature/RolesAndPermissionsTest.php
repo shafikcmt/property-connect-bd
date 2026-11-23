@@ -24,12 +24,20 @@ it('gives Super Admin everything and Admin no role management', function () {
         ->and($admin->can(Permissions::ROLES_MANAGE))->toBeFalse();
 });
 
-it('gives other roles no phase-1 administrative permissions', function (RoleName $role) {
+it('gives non-admin roles no system-administration permissions', function (RoleName $role) {
     $user = userWithRole($role);
-    foreach (Permissions::all() as $permission) {
+    foreach ([Permissions::USERS_MANAGE, Permissions::ROLES_MANAGE, Permissions::SETTINGS_MANAGE, Permissions::AUDIT_VIEW] as $permission) {
         expect($user->can($permission))->toBeFalse();
     }
 })->with([RoleName::PropertyManager, RoleName::SalesManager, RoleName::SalesAgent, RoleName::ContentManager, RoleName::Buyer]);
+
+it('scopes listing permissions by role', function () {
+    expect(userWithRole(RoleName::PropertyManager)->can(Permissions::LISTINGS_PUBLISH))->toBeTrue()
+        ->and(userWithRole(RoleName::SalesAgent)->can(Permissions::LISTINGS_VIEW))->toBeTrue()
+        ->and(userWithRole(RoleName::SalesAgent)->can(Permissions::LISTINGS_MANAGE))->toBeFalse()
+        ->and(userWithRole(RoleName::ContentManager)->can(Permissions::LISTINGS_VIEW))->toBeFalse()
+        ->and(userWithRole(RoleName::Buyer)->can(Permissions::LISTINGS_VIEW))->toBeFalse();
+});
 
 it('only lets Super Admin manage Super Admin accounts', function () {
     $target = userWithRole(RoleName::SuperAdmin);

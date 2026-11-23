@@ -5,7 +5,15 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Enums\RoleName;
+use App\Models\Amenity;
+use App\Models\Developer;
+use App\Models\Location;
+use App\Models\Project;
+use App\Models\Property;
+use App\Models\PropertyType;
 use App\Models\User;
+use App\Policies\CatalogPolicy;
+use App\Policies\ListingPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
@@ -34,6 +42,12 @@ class AppServiceProvider extends ServiceProvider
         // Super Admin implicitly holds every permission (docs/07).
         Gate::before(fn (?User $user) => $user?->hasRole(RoleName::SuperAdmin->value) ? true : null);
         Gate::policy(User::class, UserPolicy::class);
+        foreach ([Developer::class, Project::class, Property::class] as $model) {
+            Gate::policy($model, ListingPolicy::class);
+        }
+        foreach ([Location::class, PropertyType::class, Amenity::class] as $model) {
+            Gate::policy($model, CatalogPolicy::class);
+        }
 
         $this->configureRateLimiting();
     }
