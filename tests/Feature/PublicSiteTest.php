@@ -95,3 +95,9 @@ it('asks search engines to stay away while PCBD_NOINDEX is on', function () {
     $this->get('/')->assertHeader('X-Robots-Tag', 'noindex, nofollow')->assertSee('content="noindex,nofollow"', false);
     $this->get('/robots.txt')->assertSee('Disallow: /', false);
 });
+
+it('pcbd:mail-test reports success with the array mailer', function () {
+    config(['mail.default' => 'array']);
+
+    $this->artisan('pcbd:mail-test', ['to' => 'owner@example.com'])->assertSuccessful();
+});
