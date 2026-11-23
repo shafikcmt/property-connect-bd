@@ -50,3 +50,6 @@ All deferred ideas live here. Priority per [03](03-MVP-SCOPE.md). Moving an item
 
 ## Ideas to evaluate (unprioritised)
 Expat-buyer proxy visit service; neighbourhood price index from verified data; developer rating system (needs moderation policy); virtual open-house events; referral program for brokers; lead-sharing between developers (consent!).
+
+## Land-share projects (added 2026-11-23)
+Share summary, instalment table, project-updates timeline, branded project landing page, Bangla/English switch, and the developer ERP (shareholder register, deed batches, mutation, instalment collection, flat allocation, document vault). Full plan: [27](27-LAND-SHARE-PROJECTS.md).

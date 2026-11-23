@@ -4,6 +4,8 @@ Format: newest first; grouped by date/phase. Only significant changes (architect
 
 ## [Unreleased]
 ### Added
+- `docs/27-LAND-SHARE-PROJECTS.md`: domain model, website mapping and future developer-ERP plan for land-share projects (planning only; no buyer personal data stored).
+### Added
 - `php artisan pcbd:mail-test {to}` sends one test email to verify SMTP settings.
 ### Added
 - `PCBD_NOINDEX=true` keeps search engines out (robots.txt, meta robots, X-Robots-Tag) until launch; preflight warns while it is on. Tests: 173.

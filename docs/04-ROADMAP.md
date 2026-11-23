@@ -19,7 +19,7 @@ Common Definition of Done: implementation complete, validation + authorization, 
 | 8 | CRM & Lead Management | Pipeline, assignment, follow-ups, site-visit management |
 | 9 | Sales & Commission | Deals, bookings, commission |
 | 10 | Marketing & Analytics | Campaigns, UTM reports, tracking |
-| 11 | Partner & Agent Features | Developer portal, agents |
+| 11 | Partner & Agent Features | Developer portal, agents; developer ERP for land-share projects ([27](27-LAND-SHARE-PROJECTS.md)) |
 | 12 | SaaS architecture | Only after proven demand ([17](17-SAAS-FUTURE-ARCHITECTURE.md)) |
 
 **Legacy phase labels.** Docs 02, 03, 10, 11, 12, 13, 23 were written with the original numbering. Map: old P2 → 2, old P3 → 3 (+5 for UI), old P4 → 4, old P5 → 8, old P6 → 9, old P7 → 10, old P8 → 11, old P9 → 6+7. Where a doc says "Phase 5" for CRM, read "Phase 8".
