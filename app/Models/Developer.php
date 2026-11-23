@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\PublishStatus;
+use App\Models\Concerns\HasBangla;
 use App\Models\Concerns\HasMedia;
 use App\Models\Concerns\HasSlug;
 use App\Models\Concerns\Publishable;
@@ -17,10 +18,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['name', 'slug', 'summary', 'about', 'website', 'email', 'phone', 'address', 'show_contact_publicly', 'established_year', 'brand_color', 'seo_title', 'seo_description'])]
+#[Fillable(['name', 'slug', 'summary', 'about', 'website', 'email', 'phone', 'address', 'show_contact_publicly', 'established_year', 'brand_color', 'name_bn', 'summary_bn', 'about_bn', 'seo_title', 'seo_description'])]
 class Developer extends Model
 {
-    use HasFactory, HasMedia, HasSlug, Publishable, SoftDeletes, Verifiable;
+    use HasBangla, HasFactory, HasMedia, HasSlug, Publishable, SoftDeletes, Verifiable;
 
     protected function casts(): array
     {

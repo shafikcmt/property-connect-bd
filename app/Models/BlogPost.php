@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\PublishStatus;
+use App\Models\Concerns\HasBangla;
 use App\Models\Concerns\HasMedia;
 use App\Models\Concerns\HasSlug;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -15,10 +16,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-#[Fillable(['blog_category_id', 'title', 'slug', 'excerpt', 'body', 'seo_title', 'seo_description'])]
+#[Fillable(['blog_category_id', 'title', 'slug', 'excerpt', 'body', 'title_bn', 'excerpt_bn', 'body_bn', 'seo_title', 'seo_description'])]
 class BlogPost extends Model
 {
-    use HasFactory, HasMedia, HasSlug, SoftDeletes;
+    use HasBangla, HasFactory, HasMedia, HasSlug, SoftDeletes;
 
     protected function casts(): array
     {
@@ -54,7 +55,7 @@ class BlogPost extends Model
     /** Markdown rendered with raw HTML stripped and unsafe links disallowed (XSS-safe). */
     public function bodyHtml(): string
     {
-        return Str::markdown($this->body, ['html_input' => 'strip', 'allow_unsafe_links' => false]);
+        return Str::markdown((string) $this->tr('body'), ['html_input' => 'strip', 'allow_unsafe_links' => false]);
     }
 
     public function readingMinutes(): int

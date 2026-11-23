@@ -17,7 +17,7 @@ class LocationController extends Controller
         $areas = Location::active()->whereIn('type', ['city', 'area', 'sector'])->with('parent')
             ->withCount(['properties as listings_count' => $counts, 'projects as projects_count' => fn ($q) => $q->published()])->orderBy('path')->get();
 
-        return view('locations.index', ['featured' => $areas->where('is_featured', true)->where('type.value', 'area')->sortByDesc('listings_count')->values(), 'areas' => $areas->groupBy(fn ($l) => $l->parent?->name ?? 'Other')]);
+        return view('locations.index', ['featured' => $areas->where('is_featured', true)->where('type.value', 'area')->sortByDesc('listings_count')->values(), 'areas' => $areas->groupBy(fn ($l) => $l->parent?->displayName() ?? __('Other'))]);
     }
 
     public function show(string $path): View

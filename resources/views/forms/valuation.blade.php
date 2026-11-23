@@ -4,7 +4,7 @@
     <form method="POST" action="{{ route('requests.store', 'valuation') }}" class="rounded-card border border-warm-100 bg-white p-6 shadow-sm sm:p-8">
         @csrf
         <div class="mb-4 grid gap-4 sm:grid-cols-2">
-            <div><label class="label" for="pt">{{ __('Property type') }}</label><select id="pt" name="property_type" class="select"><option value="">{{ __('Select') }}</option>@foreach ($types as $t)<option value="{{ $t->name }}" @selected(old('property_type') === $t->name)>{{ $t->name }}</option>@endforeach</select></div>
+            <div><label class="label" for="pt">{{ __('Property type') }}</label><select id="pt" name="property_type" class="select"><option value="">{{ __('Select') }}</option>@foreach ($types as $t)<option value="{{ $t->name }}" @selected(old('property_type') === $t->name)>{{ $t->displayName() }}</option>@endforeach</select></div>
             <div><label class="label" for="ar">{{ __('Area / location') }}</label><input id="ar" class="input" name="area" value="{{ old('area') }}" maxlength="150" placeholder="{{ __('e.g. Gulshan, Dhaka') }}"></div>
             <div><label class="label" for="sz">{{ __('Size (sqft)') }}</label><input id="sz" class="input" type="number" min="1" name="size_sqft" value="{{ old('size_sqft') }}"></div>
             <div><label class="label" for="bd">{{ __('Bedrooms') }}</label><input id="bd" class="input" type="number" min="0" max="30" name="bedrooms" value="{{ old('bedrooms') }}"></div>

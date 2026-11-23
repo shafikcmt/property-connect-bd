@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\ProjectStatus;
 use App\Enums\PublishStatus;
+use App\Models\Concerns\HasBangla;
 use App\Models\Concerns\HasMedia;
 use App\Models\Concerns\HasSlug;
 use App\Models\Concerns\Publishable;
@@ -19,10 +20,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['developer_id', 'location_id', 'name', 'slug', 'summary', 'description', 'status', 'construction_progress', 'total_floors', 'total_units', 'handover_on', 'address', 'latitude', 'longitude', 'price_from', 'price_to', 'price_verified', 'payment_plan', 'video_url', 'available_units_verified', 'seo_title', 'seo_description',
+    'name_bn', 'summary_bn', 'description_bn', 'payment_plan_bn',
     'is_share_project', 'total_shares', 'sold_shares', 'registered_shares', 'price_per_share', 'land_area_shatangsho', 'buildings_count', 'shares_verified', 'branded_landing'])]
 class Project extends Model
 {
-    use HasFactory, HasMedia, HasSlug, Publishable, SoftDeletes, Verifiable;
+    use HasBangla, HasFactory, HasMedia, HasSlug, Publishable, SoftDeletes, Verifiable;
 
     protected function casts(): array
     {

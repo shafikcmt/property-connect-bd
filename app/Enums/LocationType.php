@@ -16,7 +16,7 @@ enum LocationType: string
 
     public function label(): string
     {
-        return ucwords(str_replace('_', ' ', $this->value));
+        return __(ucwords(str_replace('_', ' ', $this->value)));
     }
 
     /** @return array<string, string> value => label */

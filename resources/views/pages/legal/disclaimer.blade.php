@@ -1,5 +1,5 @@
 <x-layouts.app title="Disclaimer" robots="index,follow" :breadcrumbs="[['Home', route('home')], ['Disclaimer', null]]">
-    <x-page-hero title="Disclaimer" sub="Last updated: {{ now()->format('F Y') }}" />
+    <x-page-hero title="Disclaimer" sub="Last updated: {{ now()->translatedFormat('F Y') }}" />
     <div class="container-x max-w-3xl py-12">
         @unless (app()->environment('production'))<p class="mb-8 rounded-input border border-gold-500 bg-gold-500/10 p-4 text-sm text-warm-900"><strong>Draft for legal review.</strong> This text is a plain-language starting point, not legal advice. It must be reviewed by a qualified advisor before launch (see docs/21, R-03). This notice is hidden in production.</p>@endunless
         <div class="prose-pc">

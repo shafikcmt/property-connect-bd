@@ -27,6 +27,8 @@ class UpdatesRelationManager extends RelationManager
             TextInput::make('title')->required()->maxLength(160)->columnSpanFull()->placeholder('e.g. Second deed batch completed — 30 shareholders'),
             DatePicker::make('happened_on')->required()->default(now()),
             Toggle::make('is_published')->label('Show on the public page')->default(true)->inline(false),
+            TextInput::make('title_bn')->label('Title (বাংলা, optional)')->maxLength(160)->columnSpanFull(),
+            Textarea::make('body_bn')->label('Details (বাংলা, optional)')->rows(3)->maxLength(1000)->columnSpanFull(),
             Textarea::make('body')->rows(3)->maxLength(1000)->columnSpanFull()->helperText('Never include names, ID numbers or addresses of buyers.'),
         ]);
     }

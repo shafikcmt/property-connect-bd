@@ -11,6 +11,7 @@ use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProjectController;
@@ -68,6 +69,7 @@ Route::post('/compare/clear', [CompareController::class, 'clear'])->name('compar
 
 // SEO
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
+Route::get('/language/{locale}', [LocaleController::class, 'switch'])->middleware('throttle:60,1')->name('locale.switch');
 Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
 
 // Auth

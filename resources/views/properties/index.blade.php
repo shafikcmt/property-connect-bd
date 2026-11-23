@@ -8,12 +8,12 @@
         return match ($k) {
             'type' => $options['types']->firstWhere('slug', $v)?->name ?? $v,
             'location' => $options['locations']->firstWhere('path', $v)?->fullName() ?? $v,
-            'developer' => $options['developers']->firstWhere('slug', $v)?->name ?? $v,
-            'purpose' => $v === 'rent' ? 'For rent' : 'For sale',
-            'price_min' => 'Min '.\App\Support\Money::short($v), 'price_max' => 'Max '.\App\Support\Money::short($v),
-            'beds' => $v.'+ beds', 'baths' => $v.'+ baths', 'size_min' => 'Min '.$v.' sqft', 'size_max' => 'Max '.$v.' sqft',
-            'verified' => 'Verified only', 'q' => '“'.$v.'”', 'amenities' => $options['amenities']->firstWhere('slug', $v)?->name ?? $v,
-            default => ucfirst(str_replace('_', ' ', $k)).': '.str_replace('_', ' ', $v),
+            'developer' => $options['developers']->firstWhere('slug', $v)?->tr('name') ?? $v,
+            'purpose' => __($v === 'rent' ? 'For rent' : 'For sale'),
+            'price_min' => __('Min').' '.\App\Support\Money::short($v), 'price_max' => __('Max').' '.\App\Support\Money::short($v),
+            'beds' => $v.'+ '.__('beds'), 'baths' => $v.'+ '.__('baths'), 'size_min' => __('Min').' '.$v.' '.__('sqft'), 'size_max' => __('Max').' '.$v.' '.__('sqft'),
+            'verified' => __('Verified only'), 'q' => '“'.$v.'”', 'amenities' => $options['amenities']->firstWhere('slug', $v)?->displayName() ?? $v,
+            default => __(ucfirst(str_replace('_', ' ', $k))).': '.__(str_replace('_', ' ', $v)),
         };
     };
     $without = function ($k, $v) use ($q) { $c = $q; if (is_array($c[$k] ?? null)) { $c[$k] = array_values(array_diff($c[$k], [$v])); } else { unset($c[$k]); } return url()->current().'?'.http_build_query($c); };
@@ -55,7 +55,7 @@
                     <div><label class="label" for="f-q">{{ __('Keyword or ID') }}</label><input id="f-q" class="input" name="q" value="{{ $f['q'] ?? '' }}" maxlength="100" placeholder="{{ __('e.g. Gulshan, PC-1004') }}"></div>
                     @unless ($purposePage ?? null)<div><span class="label">{{ __('Looking to') }}</span><div class="grid grid-cols-3 gap-2 text-sm">@foreach ([['', 'Any'], ['sale', 'Buy'], ['rent', 'Rent']] as [$v, $l])<label class="cursor-pointer"><input type="radio" class="peer sr-only" name="purpose" value="{{ $v }}" @checked(($f['purpose'] ?? '') === $v)><span class="block rounded-input border border-warm-300 py-2 text-center peer-checked:border-navy-900 peer-checked:bg-navy-900 peer-checked:text-white peer-focus-visible:outline peer-focus-visible:outline-2">{{ __($l) }}</span></label>@endforeach</div></div>@endunless
                     <div><label class="label" for="f-loc">{{ __('Location') }}</label><select id="f-loc" class="select" name="location"><option value="">{{ __('Any location') }}</option>@foreach ($options['locations'] as $l)<option value="{{ $l->path }}" @selected(($f['location'] ?? '') === $l->path)>{{ $l->fullName() }}</option>@endforeach</select></div>
-                    <fieldset><legend class="label">{{ __('Property type') }}</legend><div class="grid grid-cols-2 gap-x-3 gap-y-1.5 text-sm">@foreach ($options['types'] as $t)<label class="flex items-center gap-2"><input type="checkbox" name="type[]" value="{{ $t->slug }}" class="h-4 w-4 accent-[#0e8f6e]" @checked(in_array($t->slug, (array) ($f['type'] ?? [])))> {{ $t->name }}</label>@endforeach</div></fieldset>
+                    <fieldset><legend class="label">{{ __('Property type') }}</legend><div class="grid grid-cols-2 gap-x-3 gap-y-1.5 text-sm">@foreach ($options['types'] as $t)<label class="flex items-center gap-2"><input type="checkbox" name="type[]" value="{{ $t->slug }}" class="h-4 w-4 accent-[#0e8f6e]" @checked(in_array($t->slug, (array) ($f['type'] ?? [])))> {{ $t->displayName() }}</label>@endforeach</div></fieldset>
                     <div><span class="label">{{ __('Price (৳)') }}</span><div class="grid grid-cols-2 gap-2"><input class="input" type="number" min="0" name="price_min" value="{{ $f['price_min'] ?? '' }}" placeholder="{{ __('Min') }}" aria-label="{{ __('Minimum price') }}"><input class="input" type="number" min="0" name="price_max" value="{{ $f['price_max'] ?? '' }}" placeholder="{{ __('Max') }}" aria-label="{{ __('Maximum price') }}"></div></div>
                     <div><span class="label">{{ __('Size (sqft)') }}</span><div class="grid grid-cols-2 gap-2"><input class="input" type="number" min="0" name="size_min" value="{{ $f['size_min'] ?? '' }}" placeholder="{{ __('Min') }}" aria-label="{{ __('Minimum size') }}"><input class="input" type="number" min="0" name="size_max" value="{{ $f['size_max'] ?? '' }}" placeholder="{{ __('Max') }}" aria-label="{{ __('Maximum size') }}"></div></div>
                     <div class="grid grid-cols-2 gap-3"><div><label class="label" for="f-beds">{{ __('Bedrooms') }}</label><select id="f-beds" class="select" name="beds"><option value="">{{ __('Any') }}</option>@foreach ([1,2,3,4,5] as $n)<option value="{{ $n }}" @selected(($f['beds'] ?? '') == $n)>{{ $n }}+</option>@endforeach</select></div>
@@ -69,7 +69,7 @@
                             <div class="grid grid-cols-2 gap-2"><div><label class="label" for="f-fmin">{{ __('Floor from') }}</label><input id="f-fmin" class="input" type="number" name="floor_min" value="{{ $f['floor_min'] ?? '' }}"></div><div><label class="label" for="f-fmax">{{ __('Floor to') }}</label><input id="f-fmax" class="input" type="number" name="floor_max" value="{{ $f['floor_max'] ?? '' }}"></div></div>
                             <div><label class="label" for="f-park">{{ __('Parking spaces (min)') }}</label><input id="f-park" class="input" type="number" min="0" name="parking" value="{{ $f['parking'] ?? '' }}"></div>
                             <div><label class="label" for="f-dev">{{ __('Developer') }}</label><select id="f-dev" class="select" name="developer"><option value="">{{ __('Any developer') }}</option>@foreach ($options['developers'] as $d)<option value="{{ $d->slug }}" @selected(($f['developer'] ?? '') === $d->slug)>{{ $d->name }}</option>@endforeach</select></div>
-                            <fieldset><legend class="label">{{ __('Amenities') }}</legend><div class="grid gap-1.5 text-sm">@foreach ($options['amenities'] as $a)<label class="flex items-center gap-2"><input type="checkbox" name="amenities[]" value="{{ $a->slug }}" class="h-4 w-4 accent-[#0e8f6e]" @checked(in_array($a->slug, (array) ($f['amenities'] ?? [])))> {{ $a->name }}</label>@endforeach</div></fieldset>
+                            <fieldset><legend class="label">{{ __('Amenities') }}</legend><div class="grid gap-1.5 text-sm">@foreach ($options['amenities'] as $a)<label class="flex items-center gap-2"><input type="checkbox" name="amenities[]" value="{{ $a->slug }}" class="h-4 w-4 accent-[#0e8f6e]" @checked(in_array($a->slug, (array) ($f['amenities'] ?? [])))> {{ $a->displayName() }}</label>@endforeach</div></fieldset>
                         </div>
                     </details>
                     <label class="flex items-center gap-2 text-sm font-medium"><input type="checkbox" name="verified" value="1" class="h-4 w-4 accent-[#0e8f6e]" @checked(! empty($f['verified']))> <x-ic name="badge" class="h-4 w-4 text-brand-600" />{{ __('Verified listings only') }}</label>

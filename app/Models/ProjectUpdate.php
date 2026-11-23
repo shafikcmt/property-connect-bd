@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Concerns\HasBangla;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['project_id', 'title', 'body', 'happened_on', 'is_published'])]
+#[Fillable(['project_id', 'title', 'body', 'happened_on', 'is_published', 'title_bn', 'body_bn'])]
 class ProjectUpdate extends Model
 {
+    use HasBangla;
+
     protected function casts(): array
     {
         return ['happened_on' => 'date', 'is_published' => 'boolean'];

@@ -36,6 +36,8 @@ class FaqResource extends Resource
             TextInput::make('sort_order')->numeric()->default(0),
             TextInput::make('question')->required()->maxLength(255)->columnSpanFull(),
             Textarea::make('answer')->required()->rows(5)->columnSpanFull(),
+            TextInput::make('question_bn')->label('Question (বাংলা, optional)')->maxLength(255)->columnSpanFull(),
+            Textarea::make('answer_bn')->label('Answer (বাংলা, optional)')->rows(4)->columnSpanFull(),
             Toggle::make('is_published')->default(true),
         ]);
     }

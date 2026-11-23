@@ -14,7 +14,7 @@ Glossary: শতাংশ = decimal (1 শতাংশ ≈ 435.6 sq ft) · দ�
 Observed example: a recently completed project had 90 shares; 60 shareholders had received registered deeds in two batches of 30, 30 remaining.
 
 ## 2. Website (public)
-**Built 2026-11-24:** share summary, instalment schedule, updates timeline, risk note, branded landing page (items below marked ✔). Bangla/English remains planned.
+**Built 2026-11-24:** share summary, instalment schedule, updates timeline, risk note, branded landing page (items below marked ✔). Bangla/English language switch built 2026-11-24 (UI strings need a native-speaker review; listing content needs Bangla text typed in the admin).
 Maps onto the existing project model: status (Upcoming = shares on sale, Ongoing = under construction, Ready/Completed), total units, floors, payment plan (text), handover date, progress %.
 Planned small additions (owner approval pending):
 - ✔ **Share summary:** total shares, sold, remaining, price per share (price shown only when verified).
@@ -22,7 +22,7 @@ Planned small additions (owner approval pending):
 - ✔ **Instalment schedule** table.
 - ✔ **Project updates / milestones timeline** (e.g. "Second deed batch completed — 30 shareholders").
 - ✔ **Branded landing page** for a developer's project (logo, optional brand colour), always labelled "Marketed by Property Connect BD" — never presented as the developer's official site; logo use needs written permission.
-- **Bangla/English** switch (UI strings now; Bangla fields for listing content).
+- ✔ **Bangla/English** switch (UI strings now; Bangla fields for listing content).
 Wording rules: no guaranteed returns or "risk-free" claims; "proposed" infrastructure labelled as proposed; full cost shown (land share **plus** construction instalments); risk note on every share project.
 
 ## 3. Developer ERP (future — builds on Phases 8, 9, 11 and, for several developers, 12)

@@ -35,6 +35,8 @@ class PageController extends Controller
     {
         abort_unless(in_array($page, ['privacy-policy', 'terms-and-conditions', 'cookie-policy', 'disclaimer'], true), 404);
 
-        return view('pages.legal.'.$page);
+        $bangla = 'pages.legal.'.$page.'-bn';
+
+        return view(app()->getLocale() === 'bn' && view()->exists($bangla) ? $bangla : 'pages.legal.'.$page);
     }
 }

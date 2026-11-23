@@ -16,7 +16,7 @@ enum PublishStatus: string
 
     public function label(): string
     {
-        return ucwords(str_replace('_', ' ', $this->value));
+        return __(ucwords(str_replace('_', ' ', $this->value)));
     }
 
     public function color(): string

@@ -25,6 +25,9 @@ class InstallmentsRelationManager extends RelationManager
             TextInput::make('timing')->maxLength(120)->placeholder('e.g. At booking, Month 6, Monthly for 24 months'),
             TextInput::make('amount')->numeric()->minValue(0)->prefix('৳')->helperText('Leave empty if the amount is not fixed.'),
             TextInput::make('note')->maxLength(255)->columnSpanFull(),
+            TextInput::make('label_bn')->label('Instalment (বাংলা, optional)')->maxLength(120),
+            TextInput::make('timing_bn')->label('When (বাংলা, optional)')->maxLength(120),
+            TextInput::make('note_bn')->label('Note (বাংলা, optional)')->maxLength(255)->columnSpanFull(),
             TextInput::make('sort_order')->numeric()->default(0),
         ]);
     }

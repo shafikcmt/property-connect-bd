@@ -39,6 +39,7 @@ Alpine.data('compare', (id, initial = false) => ({
 
 Alpine.data('counter', (target) => ({
     n: target,
+    get label() { return document.documentElement.lang.startsWith('bn') ? new Intl.NumberFormat('bn-BD').format(this.n) : this.n; },
     init() {
         if (!('IntersectionObserver' in window)) return;
         this.n = 0;

@@ -3,8 +3,8 @@
     $brandColor = $brand?->accessibleBrandColor();
     $settings = app(\App\Services\SettingsService::class);
     $siteName = $settings->get('general.site_name');
-    $pageTitle = $title ? $title.' | '.$siteName : $siteName.' — Verified properties & projects in Bangladesh';
-    $desc = $description ?: $settings->get('seo.default_description', $settings->get('general.tagline'));
+    $pageTitle = $title ? __($title).' | '.$siteName : $siteName.' — Verified properties & projects in Bangladesh';
+    $desc = $description ? __($description) : $settings->get('seo.default_description', $settings->get('general.tagline'));
     $canon = $canonical ?: url()->current();
     $robotsFinal = app()->environment('production') && ! config('pcbd.noindex') ? $robots : 'noindex,nofollow';
     $ld = $schema;
@@ -41,7 +41,7 @@
 </head>
 <body class="flex min-h-screen flex-col bg-white"@if ($brandColor) style="--color-brand-600: {{ $brandColor }}; --color-brand-700: {{ \App\Support\Color::darken($brandColor, 0.2) }}"@endif>
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-input focus:bg-white focus:px-4 focus:py-2">{{ __('Skip to content') }}</a>
-    @if ($demo)<div role="region" aria-label="{{ __('Demo notice') }}" class="bg-gold-500 px-4 py-1.5 text-center text-xs font-semibold text-navy-900">Demo content — illustrative listings, artwork and figures. Not real properties.</div>@endif
+    @if ($demo)<div role="region" aria-label="{{ __('Demo notice') }}" class="bg-gold-500 px-4 py-1.5 text-center text-xs font-semibold text-navy-900">{{ __('Demo content — illustrative listings, artwork and figures. Not real properties.') }}</div>@endif
     @if ($brand) @include('partials.header-brand', ['brand' => $brand, 'brandNav' => $brandNav])
     @else @include('partials.header', ['favCount' => $favCount]) @endif
     <main id="main" class="flex-1">

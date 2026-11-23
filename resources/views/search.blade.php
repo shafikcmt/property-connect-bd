@@ -1,5 +1,5 @@
 <x-layouts.app title="Search" robots="noindex,follow" :breadcrumbs="[['Home', route('home')], ['Search', null]]">
-    <x-page-hero eyebrow="Search" :title="$q !== '' ? 'Results for “'.$q.'”' : 'Search'" />
+    <x-page-hero eyebrow="Search" :title="$q !== '' ? __('Results for “').$q.'”' : 'Search'" />
     <div class="container-x py-10">
         <form action="{{ route('search') }}" class="mb-10 flex max-w-2xl gap-2" role="search"><label for="sq" class="sr-only">{{ __('Search') }}</label><input id="sq" name="q" value="{{ $q }}" class="input" placeholder="{{ __('Search locations, projects, developers, properties…') }}" maxlength="100"><x-ui.button type="submit"><x-ic name="search" class="h-5 w-5" /><span class="sr-only">{{ __('Search') }}</span></x-ui.button></form>
         @if ($q === '')<p class="text-warm-700">{{ __('Type a location, project, developer or property name.') }}</p>

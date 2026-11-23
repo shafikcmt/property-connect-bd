@@ -4,6 +4,11 @@ Format: newest first; grouped by date/phase. Only significant changes (architect
 
 ## [Unreleased]
 ### Added
+- Bangla/English public site: language switch (header, mobile drawer, branded pages; choice kept in an unencrypted `pcbd_locale` cookie; `PCBD_DEFAULT_LOCALE` sets the default, `en` for now). Admin stays English.
+- `lang/bn.json` (~680 strings), `lang/bn/{auth,passwords,pagination,validation}.php`, Bangla legal pages (draft, needs legal review), Bangla digits and month names in visible text (`LocalizeDigits`), lakh/crore units in Bangla, self-hosted Noto Sans/Serif Bengali (loaded only when Bengali text is shown).
+- Optional Bangla content fields (`*_bn`) for properties, projects, developers, installments, updates, FAQs and blog posts, with English fallback (`HasBangla::tr`), editable in the admin; location names use `name_bn`.
+- Tests: 192 (language switch, fallbacks, digits, Bangla validation/legal pages, every `__()` key has a Bangla entry).
+### Added
 - Land-share projects: share summary (total/sold/remaining/registered deeds, price per share, land area, buildings), instalment schedule, project-updates timeline and a risk note on the public project page; sold/registered counts and per-share price appear only when verified. CHECK constraint keeps registered <= sold <= total.
 - Branded project landing page (developer logo, name and AA-safe brand colour; always labelled "Marketed by Property Connect BD, not the developer's official website"); falls back to the normal page without a published developer logo.
 - Admin: "Land shares" and "Landing page" tabs on projects, Instalment schedule and Project updates managers, developer brand colour. Tests: 182.

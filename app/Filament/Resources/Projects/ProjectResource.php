@@ -64,6 +64,9 @@ class ProjectResource extends Resource
                     TextInput::make('address')->maxLength(255),
                     TextInput::make('summary')->maxLength(400)->columnSpanFull(),
                     Textarea::make('description')->rows(7)->columnSpanFull()->helperText('At least 150 characters to publish.'),
+                    TextInput::make('name_bn')->label('Name (বাংলা, optional)')->maxLength(255),
+                    TextInput::make('summary_bn')->label('Summary (বাংলা, optional)')->maxLength(400)->columnSpanFull(),
+                    Textarea::make('description_bn')->label('Description (বাংলা, optional)')->rows(6)->columnSpanFull()->helperText('Shown to Bangla readers instead of the English text; leave empty to show English.'),
                 ]),
                 Tab::make('Status & construction')->icon('heroicon-o-wrench-screwdriver')->columns(3)->schema([
                     Select::make('status')->label('Project status')->options(ProjectStatus::options())->required()->default('upcoming'),
@@ -78,6 +81,7 @@ class ProjectResource extends Resource
                     TextInput::make('price_to')->numeric()->minValue(0)->prefix('৳'),
                     Toggle::make('price_verified')->label('Price range is verified (show publicly)')->columnSpanFull(),
                     Textarea::make('payment_plan')->rows(4)->columnSpanFull(),
+                    Textarea::make('payment_plan_bn')->label('Payment plan (বাংলা, optional)')->rows(4)->columnSpanFull(),
                 ]),
                 Tab::make('Land shares')->icon('heroicon-o-user-group')->columns(2)->schema([
                     Toggle::make('is_share_project')->label('This is a land-share project')->live()->columnSpanFull()

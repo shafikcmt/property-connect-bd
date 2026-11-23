@@ -9,6 +9,10 @@ return [
     'area_unit' => 'sqft',
 
     // Admin/Super Admin accounts must enrol in app-based 2FA (ADR-0008).
+    // Public site languages (admin stays English). The default is what a first-time visitor sees.
+    'locales' => ['en' => 'English', 'bn' => 'বাংলা'],
+    'default_locale' => env('PCBD_DEFAULT_LOCALE', 'en'),
+
     // Preview-only switch (docker/staging): lets DemoSeeder run on a production-mode server. Must be false at launch.
     'allow_demo' => env('PCBD_ALLOW_DEMO', false),
 

@@ -9,6 +9,7 @@ use App\Enums\Furnishing;
 use App\Enums\PropertyStatus;
 use App\Enums\PublishStatus;
 use App\Enums\Purpose;
+use App\Models\Concerns\HasBangla;
 use App\Models\Concerns\HasMedia;
 use App\Models\Concerns\HasSlug;
 use App\Models\Concerns\Publishable;
@@ -26,11 +27,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'address_line', 'latitude', 'longitude', 'price', 'price_negotiable', 'rent_period', 'size_sqft', 'bedrooms', 'bathrooms',
     'balconies', 'floor_no', 'total_floors', 'facing', 'parking_spaces', 'furnishing', 'property_status', 'year_built',
     'handover_on', 'payment_plan', 'nearby', 'video_url', 'expires_at', 'show_owner_contact', 'owner_name', 'owner_phone',
-    'owner_email', 'seo_title', 'seo_description',
+    'owner_email', 'seo_title', 'seo_description', 'title_bn', 'description_bn',
 ])]
 class Property extends Model
 {
-    use HasFactory, HasMedia, HasSlug, Publishable, SoftDeletes, Verifiable;
+    use HasBangla, HasFactory, HasMedia, HasSlug, Publishable, SoftDeletes, Verifiable;
 
     /** Never serialise private owner contact data. */
     protected $hidden = ['owner_name', 'owner_phone', 'owner_email'];

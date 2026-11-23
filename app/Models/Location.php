@@ -76,8 +76,14 @@ class Location extends Model
     }
 
     /** "Gulshan, Dhaka" — this location plus its direct parent (callers eager-load `parent`). */
+    /** Bangla name when the visitor reads Bangla and one is stored. */
+    public function displayName(): string
+    {
+        return app()->getLocale() === 'bn' && filled($this->name_bn) ? $this->name_bn : $this->name;
+    }
+
     public function fullName(): string
     {
-        return $this->parent ? $this->name.', '.$this->parent->name : $this->name;
+        return $this->parent ? $this->displayName().', '.$this->parent->displayName() : $this->displayName();
     }
 }

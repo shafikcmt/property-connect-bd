@@ -6,7 +6,7 @@
     <div class="container-x flex h-16 items-center justify-between gap-3 sm:gap-6">
         <a href="{{ route('home') }}" class="flex items-center gap-2 whitespace-nowrap" aria-label="{{ config('app.name') }}">
             <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-navy-900 text-gold-500"><x-ic name="building" class="h-5 w-5" /></span>
-            <span class="font-display text-[15px] font-semibold text-navy-900 sm:text-lg">Property Connect <span class="text-brand-600">BD</span></span>
+            <span class="font-display text-[15px] font-semibold text-navy-900 sm:text-lg" lang="en">Property Connect <span class="text-brand-600">BD</span></span>
         </a>
 
         <nav aria-label="{{ __('Primary') }}" class="hidden xl:block">
@@ -41,6 +41,7 @@
         </nav>
 
         <div class="flex items-center gap-1">
+            <x-lang-switch />
             <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-full text-navy-900 transition hover:bg-warm-100" @click="search = true; $nextTick(() => document.getElementById('hdr-sq').focus())" aria-label="{{ __('Search') }}"><x-ic name="search" /></button>
             <a href="{{ route('favorites') }}" class="relative inline-flex h-11 w-11 items-center justify-center rounded-full text-navy-900 transition hover:bg-warm-100" aria-label="{{ __('Favorites') }}">
                 <x-ic name="heart" />
@@ -58,6 +59,7 @@
     {{-- Mobile drawer --}}
     <div id="mobile-menu" x-show="open" x-cloak x-transition.opacity.duration.150ms class="border-t border-warm-100 bg-white xl:hidden">
         <nav aria-label="{{ __('Mobile') }}" class="container-x max-h-[78vh] overflow-y-auto py-4">
+            <x-lang-switch drawer />
             <ul class="grid grid-cols-2 gap-1 text-base font-medium text-warm-900">
                 @foreach ([['Home', route('home')], ['Properties', route('properties.index')], ['For sale', route('properties.purpose', 'for-sale')], ['For rent', route('properties.purpose', 'for-rent')], ['Projects', route('projects.index')], ['Developers', route('developers.index')], ['Locations', route('locations.index')], ['Services', route('services')], ['About', route('about')], ['Blog', route('blog.index')], ['Contact', route('contact')], ['FAQ', route('faq')]] as [$l, $u])
                     <li><a href="{{ $u }}" class="block rounded-input px-3 py-3 hover:bg-warm-50">{{ __($l) }}</a></li>

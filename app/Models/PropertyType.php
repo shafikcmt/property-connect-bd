@@ -14,6 +14,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable(['name', 'slug', 'group', 'sort_order', 'is_active'])]
 class PropertyType extends Model
 {
+    /** Reference-data names are translated through lang/bn.json. */
+    public function displayName(): string
+    {
+        return __($this->name);
+    }
+
     use HasSlug;
 
     protected function casts(): array

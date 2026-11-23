@@ -46,7 +46,7 @@
             @foreach ([['properties', 'Properties listed', 'home'], ['projects', 'Projects', 'building'], ['developers', 'Developers', 'handshake'], ['verified', 'Verified listings', 'badge']] as [$k, $label, $ic])
                 @if ($stats[$k] > 0)
                 <div class="reveal rounded-card border border-warm-100 bg-white p-5 text-center" x-data="counter({{ $stats[$k] }})">
-                    <x-ic :name="$ic" class="mx-auto h-6 w-6 text-brand-600" /><dd class="mt-2 font-display text-3xl font-semibold text-navy-900" x-text="n">{{ $stats[$k] }}</dd><dt class="text-sm text-warm-700">{{ __($label) }}</dt>
+                    <x-ic :name="$ic" class="mx-auto h-6 w-6 text-brand-600" /><dd class="mt-2 font-display text-3xl font-semibold text-navy-900" x-text="label">{{ \App\Support\Num::local((string) $stats[$k]) }}</dd><dt class="text-sm text-warm-700">{{ __($label) }}</dt>
                 </div>@endif
             @endforeach
         </dl>
@@ -69,7 +69,7 @@
             @foreach ($types->take(6) as $i => $t)
             <li class="reveal" style="--i: {{ $i }}"><a href="{{ route('properties.index', ['type' => [$t->slug]]) }}" class="group flex h-full flex-col items-center rounded-card border border-warm-100 bg-white p-5 text-center lift">
                 <span class="flex h-12 w-12 items-center justify-center rounded-full bg-navy-50 text-navy-900 transition group-hover:bg-brand-600 group-hover:text-white"><x-ic :name="in_array($t->group->value, ['commercial','industrial']) ? 'building' : ($t->group->value === 'land' ? 'map' : 'home')" class="h-6 w-6" /></span>
-                <span class="mt-3 text-sm font-semibold text-navy-900">{{ $t->name }}</span><span class="text-xs text-warm-500">{{ $t->listings_count }} {{ __('listings') }}</span></a></li>
+                <span class="mt-3 text-sm font-semibold text-navy-900">{{ $t->displayName() }}</span><span class="text-xs text-warm-500">{{ $t->listings_count }} {{ __('listings') }}</span></a></li>
             @endforeach
         </ul>
     </div></section>
@@ -90,7 +90,7 @@
         <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             @foreach ($locations as $i => $l)
             <li class="reveal" style="--i: {{ $i % 4 }}"><a href="{{ route('locations.show', $l->path) }}" class="group relative block overflow-hidden rounded-card bg-gradient-to-br from-navy-700 to-[#14707a] p-6 transition hover:-translate-y-1">
-                <x-ic name="pin" class="h-6 w-6 text-gold-500" /><p class="mt-10 font-display text-2xl font-semibold">{{ $l->name }}</p><p class="text-sm text-warm-100/80">{{ $l->parent?->name }} · {{ $l->listings_count }} {{ __('listings') }}</p>
+                <x-ic name="pin" class="h-6 w-6 text-gold-500" /><p class="mt-10 font-display text-2xl font-semibold">{{ $l->displayName() }}</p><p class="text-sm text-warm-100/80">{{ $l->parent?->displayName() }} · {{ $l->listings_count }} {{ __('listings') }}</p>
                 <x-ic name="arrow" class="absolute right-5 top-5 h-5 w-5 opacity-0 transition group-hover:opacity-100" /></a></li>
             @endforeach
         </ul>

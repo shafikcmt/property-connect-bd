@@ -6,7 +6,7 @@
             <thead class="bg-warm-50 text-xs uppercase tracking-wide text-warm-500"><tr><th scope="col" class="p-3">{{ __('Instalment') }}</th><th scope="col" class="p-3">{{ __('When') }}</th><th scope="col" class="p-3 text-right">{{ __('Amount') }}</th></tr></thead>
             <tbody class="divide-y divide-warm-100">
                 @foreach ($project->installments as $i)
-                    <tr><th scope="row" class="p-3 font-semibold text-navy-900">{{ $i->label }}@if ($i->note)<span class="mt-0.5 block text-xs font-normal text-warm-700">{{ $i->note }}</span>@endif</th><td class="p-3">{{ $i->timing ?: '—' }}</td><td class="p-3 text-right font-semibold">{{ $i->amount !== null ? \App\Support\Money::short($i->amount) : '—' }}</td></tr>
+                    <tr><th scope="row" class="p-3 font-semibold text-navy-900">{{ $i->tr('label') }}@if ($i->tr('note'))<span class="mt-0.5 block text-xs font-normal text-warm-700">{{ $i->tr('note') }}</span>@endif</th><td class="p-3">{{ $i->tr('timing') ?: '—' }}</td><td class="p-3 text-right font-semibold">{{ $i->amount !== null ? \App\Support\Money::short($i->amount) : '—' }}</td></tr>
                 @endforeach
             </tbody>
         </table>

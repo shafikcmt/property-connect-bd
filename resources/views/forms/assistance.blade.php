@@ -5,7 +5,7 @@
         @csrf
         <div class="mb-4 grid gap-4 sm:grid-cols-2">
             <div><label class="label" for="ar">{{ __('Preferred area(s)') }}</label><input id="ar" class="input" name="area" value="{{ old('area') }}" maxlength="150"></div>
-            <div><label class="label" for="pt">{{ __('Property type') }}</label><select id="pt" name="property_type" class="select"><option value="">{{ __('Any') }}</option>@foreach ($types as $t)<option value="{{ $t->name }}">{{ $t->name }}</option>@endforeach</select></div>
+            <div><label class="label" for="pt">{{ __('Property type') }}</label><select id="pt" name="property_type" class="select"><option value="">{{ __('Any') }}</option>@foreach ($types as $t)<option value="{{ $t->name }}">{{ $t->displayName() }}</option>@endforeach</select></div>
             <div><label class="label" for="bd">{{ __('Bedrooms') }}</label><input id="bd" class="input" type="number" min="0" max="30" name="bedrooms" value="{{ old('bedrooms') }}"></div>
             <div><label class="label" for="ep">{{ __('Budget (৳)') }}</label><input id="ep" class="input" type="number" min="0" name="expected_price" value="{{ old('expected_price') }}"></div>
         </div>

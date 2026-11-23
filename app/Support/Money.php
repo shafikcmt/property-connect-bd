@@ -14,13 +14,13 @@ final class Money
         }
         $n = (float) $amount;
         if ($n >= 10_000_000) {
-            return '৳ '.rtrim(rtrim(number_format($n / 10_000_000, 2), '0'), '.').' Cr';
+            return Num::local('৳ '.rtrim(rtrim(number_format($n / 10_000_000, 2), '0'), '.')).' '.__('Cr');
         }
         if ($n >= 100_000) {
-            return '৳ '.rtrim(rtrim(number_format($n / 100_000, 2), '0'), '.').' Lac';
+            return Num::local('৳ '.rtrim(rtrim(number_format($n / 100_000, 2), '0'), '.')).' '.__('Lac');
         }
 
-        return '৳ '.number_format($n);
+        return Num::local('৳ '.number_format($n));
     }
 
     public static function full(float|int|string|null $amount): string

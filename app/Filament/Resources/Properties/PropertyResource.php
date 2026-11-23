@@ -80,6 +80,8 @@ class PropertyResource extends Resource
                     Select::make('property_status')->label('Property status')->options(PropertyStatus::options())->required()->default('ready'),
                     DatePicker::make('handover_on')->label('Handover date'),
                     Textarea::make('description')->rows(6)->columnSpanFull()->helperText('At least 80 characters to publish. Plain text.'),
+                    TextInput::make('title_bn')->label('Title (বাংলা, optional)')->maxLength(255)->columnSpanFull(),
+                    Textarea::make('description_bn')->label('Description (বাংলা, optional)')->rows(5)->columnSpanFull()->helperText('Shown to Bangla readers instead of the English text; leave empty to show English.'),
                 ]),
                 Tab::make('Price & specs')->icon('heroicon-o-currency-bangladeshi')->columns(3)->schema([
                     TextInput::make('price')->numeric()->minValue(0)->prefix('৳')->helperText('Total price (sale) or rent per period.'),

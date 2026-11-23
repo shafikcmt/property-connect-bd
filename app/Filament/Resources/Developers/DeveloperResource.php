@@ -48,6 +48,9 @@ class DeveloperResource extends Resource
                     ->helperText('Hex like #0A7459. Used only if white text on it stays readable; otherwise the site colour is used.'),
                 TextInput::make('summary')->maxLength(300)->columnSpanFull(),
                 Textarea::make('about')->rows(6)->columnSpanFull()->helperText('At least 50 characters to publish.'),
+                TextInput::make('name_bn')->label('Name (বাংলা, optional)')->maxLength(255),
+                TextInput::make('summary_bn')->label('Summary (বাংলা, optional)')->maxLength(300),
+                Textarea::make('about_bn')->label('About (বাংলা, optional)')->rows(5)->columnSpanFull(),
             ]),
             Section::make('Contact')->columns(2)->schema([
                 TextInput::make('website')->url()->maxLength(255),
