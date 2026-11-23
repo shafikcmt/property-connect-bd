@@ -1,5 +1,7 @@
 # 02 — Product Requirements
 
+> **Phase numbering note (2026-11-23):** phase tags in this document use the original numbering. The website-first roadmap in [04](04-ROADMAP.md) supersedes it — see the mapping table there (e.g. CRM = Phase 8 now).
+
 Requirement IDs (`FR-xxx`) are referenced by [23-ACCEPTANCE-CRITERIA](23-ACCEPTANCE-CRITERIA.md) and tests. Priority per [03](03-MVP-SCOPE.md). Behavioural detail lives in [11](11-MODULE-SPECIFICATIONS.md).
 
 ## 1. Public discovery

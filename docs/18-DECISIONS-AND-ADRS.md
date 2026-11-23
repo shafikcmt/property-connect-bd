@@ -32,7 +32,7 @@ Format: ID · Date · Status (Accepted / Proposed / Superseded) · Context · De
 - **Decision:** Defer all tenancy; adopt only "SaaS-ready habits" ([17](17-SAAS-FUTURE-ARCHITECTURE.md)). **Consequences:** a later migration will be needed; accepted trade-off for speed and simplicity.
 
 ### ADR-0006 — Spatie Media Library for media
-- **Date:** 2026-11-22 · **Status:** Proposed (verify compatibility in Phase 2)
+- **Date:** 2026-11-22 · **Status:** Superseded by ADR-0017 (PHP 8.3 incompatible)
 - **Decision:** Use `spatie/laravel-medialibrary` (conversions, collections, private disk) with Filament's Spatie media plugin. **Alternatives:** custom `media` table + Intervention Image; Filament FileUpload only. **Consequences:** less custom code, proven; adds dependency and a `media` table. Fallback: custom if incompatible.
 
 ### ADR-0007 — Contact/inquiry submissions are leads
@@ -56,6 +56,18 @@ Format: ID · Date · Status (Accepted / Proposed / Superseded) · Context · De
 ### ADR-0011 — No Redis, no Docker requirement in MVP
 - **Date:** 2026-11-22 · **Status:** Accepted
 - **Decision:** DB queue/cache/session drivers; Docker optional for local dev. **Revisit when:** queue latency or cache load measured as a problem.
+
+### ADR-0016 — Website-first reprioritisation
+- **Date:** 2026-11-23 · **Status:** Accepted (owner directive)
+- **Context:** The founder wants the complete public website live before any CRM/sales/SaaS software.
+- **Decision:** Reorder phases (docs/04): 2 Property & Project Foundation → 3 Public Website → 4 Buyer Experience → 5 Premium UI/Animation → 6 QA → 7 Deployment → launch → CRM and the rest. A minimal forward-compatible `leads` and `site_visits` table plus a basic admin list ship pre-launch so inquiries are never lost (extends ADR-0007).
+- **Alternatives:** keep original order (CRM before launch). **Consequences:** faster launch; lead handling is manual/basic at launch; Phase 8 later adds the full pipeline over the same tables (no data migration).
+
+### ADR-0017 — Custom media layer instead of Spatie Media Library (supersedes ADR-0006)
+- **Date:** 2026-11-23 · **Status:** Accepted
+- **Context:** `spatie/laravel-medialibrary` (11.23.x) requires PHP ^8.4; project runs PHP 8.3 (ADR-0002) and the GD extension is available.
+- **Decision:** Own `media` table (polymorphic, collection, disk, path, alt, caption, sort) and `ImageProcessor` (GD) generating WebP derivatives (480/960/1600 px); public images on the `public` disk, private documents on `local`. Admin upload via Filament FileUpload in a relation manager.
+- **Alternatives:** upgrade PHP to 8.4; Intervention Image. **Consequences:** ~200 lines of own code, no extra dependency, easy swap later.
 
 ### ADR-0012 — Documentation-first with progress tracker as source of truth
 - **Date:** 2026-11-22 · **Status:** Accepted

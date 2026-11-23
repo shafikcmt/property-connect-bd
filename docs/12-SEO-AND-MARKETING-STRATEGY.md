@@ -1,5 +1,7 @@
 # 12 — SEO & Marketing Strategy
 
+> **Phase numbering note (2026-11-23):** phase tags in this document use the original numbering. The website-first roadmap in [04](04-ROADMAP.md) supersedes it — see the mapping table there (e.g. CRM = Phase 8 now).
+
 ## 1. Technical SEO requirements
 - Server-rendered HTML for all public content (Livewire components render initial HTML; no content that requires JS to appear).
 - **Slugs:** lowercase, hyphenated, human-readable; properties end in `-{id}`; stable (changes → 301 via `slug_histories`).

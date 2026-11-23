@@ -1,5 +1,7 @@
 # 10 — Database Architecture
 
+> **Phase numbering note (2026-11-23):** phase tags in this document use the original numbering. The website-first roadmap in [04](04-ROADMAP.md) supersedes it — see the mapping table there (e.g. CRM = Phase 8 now).
+
 PostgreSQL 16. This document defines conventions, the **MVP schema** (tables created in phases 1–5), the **extension schema** (phases 6–8) and the future schema. Do not create a table before its phase.
 
 ## 1. Conventions

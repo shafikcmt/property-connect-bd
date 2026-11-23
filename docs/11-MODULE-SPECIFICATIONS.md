@@ -1,5 +1,7 @@
 # 11 — Module Specifications
 
+> **Phase numbering note (2026-11-23):** phase tags in this document use the original numbering. The website-first roadmap in [04](04-ROADMAP.md) supersedes it — see the mapping table there (e.g. CRM = Phase 8 now).
+
 For each module: purpose, entities, behaviour/rules, admin UI, public UI, permissions, events/notifications, tests. Phase tags in brackets. Data model detail: [10](10-DATABASE-ARCHITECTURE.md); roles: [07](07-USER-ROLES-AND-PERMISSIONS.md).
 
 ## M1 Foundation & Auth [P1]

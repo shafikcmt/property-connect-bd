@@ -1,5 +1,7 @@
 # 23 — Acceptance Criteria
 
+> **Phase numbering note (2026-11-23):** phase tags in this document use the original numbering. The website-first roadmap in [04](04-ROADMAP.md) supersedes it — see the mapping table there (e.g. CRM = Phase 8 now).
+
 Global DoD applies to every phase: tests green and actually run; Pint clean; validation + authorization present; responsive & accessible UI verified; docs/tracker/changelog updated; no known critical bug; migrations reviewed (fresh + rollback).
 
 ## Phase 0 — Planning & Documentation

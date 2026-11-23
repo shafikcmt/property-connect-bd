@@ -1,5 +1,7 @@
 # 03 — MVP Scope & Priorities
 
+> **Phase numbering note (2026-11-23):** phase tags in this document use the original numbering. The website-first roadmap in [04](04-ROADMAP.md) supersedes it — see the mapping table there (e.g. CRM = Phase 8 now).
+
 **Priorities:** P0 must-have for launch · P1 important (soon after launch / late MVP) · P2 advanced · P3 future SaaS.
 **Launch (MVP) = all P0 + selected P1** delivered by Roadmap Phases 1–5 plus the minimum of Phase 6 and 9. Solo-developer feasibility is the filter.
 

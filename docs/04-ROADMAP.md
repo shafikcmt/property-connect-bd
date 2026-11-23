@@ -1,73 +1,60 @@
-# 04 — Development Roadmap
+# 04 — Development Roadmap (website-first, revised 2026-11-23)
 
-Phases are sequential. A phase is closed only when its Definition of Done in [23-ACCEPTANCE-CRITERIA](23-ACCEPTANCE-CRITERIA.md) is met and [19-PROGRESS-TRACKER](19-PROGRESS-TRACKER.md) is updated. Branch names per [22](22-DEVELOPMENT-WORKFLOW.md).
+**Direction (ADR-0016):** build, test and deploy the complete public real-estate website first; CRM, sales, commission, marketing analytics, portals and SaaS follow *after* launch. Phases are sequential; a phase closes only when its criteria in [23](23-ACCEPTANCE-CRITERIA.md) are met and [19](19-PROGRESS-TRACKER.md) is updated.
 
-Common to all phases — **Definition of Done:** implementation complete, validation + authorization in place, tests added and run green, Pint clean, responsive/accessible UI verified, docs/tracker/changelog updated, no known critical bugs.
+Common Definition of Done: implementation complete, validation + authorization, tests added and run green, Pint clean, responsive/accessible UI verified with screenshots, docs/tracker/changelog updated, no known critical bug.
 
----
-## Phase 0 — Product Planning & Documentation ✅
-**Goal:** Complete blueprint. **Scope:** repo inspection, docs 00–24, CLAUDE.md, README. **Dependencies:** none. **DB changes:** none. **Tests:** doc consistency review. **Risks:** over-planning. **Deliverables:** docs/, CLAUDE.md, README.md. **DoD:** all docs written and cross-checked; no code.
+## Phase map
+| Phase | Name (user "Stage") | Goal |
+|---|---|---|
+| 0 ✅ | Planning & Documentation | Blueprint |
+| 1 ✅ | Application Foundation | Laravel, auth, roles, admin shell, layout |
+| **2** | **Property & Project Foundation** (Stage 1) | Admin data layer that powers the site |
+| **3** | **Public Website** (Stage 2) | Every public page, search, filters, forms, SEO |
+| **4** | **Buyer Experience** (Stage 3) | Favorites, compare, recently viewed, inquiry, WhatsApp, site-visit request, profile, history |
+| **5** | **Premium UI/UX & Animation** (Stage 4) | Homepage experience, cards, motion, skeletons, design polish |
+| **6** | **Website QA** (Stage 5) | Tests, screenshots at 375/768/1280/1440, fixes, perf/SEO/security review |
+| **7** | **Deployment** (Stage 6) | Production config, docs, backups, rollback — launch-ready |
+| — | **LAUNCH** | |
+| 8 | CRM & Lead Management | Pipeline, assignment, follow-ups, site-visit management |
+| 9 | Sales & Commission | Deals, bookings, commission |
+| 10 | Marketing & Analytics | Campaigns, UTM reports, tracking |
+| 11 | Partner & Agent Features | Developer portal, agents |
+| 12 | SaaS architecture | Only after proven demand ([17](17-SAAS-FUTURE-ARCHITECTURE.md)) |
 
-## Phase 1 — Application Foundation  (`feat/project-foundation`, `feat/authentication`)
-**Goal:** A running, tested Laravel app with auth, admin shell, roles, design system and layouts.
-**Scope:** Laravel install (version verified), PostgreSQL config, `.env.example`, Spatie Permission, Filament panel at `/admin`, auth (login/register/reset/verify), seed roles/permissions (Super Admin, Admin, Property Manager, Sales Manager, Sales Agent, Content Manager, Buyer), settings store, audit logging basics, Tailwind design tokens, public layout (header/footer/nav), error pages, Pest + Pint, CI workflow.
-**Dependencies:** Phase 0.
-**Tasks:** scaffold → config → DB → auth → roles/permissions + policies base → Filament panel + access control → settings → layouts/nav/design tokens → testing infra → CI → docs.
-**DB changes:** users (+phone, status), Spatie tables, settings, audit_logs, jobs/failed_jobs/cache/sessions, notifications.
-**UI pages:** home placeholder (real layout), login/register/reset, account stub, `/admin` dashboard shell, 403/404/419/500.
-**Backend:** `App\Enums\RoleName`, `RolesAndPermissionsSeeder`, `SettingsService`, `AuditLogger`, panel provider with `canAccessPanel`.
-**Tests:** auth flows, role gating of `/admin`, settings, audit log written, security headers.
-**Acceptance:** see 23 §Phase 1. **Risks:** Filament/Laravel version mismatch → mitigate by verifying before install (ADR-0002).
-**Deliverables:** working app skeleton.
+**Legacy phase labels.** Docs 02, 03, 10, 11, 12, 13, 23 were written with the original numbering. Map: old P2 → 2, old P3 → 3 (+5 for UI), old P4 → 4, old P5 → 8, old P6 → 9, old P7 → 10, old P8 → 11, old P9 → 6+7. Where a doc says "Phase 5" for CRM, read "Phase 8".
 
-## Phase 2 — Property & Project Management  (`feat/property-management`, `feat/project-management`)
-**Goal:** Admin can fully manage supply data.
-**Scope:** locations hierarchy, amenities, property types/categories, developers, projects, properties, media (images, brochure, floor plans) with private document storage, units & unit types, verification, featured-until, status workflow, slugs, SEO fields.
-**Dependencies:** Phase 1.
-**DB:** locations, developers, property_types, amenities, projects, project_units(+unit_types), properties, media (Spatie Media Library or own `media` table — ADR-0006), floor_plans, pivots, verifications.
-**UI:** Filament resources and relation managers.
-**Backend:** enums, policies, `PropertyService::publish()`, slug service, price-per-sqft accessor, image conversions.
-**Tests:** CRUD authorization per role, publish rules (cannot publish without required fields), verification recorded, featured expiry scope.
-**Risks:** media complexity → use proven package, limit conversions.
-
-## Phase 3 — Public Website & Discovery  (`feat/public-property-listings`, `feat/property-search`)
-**Goal:** Fast, SEO-friendly public site showing real published data.
-**Scope:** homepage, listing + filters + search (PostgreSQL FTS/ILIKE + indexes), details, projects, developers, locations, CMS pages, blog (P1), sitemap/robots/schema/breadcrumbs, inquiry form → lead (minimal lead table arrives here as dependency of FR-301, ADR-0007) plus a basic read-only admin inquiry list so no lead is lost before Phase 5 delivers the full CRM UI.
-**Dependencies:** Phase 2.
-**DB:** pages, faqs, blog tables (P1), leads (minimal columns), contact_inquiries merged into leads.
-**Tests:** filters, sort, pagination, only-published visibility, SEO output, inquiry validation + rate limit, N+1 guard, accessibility smoke.
-**Risks:** search performance → indexes + EXPLAIN review.
-
-## Phase 4 — Buyer & Seller Experience  (`feat/buyer-account`)
-**Scope:** account area, favorites, saved searches, compare, recently viewed, property submission with moderation, sell/rent/valuation/assistance forms, newsletter consent capture.
-**DB:** favorites, saved_searches, recently_viewed, newsletter_subscribers, property_reports; submissions reuse `properties` (ADR-0009) ([10](10-DATABASE-ARCHITECTURE.md)).
-**Tests:** ownership authorization (users only see own data), moderation gate, compare limit, upload validation.
-
-## Phase 5 — CRM & Lead Management  (`feat/lead-management`, `feat/site-visits`)
-**Scope:** lead sources, pipeline (list + kanban-lite), assignment, notes, activity timeline, status history, follow-ups, site visits (+calendar view), notifications (database + mail), dashboard widgets, duplicate handling, consent/retention tools.
-**DB:** lead_sources, lead_notes, lead_activities, lead_status_histories, follow_ups, site_visits.
-**Tests:** lifecycle transitions, assignment visibility (agents see only assigned), follow-up reminders (scheduler), visit status machine, PII access control.
-
-## Phase 6 — Sales & Commission  (`feat/sales-commission`)
-**Scope:** deals, bookings, sales, commission agreements, calculation, approval, payments (partial), outstanding, reports, dashboard finance widgets.
-**DB:** deals, bookings, commission_agreements, commissions, commission_payments.
-**Tests:** calculation unit tests (percentage/fixed, rounding), payment sums never exceed due, status transitions, finance permission gating.
-
-## Phase 7 — Marketing & Analytics  (`feat/marketing-analytics`)
-**Scope:** cookie-consent banner (required before any analytics tag loads), campaigns, UTM capture + attribution, tracking events (WhatsApp/phone/inquiry), GA4 + Meta Pixel via settings with consent gating, campaign reports, landing pages (simple template-based).
-**DB:** campaigns, campaign_leads, landing_pages, tracking_events, campaign_costs.
-
-## Phase 8 — Partner & Agent Features
-**Scope:** developer portal (view own projects/leads, update availability), agent management, partner access, assigned leads, performance reports.
-**DB:** agents, owner/developer user links, partnership_records (if not earlier).
-
-## Phase 9 — Production Readiness
-**Scope:** security audit, QA pass, performance, SEO audit, deployment, backups + restore test, monitoring/alerts, legal pages review, launch checklist, content seeding (real data only).
+## Pre-launch scope guard
+Inquiry capture must exist at launch, otherwise the site generates nothing. Therefore Phase 3/4 include a **minimal, forward-compatible** `leads` table (all public forms write to it) and a `site_visits` request table, plus a basic Filament list/status editor so the founder can see and mark inquiries. Assignment, follow-ups, activity timelines, pipeline views, SLA, dedupe, deals and commission wait until Phase 8+ (ADR-0007 still applies).
 
 ---
-## Timeline guidance (solo developer, indicative)
-P1 2 wks · P2 3 wks · P3 4 wks · P4 2 wks · P5 3 wks · P6 2 wks · P7 2 wks · P8 3 wks · P9 2 wks. Launch candidate after Phases 1–3 + 5 + 9 (≈ 14 wks); Phases 4, 6 follow. Estimates are planning aids, not commitments.
+## Phase 2 — Property & Project Foundation (`feat/property-management`)
+**Scope:** locations tree; property types; amenities; developers; projects (status, progress, handover, price range); unit types + units with basic availability; properties (purpose, status, specs, price, publish workflow); media (images/galleries/brochure/floor plans) with GD-generated WebP conversions; verification records; featured flags with expiry; slugs + slug history; SEO fields; polished Filament resources with navigation groups, filters, badges, publish validators; policies/permissions (`properties.*`, `projects.*`, `developers.*`, `catalog.manage`); clearly-labelled demo seeder (generated illustrative images).
+**DB:** locations, property_types, amenities, developers, projects, project_unit_types, project_units, properties, amenity_property, amenity_project, media, floor_plans, verifications, slug_histories.
+**Tests:** CRUD authorization per role, publish validator, verification record, featured expiry scope, slug history, media processing, demo seeder refuses production.
+**Acceptance:** admin can create a complete developer → project → unit types → property chain with images, verify and feature it; unpublished data never leaks (tested).
+
+## Phase 3 — Public Website (`feat/public-property-listings`)
+**Pages:** Home, Properties (+filters/sort/search/grid-list/pagination), Property details, Projects, Project details, Developers, Developer details, Locations, Location details, Services, About, Contact, Blog, Blog details, FAQ, Privacy, Terms (+Cookie, Disclaimer), Sell property, Rent property, Submit property, Valuation request, 404/search.
+**Backend:** query objects (`PropertySearch`, `ProjectSearch`), SEO component (meta/canonical/OG/JSON-LD/breadcrumbs), sitemap + robots, CMS tables (pages, faqs, blog_posts/categories) with Filament resources, `leads` (minimal) + form actions with honeypot/rate-limit/consent, contact page, submissions (`properties.publish_status=pending_review`).
+**Acceptance:** every route returns real content, no placeholder UI; forms validate and persist; SEO output tested.
+
+## Phase 4 — Buyer Experience (`feat/buyer-account`)
+Favorites (guest session → account merge), compare (≤4), recently viewed, property/project inquiry, request info, WhatsApp click-to-chat links, site-visit request (minimal `site_visits`), registration/login integration, profile, saved properties/searches, inquiry + visit history — all functional and owner-scoped (IDOR tests).
+
+## Phase 5 — Premium UI/UX & Animation (`feat/premium-ui`)
+Design system finalisation (tokens, self-hosted fonts if assets available), animated architectural hero, premium property/project cards, scroll reveal (CSS + one tiny IntersectionObserver), staggered cards, image-zoom hovers, animated stats, skeleton loaders, gallery/lightbox transitions, smooth menus/dropdowns, interactive search. CSS first; **no animation library unless justified by ADR**. `prefers-reduced-motion` respected; no layout shift; reduced motion on mobile.
+
+## Phase 6 — Website QA (`chore/website-qa`)
+Route sweep tests, Playwright screenshots (375/768/1280/1440) reviewed and defects fixed, forms/validation/auth/authz/security tests, SEO audit, Lighthouse-style performance review, empty/error/loading states.
+
+## Phase 7 — Deployment (`chore/deployment`)
+Production `.env` template, web-server/PHP config, SSL, PostgreSQL production setup, storage/image config, cache/queue/scheduler, backups + restore drill doc, logging, security checks, production build, SEO/analytics config, deployment guide + rollback plan. **No irreversible production action without owner authorisation.**
+
+---
+## Post-launch phases (unchanged content, renumbered)
+**8 CRM & Lead Management** (lead sources, pipeline, assignment, notes, activity timeline, follow-ups, site-visit management, notifications, dashboard). **9 Sales & Commission** (deals, bookings, sales, agreements, calculation, payments, reports). **10 Marketing & Analytics** (campaigns, UTM attribution, tracking events, GA4/Meta Pixel with consent, reports). **11 Partner & Agent** (developer portal, agents, performance). **12 SaaS** (tenancy, billing — only on demand).
+Details of each remain in docs 11, 13, 10 §4.
 
 ## Dependency graph
-0 → 1 → 2 → 3 → 5 → 6; 3 → 4; 5 → 7; 6,7 → 8; all → 9 (hardening runs continuously; formal pass last).
-Note: Phase 3 introduces a *minimal* `leads` table so inquiries are never lost; Phase 5 extends it (ADR-0007).
+0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → LAUNCH → 8 → 9 → 10 → 11 → 12. Phases 4 and 5 may interleave with 3 where a page needs both; they close in order.
