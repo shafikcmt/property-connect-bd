@@ -1,0 +1,25 @@
+name: Deploy
+
+# Manual only: nothing deploys unless someone presses "Run workflow".
+on:
+  workflow_dispatch:
+
+concurrency: production-deploy
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, linux, pcbd]
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sync code to the app directory (never touches .env or storage/)
+        run: |
+          : "${APP_DIR:?set repository variable APP_DIR}"
+          rsync -a --delete --exclude '.env' --exclude 'storage/' --exclude 'node_modules/' --exclude 'vendor/' --exclude 'bootstrap/cache/' --exclude '.git/' ./ "$APP_DIR"/
+        env:
+          APP_DIR: ${{ vars.APP_DIR }}
+      - name: Backup database, then deploy
+        working-directory: ${{ vars.APP_DIR }}
+        run: |
+          bash scripts/backup-db.sh
+          bash scripts/deploy.sh
