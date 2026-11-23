@@ -46,7 +46,7 @@ class ProjectController extends Controller
         if (! $found instanceof Project) {
             return $found;
         }
-        $project = $found->load(['developer.logo', 'location.parent.parent', 'amenities', 'unitTypes', 'media']);
+        $project = $found->load(['developer.logo', 'location.parent.parent', 'amenities', 'unitTypes', 'media', 'installments', 'updates' => fn ($q) => $q->where('is_published', true)]);
 
         $availability = $project->available_units_verified
             ? $project->units()->selectRaw("count(*) filter (where status = 'available') as available, count(*) as total")->first()

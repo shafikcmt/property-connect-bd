@@ -4,6 +4,10 @@ Format: newest first; grouped by date/phase. Only significant changes (architect
 
 ## [Unreleased]
 ### Added
+- Land-share projects: share summary (total/sold/remaining/registered deeds, price per share, land area, buildings), instalment schedule, project-updates timeline and a risk note on the public project page; sold/registered counts and per-share price appear only when verified. CHECK constraint keeps registered <= sold <= total.
+- Branded project landing page (developer logo, name and AA-safe brand colour; always labelled "Marketed by Property Connect BD, not the developer's official website"); falls back to the normal page without a published developer logo.
+- Admin: "Land shares" and "Landing page" tabs on projects, Instalment schedule and Project updates managers, developer brand colour. Tests: 182.
+### Added
 - `docs/27-LAND-SHARE-PROJECTS.md`: domain model, website mapping and future developer-ERP plan for land-share projects (planning only; no buyer personal data stored).
 ### Added
 - `php artisan pcbd:mail-test {to}` sends one test email to verify SMTP settings.

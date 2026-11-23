@@ -44,6 +44,8 @@ class DeveloperResource extends Resource
             Section::make('Company')->columns(2)->schema([
                 TextInput::make('name')->required()->maxLength(255),
                 TextInput::make('established_year')->numeric()->minValue(1800)->maxValue(2100)->helperText('Shown publicly only when the developer is verified.'),
+                TextInput::make('brand_color')->label('Brand colour (landing pages)')->regex('/^#[0-9a-fA-F]{6}$/')->placeholder('#0A7459')->maxLength(7)
+                    ->helperText('Hex like #0A7459. Used only if white text on it stays readable; otherwise the site colour is used.'),
                 TextInput::make('summary')->maxLength(300)->columnSpanFull(),
                 Textarea::make('about')->rows(6)->columnSpanFull()->helperText('At least 50 characters to publish.'),
             ]),

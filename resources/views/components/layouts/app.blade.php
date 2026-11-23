@@ -1,5 +1,6 @@
-@props(['title' => null, 'description' => null, 'robots' => 'index,follow', 'image' => null, 'schema' => [], 'breadcrumbs' => [], 'canonical' => null, 'ogType' => 'website'])
+@props(['title' => null, 'description' => null, 'robots' => 'index,follow', 'image' => null, 'schema' => [], 'breadcrumbs' => [], 'canonical' => null, 'ogType' => 'website', 'brand' => null, 'brandNav' => []])
 @php
+    $brandColor = $brand?->accessibleBrandColor();
     $settings = app(\App\Services\SettingsService::class);
     $siteName = $settings->get('general.site_name');
     $pageTitle = $title ? $title.' | '.$siteName : $siteName.' — Verified properties & projects in Bangladesh';
@@ -38,15 +39,17 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @foreach ($ld as $block)<script type="application/ld+json">{!! json_encode($block, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) !!}</script>@endforeach
 </head>
-<body class="flex min-h-screen flex-col bg-white">
+<body class="flex min-h-screen flex-col bg-white"@if ($brandColor) style="--color-brand-600: {{ $brandColor }}; --color-brand-700: {{ \App\Support\Color::darken($brandColor, 0.2) }}"@endif>
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-input focus:bg-white focus:px-4 focus:py-2">{{ __('Skip to content') }}</a>
     @if ($demo)<div role="region" aria-label="{{ __('Demo notice') }}" class="bg-gold-500 px-4 py-1.5 text-center text-xs font-semibold text-navy-900">Demo content — illustrative listings, artwork and figures. Not real properties.</div>@endif
-    @include('partials.header', ['favCount' => $favCount])
+    @if ($brand) @include('partials.header-brand', ['brand' => $brand, 'brandNav' => $brandNav])
+    @else @include('partials.header', ['favCount' => $favCount]) @endif
     <main id="main" class="flex-1">
         @if (session('status') && ! session('form'))<div class="container-x pt-6"><x-ui.flash /></div>@endif
         {{ $slot }}
     </main>
-    @include('partials.footer')
+    @if ($brand) @include('partials.footer-brand', ['brand' => $brand])
+    @else @include('partials.footer') @endif
 
     @if ($wa)
         <a href="https://wa.me/{{ $wa }}?text={{ rawurlencode('Hello, I found you on '.$siteName) }}" target="_blank" rel="noopener" aria-label="{{ __('Chat on WhatsApp') }}"

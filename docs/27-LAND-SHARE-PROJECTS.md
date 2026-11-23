@@ -13,14 +13,15 @@ Glossary: শতাংশ = decimal (1 শতাংশ ≈ 435.6 sq ft) · দ�
 
 Observed example: a recently completed project had 90 shares; 60 shareholders had received registered deeds in two batches of 30, 30 remaining.
 
-## 2. Website (public, now → pre-launch/just after)
+## 2. Website (public)
+**Built 2026-11-24:** share summary, instalment schedule, updates timeline, risk note, branded landing page (items below marked ✔). Bangla/English remains planned.
 Maps onto the existing project model: status (Upcoming = shares on sale, Ongoing = under construction, Ready/Completed), total units, floors, payment plan (text), handover date, progress %.
 Planned small additions (owner approval pending):
-- **Share summary:** total shares, sold, remaining, price per share (price shown only when verified).
-- **Registration progress:** "60 of 90 shareholders have registered deeds" (aggregate only, never names).
-- **Instalment schedule** table.
-- **Project updates / milestones timeline** (e.g. "Second deed batch completed — 30 shareholders").
-- **Branded landing page** for a developer's project (logo, optional brand colour), always labelled "Marketed by Property Connect BD" — never presented as the developer's official site; logo use needs written permission.
+- ✔ **Share summary:** total shares, sold, remaining, price per share (price shown only when verified).
+- ✔ **Registration progress:** "60 of 90 shareholders have registered deeds" (aggregate only, never names).
+- ✔ **Instalment schedule** table.
+- ✔ **Project updates / milestones timeline** (e.g. "Second deed batch completed — 30 shareholders").
+- ✔ **Branded landing page** for a developer's project (logo, optional brand colour), always labelled "Marketed by Property Connect BD" — never presented as the developer's official site; logo use needs written permission.
 - **Bangla/English** switch (UI strings now; Bangla fields for listing content).
 Wording rules: no guaranteed returns or "risk-free" claims; "proposed" infrastructure labelled as proposed; full cost shown (land share **plus** construction instalments); risk note on every share project.
 

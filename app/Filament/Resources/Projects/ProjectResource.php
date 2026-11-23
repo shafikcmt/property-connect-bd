@@ -7,9 +7,11 @@ use App\Enums\PublishStatus;
 use App\Filament\Resources\Projects\Pages\CreateProject;
 use App\Filament\Resources\Projects\Pages\EditProject;
 use App\Filament\Resources\Projects\Pages\ListProjects;
+use App\Filament\Resources\Projects\RelationManagers\InstallmentsRelationManager;
 use App\Filament\Resources\Projects\RelationManagers\MediaRelationManager;
 use App\Filament\Resources\Projects\RelationManagers\UnitsRelationManager;
 use App\Filament\Resources\Projects\RelationManagers\UnitTypesRelationManager;
+use App\Filament\Resources\Projects\RelationManagers\UpdatesRelationManager;
 use App\Models\Developer;
 use App\Models\Location;
 use App\Models\Project;
@@ -77,6 +79,23 @@ class ProjectResource extends Resource
                     Toggle::make('price_verified')->label('Price range is verified (show publicly)')->columnSpanFull(),
                     Textarea::make('payment_plan')->rows(4)->columnSpanFull(),
                 ]),
+                Tab::make('Land shares')->icon('heroicon-o-user-group')->columns(2)->schema([
+                    Toggle::make('is_share_project')->label('This is a land-share project')->live()->columnSpanFull()
+                        ->helperText('Each share is sold with a promise of one flat. Shows a share summary on the public page.'),
+                    TextInput::make('total_shares')->numeric()->minValue(1)->maxValue(65000)->visible(fn ($get) => (bool) $get('is_share_project')),
+                    TextInput::make('sold_shares')->numeric()->minValue(0)->lte('total_shares')->visible(fn ($get) => (bool) $get('is_share_project')),
+                    TextInput::make('registered_shares')->label('Shares with registered deeds')->numeric()->minValue(0)->lte('sold_shares')->visible(fn ($get) => (bool) $get('is_share_project')),
+                    TextInput::make('price_per_share')->numeric()->minValue(0)->prefix('৳')->visible(fn ($get) => (bool) $get('is_share_project'))
+                        ->helperText('Shown publicly only when "Price range is verified" is on (Pricing tab).'),
+                    TextInput::make('land_area_shatangsho')->label('Land area (শতাংশ / decimal)')->numeric()->minValue(0)->visible(fn ($get) => (bool) $get('is_share_project')),
+                    TextInput::make('buildings_count')->label('Number of buildings')->numeric()->minValue(1)->maxValue(100)->visible(fn ($get) => (bool) $get('is_share_project')),
+                    Toggle::make('shares_verified')->label('Share counts are verified (show publicly)')->columnSpanFull()->visible(fn ($get) => (bool) $get('is_share_project'))
+                        ->helperText('Tick only after checking the register/deeds. Sold, remaining and registered counts are hidden otherwise.'),
+                ]),
+                Tab::make('Landing page')->icon('heroicon-o-window')->schema([
+                    Toggle::make('branded_landing')->label('Show as a branded landing page')
+                        ->helperText('Uses the developer\'s logo, name and brand colour. Needs a published developer with a logo and the developer\'s written permission. The page always says "Marketed by Property Connect BD".'),
+                ]),
                 Tab::make('Amenities & media')->icon('heroicon-o-sparkles')->schema([
                     CheckboxList::make('amenities')->relationship('amenities', 'name')->columns(3)->searchable(),
                     TextInput::make('video_url')->url()->maxLength(255),
@@ -117,7 +136,7 @@ class ProjectResource extends Resource
 
     public static function getRelations(): array
     {
-        return [MediaRelationManager::class, UnitTypesRelationManager::class, UnitsRelationManager::class];
+        return [MediaRelationManager::class, UnitTypesRelationManager::class, UnitsRelationManager::class, InstallmentsRelationManager::class, UpdatesRelationManager::class];
     }
 
     public static function getPages(): array

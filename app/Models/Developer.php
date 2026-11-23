@@ -9,6 +9,7 @@ use App\Models\Concerns\HasMedia;
 use App\Models\Concerns\HasSlug;
 use App\Models\Concerns\Publishable;
 use App\Models\Concerns\Verifiable;
+use App\Support\Color;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['name', 'slug', 'summary', 'about', 'website', 'email', 'phone', 'address', 'show_contact_publicly', 'established_year', 'seo_title', 'seo_description'])]
+#[Fillable(['name', 'slug', 'summary', 'about', 'website', 'email', 'phone', 'address', 'show_contact_publicly', 'established_year', 'brand_color', 'seo_title', 'seo_description'])]
 class Developer extends Model
 {
     use HasFactory, HasMedia, HasSlug, Publishable, SoftDeletes, Verifiable;
@@ -28,6 +29,14 @@ class Developer extends Model
             'is_verified' => 'boolean', 'is_featured' => 'boolean', 'show_contact_publicly' => 'boolean',
             'verified_at' => 'datetime', 'featured_until' => 'datetime', 'published_at' => 'datetime',
         ];
+    }
+
+    /** Brand colour for landing pages, only if it keeps white text readable (AA); otherwise the site default is used. */
+    public function accessibleBrandColor(): ?string
+    {
+        $c = $this->brand_color;
+
+        return Color::isHex($c) && Color::contrastWithWhite($c) >= 4.5 ? strtolower($c) : null;
     }
 
     public function projects(): HasMany

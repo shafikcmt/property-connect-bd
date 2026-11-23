@@ -12,10 +12,26 @@
         'image' => $gallery->take(4)->map(fn ($m) => $m->url(1600))->all(), 'address' => $project->location ? ['@type' => 'PostalAddress', 'addressLocality' => $project->location->name, 'addressCountry' => 'BD'] : null])];
     $statusColor = ['upcoming' => 'bg-gold-500 text-navy-900', 'ongoing' => 'bg-info text-white', 'ready' => 'bg-brand-600 text-white', 'completed' => 'bg-warm-700 text-white'][$project->status->value];
     $favs = app(\App\Services\Favorites::class)->ids(request(), 'project');
+    $branded = $project->isBranded();
+    $brandNav = array_values(array_filter([
+        $gallery->isNotEmpty() ? ['Gallery', 'gallery'] : null,
+        $project->shareSummary() ? ['Shares', 'shares'] : null,
+        $project->description ? ['Details', 'details'] : null,
+        $project->payment_plan ? ['Payment plan', 'plan'] : ($project->installments->isNotEmpty() ? ['Payment plan', 'installments'] : null),
+        $project->updates->isNotEmpty() ? ['Updates', 'updates'] : null,
+        ['Contact', 'inquiry'],
+    ]));
 @endphp
-<x-layouts.app :title="$project->seo_title ?: $project->name.' by '.$project->developer->name" :description="$project->seo_description ?: $desc" :image="$gallery->first()?->url(1600)" :schema="$schema" :breadcrumbs="$crumbs">
-    <x-breadcrumbs :items="$crumbs" />
-    <div class="container-x pt-5"><x-gallery :images="$gallery" :title="$project->name" /></div>
+<x-layouts.app :title="$project->seo_title ?: $project->name.' by '.$project->developer->name" :description="$project->seo_description ?: $desc" :image="$gallery->first()?->url(1600)" :schema="$schema" :breadcrumbs="$crumbs" :brand="$branded ? $project->developer : null" :brandNav="$brandNav">
+    @if ($branded)
+        <div id="top" class="border-b border-warm-100 bg-warm-50"><div class="container-x flex flex-wrap items-center justify-between gap-4 py-6">
+            <div class="flex items-center gap-4"><span class="flex h-16 w-20 items-center justify-center overflow-hidden rounded-xl border border-warm-100 bg-white p-2"><x-picture :media="$project->developer->logo" :alt="$project->developer->name" fit="object-contain" sizes="160px" /></span>
+                <p class="text-sm text-warm-700">{{ __('A project by') }}<br><a href="{{ route('developers.show', $project->developer->slug) }}" class="font-display text-lg font-semibold text-navy-900 hover:underline">{{ $project->developer->name }}</a></p></div>
+            <p class="max-w-md text-xs text-warm-700">{{ __('Marketed by :site. This is not the developer’s official website.', ['site' => $s->get('general.site_name')]) }}</p></div></div>
+    @else
+        <x-breadcrumbs :items="$crumbs" />
+    @endif
+    <div id="gallery" class="container-x pt-5"><x-gallery :images="$gallery" :title="$project->name" /></div>
     <div class="container-x mt-8 grid gap-10 pb-28 lg:grid-cols-[1fr_390px] lg:pb-10">
         <div class="min-w-0">
             <div class="flex flex-wrap items-center gap-2"><span class="chip {{ $statusColor }}">{{ $project->status->label() }}</span>
@@ -32,7 +48,9 @@
             </dl>
             @if ($project->construction_progress !== null && $project->status->value !== 'ready')<div class="mt-4" role="progressbar" aria-valuenow="{{ $project->construction_progress }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ __('Construction progress') }}"><div class="h-2 overflow-hidden rounded-full bg-warm-100"><div class="h-full rounded-full bg-brand-600" style="width: {{ $project->construction_progress }}%"></div></div></div>@endif
 
-            @if ($project->description)<section class="mt-10"><h2 class="font-display text-2xl font-semibold">{{ __('About the project') }}</h2><div class="prose-pc mt-3 whitespace-pre-line">{{ $project->description }}</div></section>@endif
+            @if ($project->description)<section id="details" class="mt-10"><h2 class="font-display text-2xl font-semibold">{{ __('About the project') }}</h2><div class="prose-pc mt-3 whitespace-pre-line">{{ $project->description }}</div></section>@endif
+
+            @include('projects.partials.shares')
 
             @if ($project->unitTypes->isNotEmpty())<section class="mt-10"><h2 class="font-display text-2xl font-semibold">{{ __('Unit types') }}</h2>
                 <div class="mt-4 overflow-x-auto rounded-card border border-warm-100" tabindex="0" role="region" aria-label="{{ __('Unit types table') }}"><table class="w-full min-w-[520px] text-left text-sm"><thead class="bg-warm-50 text-xs uppercase tracking-wide text-warm-500"><tr><th scope="col" class="p-3">{{ __('Type') }}</th><th scope="col" class="p-3">{{ __('Beds / baths') }}</th><th scope="col" class="p-3">{{ __('Size') }}</th><th scope="col" class="p-3">{{ __('Price') }}</th></tr></thead><tbody class="divide-y divide-warm-100">
@@ -41,7 +59,10 @@
 
             @if ($project->amenities->isNotEmpty())<section class="mt-10"><h2 class="font-display text-2xl font-semibold">{{ __('Amenities') }}</h2><ul class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">@foreach ($project->amenities as $a)<li class="flex items-center gap-2.5 text-warm-700"><x-ic name="check" class="h-5 w-5 text-brand-600" />{{ $a->name }}</li>@endforeach</ul></section>@endif
             @if ($plans->isNotEmpty())<section class="mt-10"><h2 class="font-display text-2xl font-semibold">{{ __('Floor plans') }}</h2><div class="mt-4 grid gap-4 sm:grid-cols-2">@foreach ($plans as $pl)<a href="{{ $pl->url(1600) }}" target="_blank" rel="noopener" class="zoom-wrap block overflow-hidden rounded-card border border-warm-100 bg-white p-2"><x-picture :media="$pl" :alt="__('Floor plan')" fit="object-contain" sizes="50vw" /></a>@endforeach</div></section>@endif
-            @if ($project->payment_plan)<section class="mt-10"><h2 class="font-display text-2xl font-semibold">{{ __('Payment plan') }}</h2><p class="prose-pc mt-3 whitespace-pre-line">{{ $project->payment_plan }}</p></section>@endif
+            @if ($project->payment_plan)<section id="plan" class="mt-10"><h2 class="font-display text-2xl font-semibold">{{ __('Payment plan') }}</h2><p class="prose-pc mt-3 whitespace-pre-line">{{ $project->payment_plan }}</p></section>@endif
+            @include('projects.partials.installments')
+            @include('projects.partials.updates')
+            @include('projects.partials.risk-note')
             <p class="mt-8 flex flex-wrap gap-4">@if ($brochure)<a class="inline-flex items-center gap-2 font-semibold text-brand-700 hover:underline" href="{{ $brochure->url() }}" target="_blank" rel="noopener"><x-ic name="doc" class="h-5 w-5" />{{ __('Download brochure') }}</a>@endif
                 @if ($project->video_url && preg_match('~^https://(www\.)?(youtube\.com|youtu\.be|vimeo\.com)/~', $project->video_url))<a class="inline-flex items-center gap-2 font-semibold text-brand-700 hover:underline" href="{{ $project->video_url }}" target="_blank" rel="noopener noreferrer"><x-ic name="camera" class="h-5 w-5" />{{ __('Watch video') }}</a>@endif
                 @if ($project->latitude && $project->longitude)<a class="inline-flex items-center gap-2 font-semibold text-brand-700 hover:underline" target="_blank" rel="noopener" href="https://www.openstreetmap.org/?mlat={{ $project->latitude }}&mlon={{ $project->longitude }}#map=16/{{ $project->latitude }}/{{ $project->longitude }}"><x-ic name="map" class="h-5 w-5" />{{ __('View on map') }}</a>@endif</p>
