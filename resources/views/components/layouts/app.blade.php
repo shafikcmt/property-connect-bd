@@ -40,7 +40,7 @@
 </head>
 <body class="flex min-h-screen flex-col bg-white">
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-input focus:bg-white focus:px-4 focus:py-2">{{ __('Skip to content') }}</a>
-    @if ($demo)<div class="bg-gold-500 px-4 py-1.5 text-center text-xs font-semibold text-navy-900">Demo content — illustrative listings, artwork and figures. Not real properties.</div>@endif
+    @if ($demo)<div role="region" aria-label="{{ __('Demo notice') }}" class="bg-gold-500 px-4 py-1.5 text-center text-xs font-semibold text-navy-900">Demo content — illustrative listings, artwork and figures. Not real properties.</div>@endif
     @include('partials.header', ['favCount' => $favCount])
     <main id="main" class="flex-1">
         @if (session('status') && ! session('form'))<div class="container-x pt-6"><x-ui.flash /></div>@endif

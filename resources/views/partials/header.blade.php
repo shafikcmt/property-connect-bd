@@ -10,7 +10,7 @@
         </a>
 
         <nav aria-label="{{ __('Primary') }}" class="hidden xl:block">
-            <ul class="flex items-center gap-4">
+            <ul class="flex items-center gap-6">
                 <li class="relative" @mouseenter="dd = 'p'" @mouseleave="dd = null">
                     <a href="{{ route('properties.index') }}" class="{{ $link($on('properties.*')) }} inline-flex items-center gap-1" @focus="dd = 'p'">{{ __('Properties') }}<x-ic name="chevron" class="h-4 w-4" /></a>
                     <div x-show="dd === 'p'" x-cloak class="menu-in absolute left-0 top-full w-56 pt-2"><div class="rounded-card border border-warm-100 bg-white p-2 shadow-xl">
@@ -29,10 +29,14 @@
                 </li>
                 <li><a href="{{ route('developers.index') }}" class="{{ $link($on('developers.*')) }}">{{ __('Developers') }}</a></li>
                 <li><a href="{{ route('locations.index') }}" class="{{ $link($on('locations.*')) }}">{{ __('Locations') }}</a></li>
-                <li><a href="{{ route('services') }}" class="{{ $link($on('services')) }}">{{ __('Services') }}</a></li>
-                <li><a href="{{ route('about') }}" class="{{ $link($on('about')) }}">{{ __('About') }}</a></li>
-                <li><a href="{{ route('blog.index') }}" class="{{ $link($on('blog.*')) }}">{{ __('Blog') }}</a></li>
-                <li><a href="{{ route('contact') }}" class="{{ $link($on('contact')) }}">{{ __('Contact') }}</a></li>
+                <li class="relative" @mouseenter="dd = 'm'" @mouseleave="dd = null">
+                    <button type="button" class="{{ $link($on('services', 'about', 'blog.*', 'faq', 'contact')) }} inline-flex items-center gap-1" @click="dd = dd === 'm' ? null : 'm'" @focus="dd = 'm'" :aria-expanded="(dd === 'm').toString()" aria-haspopup="true">{{ __('More') }}<x-ic name="chevron" class="h-4 w-4" /></button>
+                    <div x-show="dd === 'm'" x-cloak class="menu-in absolute right-0 top-full w-52 pt-2"><div class="rounded-card border border-warm-100 bg-white p-2 shadow-xl">
+                        @foreach ([['Services', route('services'), 'services'], ['About us', route('about'), 'about'], ['Blog', route('blog.index'), 'blog.*'], ['FAQ', route('faq'), 'faq'], ['Contact', route('contact'), 'contact']] as [$l, $u, $rt])
+                            <a href="{{ $u }}" @if ($on($rt)) aria-current="page" @endif class="block rounded-input px-3 py-2 text-sm hover:bg-warm-50 hover:text-navy-900 {{ $on($rt) ? 'font-semibold text-navy-900' : 'text-warm-700' }}">{{ __($l) }}</a>
+                        @endforeach
+                    </div></div>
+                </li>
             </ul>
         </nav>
 

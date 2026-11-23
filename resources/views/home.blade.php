@@ -5,26 +5,39 @@
 @endphp
 <x-layouts.app :schema="$schema" description="Find verified apartments, houses, plots and new projects in Bangladesh. Browse trusted developers, compare properties and request site visits.">
     {{-- HERO --}}
-    <section class="relative overflow-hidden bg-navy-900 text-white">
-        <div class="pointer-events-none absolute inset-0 opacity-40" style="background: radial-gradient(60% 60% at 80% 20%, rgba(20,184,166,.35), transparent 60%), radial-gradient(50% 50% at 10% 90%, rgba(201,162,75,.18), transparent 60%)"></div>
-        <div class="container-x relative grid items-center gap-10 pb-28 pt-14 lg:grid-cols-[1.05fr_.95fr] lg:pb-36 lg:pt-20">
+    <section class="relative isolate overflow-hidden bg-navy-900 text-white">
+        <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+            <div class="absolute inset-0" style="background: radial-gradient(65% 70% at 85% 10%, rgba(20,184,166,.32), transparent 62%), radial-gradient(55% 60% at 5% 100%, rgba(201,162,75,.20), transparent 62%), linear-gradient(180deg, #0b1f3a 0%, #0d2646 100%)"></div>
+            <div class="hero-grid absolute inset-0"></div>
+            <div class="orb absolute -right-32 top-4 h-[28rem] w-[28rem] rounded-full bg-teal-500/20 blur-3xl"></div>
+            <div class="orb absolute -left-28 bottom-8 h-80 w-80 rounded-full bg-gold-500/10 blur-3xl" style="animation-delay:-6s"></div>
+            <svg class="absolute inset-x-0 bottom-0 h-24 w-full text-white/[.045] sm:h-32" viewBox="0 0 1440 120" preserveAspectRatio="none" fill="currentColor"><path d="M0 120V78h54V52h38v26h46V34h52v44h40V60h60v18h48V28h56v50h44V64h70v14h52V40h48v38h60V56h58v22h46V30h54v48h50V62h66v16h44V44h52v34h58V58h48v20h60V36h50v42h56V66h62v12h40V48h54v30h58V60h44v18h60V40h52v38h46V120z"/></svg>
+        </div>
+        <div class="container-x relative grid items-center gap-12 pb-28 pt-12 lg:grid-cols-[1.05fr_.95fr] lg:pb-36 lg:pt-14">
             <div class="hero-in">
-                <p class="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-gold-500" style="--i:0"><x-ic name="sparkles" class="h-4 w-4" />{{ __('Verified property marketplace') }}</p>
-                <h1 class="font-display text-4xl font-semibold leading-[1.08] !text-white sm:text-5xl lg:text-6xl" style="--i:1">{{ __('Find a home you will love,') }} <span class="text-gold-500">{{ __('with confidence.') }}</span></h1>
-                <p class="mt-6 max-w-xl text-lg text-warm-100/90" style="--i:2">{{ __('Explore apartments, houses, plots and new developments from trusted developers — with transparent details and help at every step.') }}</p>
-                <div class="mt-8 flex flex-wrap gap-3" style="--i:3">
-                    <x-ui.button :href="route('properties.purpose', 'for-sale')" class="!px-6 !py-3">{{ __('Browse properties') }}<x-ic name="arrow" class="h-4 w-4" /></x-ui.button>
-                    <a href="{{ route('projects.index') }}" class="inline-flex min-h-11 items-center gap-2 rounded-input border border-white/30 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">{{ __('New projects') }}</a>
+                <p class="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.07] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-gold-500 backdrop-blur" style="--i:0"><x-ic name="sparkles" class="h-4 w-4" />{{ __('Verified property marketplace') }}</p>
+                <h1 class="font-display text-[2.6rem] font-semibold leading-[1.05] !text-white sm:text-6xl lg:text-[4rem]" style="--i:1">{{ __('Find a home you will love,') }} <span class="swoosh relative inline-block text-gold-500">{{ __('with confidence.') }}<svg class="absolute -bottom-2 left-0 h-3 w-full text-gold-500/70" viewBox="0 0 300 12" preserveAspectRatio="none" fill="none" aria-hidden="true"><path class="swoosh-path" d="M3 8c60-7 130-8 200-4 30 2 60 2 94-1" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span></h1>
+                <p class="mt-7 max-w-xl text-lg leading-relaxed text-warm-100/90" style="--i:2">{{ __('Explore apartments, houses, plots and new developments from trusted developers — with transparent details and help at every step.') }}</p>
+                <div class="mt-9 flex flex-wrap gap-3" style="--i:3">
+                    <x-ui.button :href="route('properties.purpose', 'for-sale')" class="!px-7 !py-3.5 shadow-lg shadow-brand-600/30">{{ __('Browse properties') }}<x-ic name="arrow" class="h-4 w-4" /></x-ui.button>
+                    <a href="{{ route('projects.index') }}" class="inline-flex min-h-11 items-center gap-2 rounded-input border border-white/30 bg-white/[.04] px-7 py-3.5 text-sm font-semibold text-white backdrop-blur transition hover:border-white/60 hover:bg-white/10">{{ __('New projects') }}</a>
                 </div>
+                <ul class="mt-10 flex flex-wrap gap-x-7 gap-y-3 border-t border-white/10 pt-6 text-sm text-warm-100/90" style="--i:4">
+                    <li class="flex items-center gap-2"><x-ic name="badge" class="h-5 w-5 text-gold-500" />{{ __('Verified only with records') }}</li>
+                    <li class="flex items-center gap-2"><x-ic name="layers" class="h-5 w-5 text-gold-500" />{{ __('Transparent pricing') }}</li>
+                    <li class="flex items-center gap-2"><x-ic name="calendar" class="h-5 w-5 text-gold-500" />{{ __('Site-visit support') }}</li>
+                </ul>
             </div>
-            <div class="relative hidden lg:block" aria-hidden="false">
-                <div class="float-a"><x-hero-art /></div>
-                <div class="float-b absolute -left-6 top-10 flex items-center gap-3 rounded-2xl bg-white px-4 py-3 text-navy-900 shadow-xl"><span class="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600/10 text-brand-700"><x-ic name="badge" class="h-5 w-5" /></span><span class="text-sm font-semibold leading-tight">{{ __('Verified listings') }}<br><span class="text-xs font-normal text-warm-700">{{ __('Checked by our team') }}</span></span></div>
-                <div class="float-a absolute -right-4 bottom-12 flex items-center gap-3 rounded-2xl bg-white px-4 py-3 text-navy-900 shadow-xl" style="animation-delay:-3s"><span class="flex h-9 w-9 items-center justify-center rounded-full bg-gold-500/20 text-gold-500"><x-ic name="calendar" class="h-5 w-5" /></span><span class="text-sm font-semibold leading-tight">{{ __('Site visits') }}<br><span class="text-xs font-normal text-warm-700">{{ __('Request in one minute') }}</span></span></div>
+            <div class="relative hidden lg:block">
+                <div class="absolute -inset-4 rounded-[2.2rem] bg-gradient-to-br from-teal-500/25 via-transparent to-gold-500/25 blur-2xl" aria-hidden="true"></div>
+                <div class="float-a relative rounded-[1.9rem] p-1.5 ring-1 ring-white/15 shadow-2xl shadow-black/40"><x-hero-art /></div>
+                <div class="float-b glass absolute -left-8 top-12 flex items-center gap-3 rounded-2xl px-4 py-3"><span class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-600 text-white"><x-ic name="badge" class="h-5 w-5" /></span><span class="text-sm font-semibold leading-tight">{{ __('Verified listings') }}<br><span class="text-xs font-normal text-warm-100/80">{{ __('Checked by our team') }}</span></span></div>
+                <div class="float-a glass absolute -right-6 top-24 flex items-center gap-3 rounded-2xl px-4 py-3" style="animation-delay:-4s"><span class="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white"><x-ic name="compare" class="h-5 w-5" /></span><span class="text-sm font-semibold leading-tight">{{ __('Compare homes') }}<br><span class="text-xs font-normal text-warm-100/80">{{ __('Up to 4, side by side') }}</span></span></div>
+                <div class="float-b glass absolute -bottom-5 left-16 flex items-center gap-3 rounded-2xl px-4 py-3" style="animation-delay:-2s"><span class="flex h-10 w-10 items-center justify-center rounded-full bg-gold-500 text-navy-900"><x-ic name="calendar" class="h-5 w-5" /></span><span class="text-sm font-semibold leading-tight">{{ __('Site visits') }}<br><span class="text-xs font-normal text-warm-100/80">{{ __('Request in one minute') }}</span></span></div>
             </div>
         </div>
     </section>
-    <div class="container-x relative z-10 -mt-20 lg:-mt-24"><x-search-bar :options="$options" /></div>
+    <div class="container-x relative z-10 -mt-20 lg:-mt-24"><x-search-bar :options="$options" :popular="$locations->take(4)" /></div>
 
     {{-- STATS (real counts only) --}}
     @if ($stats['properties'] + $stats['projects'] + $stats['developers'] > 0)
