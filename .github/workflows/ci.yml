@@ -55,3 +55,15 @@ jobs:
         run: php artisan test
       - name: Dependency audit
         run: composer audit
+
+  # Push to main = live. Runs only after the tests above pass, on the server's own runner.
+  deploy:
+    needs: tests
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, linux, pcbd]
+    environment: production
+    concurrency: production-deploy
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and roll out
+        run: bash scripts/deploy-docker.sh

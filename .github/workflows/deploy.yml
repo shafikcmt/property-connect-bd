@@ -1,6 +1,6 @@
 name: Deploy
 
-# Manual only: nothing deploys unless someone presses "Run workflow". Runs on the server's own runner (label pcbd).
+# Manual re-deploy button (e.g. after editing the server .env). Normal deploys happen from ci.yml on every push to main, after tests pass.
 on:
   workflow_dispatch:
 

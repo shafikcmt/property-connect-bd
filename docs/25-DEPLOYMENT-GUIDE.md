@@ -95,3 +95,7 @@ Rollback: `git checkout <previous-tag>` → `composer install --no-dev` → `npm
 
 ## 12. Launch checklist
 1. Real content loaded via Admin (developers → projects → properties with photos), each verified only after an actual check. 2. Contact settings filled. 3. Legal pages reviewed. 4. DNS pointed (owner action). 5. TLS valid. 6. Preflight green. 7. Backup + restore tested. 8. Search Console sitemap submitted. 9. Inquiry → admin Inquiries inbox → email/WhatsApp follow-up process agreed. 10. Monitoring live.
+
+## Auto-deploy (Docker + Cloudflare Tunnel setup)
+Pushing to `main` runs the CI tests and, only if they pass, deploys on the server's self-hosted runner (`ci.yml` job `deploy`). `deploy.yml` is a manual re-run button. A broken migration would go live like any other change, so keep a backup habit and watch the Actions run after each push.
+
