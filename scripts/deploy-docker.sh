@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Build and roll out the production stack. Run from the repo checkout (the GitHub runner does this).
-# Never touches /srv/pcbd/.env, the database volume or uploads. Backs up the database first when one exists.
+# Never touches /home/deploy/pcbd/.env, the database volume or uploads. Backs up the database first when one exists.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-export PCBD_ENV_FILE="${PCBD_ENV_FILE:-/srv/pcbd/.env}"
+export PCBD_ENV_FILE="${PCBD_ENV_FILE:-/home/deploy/pcbd/.env}"
 [ -f "$PCBD_ENV_FILE" ] || { echo "Missing $PCBD_ENV_FILE — create it from .env.production.example first"; exit 1; }
 dc() { docker compose -p pcbd -f docker-compose.prod.yml --env-file "$PCBD_ENV_FILE" "$@"; }
 

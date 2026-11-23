@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Nightly PostgreSQL dump (+ weekly uploads archive) into /srv/pcbd/backups.
-# Cron (as the deploy user): 30 2 * * * bash /srv/pcbd/app/scripts/backup-docker.sh
+# Nightly PostgreSQL dump (+ weekly uploads archive) into /home/deploy/pcbd/backups.
+# Cron (as the deploy user): 30 2 * * * bash /home/deploy/pcbd/app/scripts/backup-docker.sh
 # Copy these files OFF the server too — a backup on the same disk is not a backup.
 set -euo pipefail
-OUT="${BACKUP_DIR:-/srv/pcbd/backups}"
+OUT="${BACKUP_DIR:-/home/deploy/pcbd/backups}"
 STAMP=$(date +%Y%m%d-%H%M%S)
 mkdir -p "$OUT"
 DB=$(docker ps --filter label=com.docker.compose.project=pcbd --filter label=com.docker.compose.service=db --format '{{.Names}}' | head -1)

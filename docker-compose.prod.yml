@@ -1,11 +1,11 @@
-# Production stack (ADR-0018). Always run via scripts/deploy-docker.sh, which passes --env-file /srv/pcbd/.env.
+# Production stack (ADR-0018). Always run via scripts/deploy-docker.sh, which passes --env-file /home/deploy/pcbd/.env.
 # No ports are published: the only way in is the outbound Cloudflare Tunnel, so this never conflicts with other sites on the host.
 name: pcbd
 
 x-app: &app
   build: { context: ., dockerfile: deploy/Dockerfile, target: app }
   image: pcbd-app:latest
-  env_file: ${PCBD_ENV_FILE:-/srv/pcbd/.env}
+  env_file: ${PCBD_ENV_FILE:-/home/deploy/pcbd/.env}
   restart: unless-stopped
   depends_on: { db: { condition: service_healthy } }
   volumes:
