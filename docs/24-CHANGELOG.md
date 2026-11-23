@@ -3,6 +3,8 @@
 Format: newest first; grouped by date/phase. Only significant changes (architecture, behaviour, schema, dependencies, security). Follows "Keep a Changelog" categories: Added / Changed / Fixed / Security / Removed.
 
 ## [Unreleased]
+### Added
+- Optional staff email alert on new inquiries (Settings → "Email new inquiries to"); no message body in the mail; failures are logged and never lose the lead. Tests: 171.
 
 ## 2026-11-23 — Website QA and launch preparation
 ### Fixed

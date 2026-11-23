@@ -34,7 +34,7 @@ Status as of 2026-11-23. The website itself is QA-complete (see [19](19-PROGRESS
 Website pages and flows, admin panel, search/filters, favorites/compare/inquiries/site visits/owner submissions, accessibility pass (axe: 0 violations), Lighthouse (mobile 94–100 perf, 100 a11y/best-practices/SEO), SEO output, CSP (report-only), security headers, preflight command, deploy + backup scripts, migrations reversible, `composer audit`/`npm audit` clean, 169 automated tests + 8 browser QA scripts.
 
 ## E. Known limitations at launch (accepted, documented)
-- Inquiry handling is a basic inbox (status + notes). Assignment, follow-up reminders, pipeline, notifications to staff and email to buyers arrive in the CRM phase (after launch). Until then, **check the Inquiries inbox daily** (the sidebar shows a count badge) — or tell me and I will add a simple "email me on new inquiry" notification (small task, needs item A8).
+- Inquiry handling is a basic inbox (status + notes). Assignment, follow-up reminders, pipeline, notifications to staff and email to buyers arrive in the CRM phase (after launch). Until then, **check the Inquiries inbox daily** (the sidebar shows a count badge) — or, once SMTP (A8) works, enter an address in Admin → Settings → "Email new inquiries to" (built, tested with fake mail; real delivery untested until SMTP exists).
 - No analytics until the consent banner exists (item A10).
 - Desktop Lighthouse numbers (70–88 on the dev server) rise to 86–98 once nginx gzip/caching is in place (measured with a gzip proxy); **re-measure on the real server**.
 - CSP is report-only; enforcing it is a post-launch hardening step after watching real traffic.

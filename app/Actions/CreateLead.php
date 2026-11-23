@@ -5,9 +5,14 @@ declare(strict_types=1);
 namespace App\Actions;
 
 use App\Enums\RequestType;
+use App\Mail\NewInquiryMail;
 use App\Models\Lead;
+use App\Services\SettingsService;
 use App\Support\Phone;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Throwable;
 
 /**
  * Single entry point for every public form (ADR-0007). Normalises contact data, records
@@ -30,7 +35,7 @@ class CreateLead
             return $recent;
         }
 
-        return Lead::create([
+        $lead = Lead::create([
             'user_id' => $request->user()?->id,
             'name' => trim((string) $data['name']),
             'phone' => $phone,
@@ -51,5 +56,24 @@ class CreateLead
             'ip_hash' => $request->ip() ? hash_hmac('sha256', $request->ip(), (string) config('app.key')) : null,
             'user_agent' => mb_substr((string) $request->userAgent(), 0, 255),
         ]);
+
+        $this->alertStaff($lead);
+
+        return $lead;
+    }
+
+    /** A mail failure must never lose or fail a lead; it is logged without personal data. */
+    private function alertStaff(Lead $lead): void
+    {
+        $to = app(SettingsService::class)->get('leads.notify_email');
+        if (! $to) {
+            return;
+        }
+
+        try {
+            Mail::to($to)->send(new NewInquiryMail($lead));
+        } catch (Throwable $e) {
+            Log::warning('New-inquiry alert failed', ['lead_id' => $lead->id, 'error' => $e::class]);
+        }
     }
 }

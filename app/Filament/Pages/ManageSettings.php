@@ -77,6 +77,8 @@ class ManageSettings extends Page
             Section::make(__('SEO & operations'))->columns(2)->schema([
                 Textarea::make(self::field('seo.default_description'))->label(__('Default meta description'))->rows(2)->maxLength(160),
                 TextInput::make(self::field('leads.sla_minutes'))->label(__('Lead first-response target (minutes)'))->numeric()->minValue(1)->maxValue(1440),
+                TextInput::make(self::field('leads.notify_email'))->label(__('Email new inquiries to'))->email()->maxLength(255)
+                    ->helperText(__('Staff alert only; leave empty to disable. Requires working mail settings.')),
             ]),
         ]);
     }

@@ -2,6 +2,7 @@
 
 use App\Enums\PublishStatus;
 use App\Enums\RoleName;
+use App\Mail\NewInquiryMail;
 use App\Models\BlogPost;
 use App\Models\Favorite;
 use App\Models\Lead;
@@ -11,7 +12,9 @@ use App\Models\PropertyType;
 use App\Models\SavedSearch;
 use App\Models\SiteVisit;
 use App\Models\User;
+use App\Services\SettingsService;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 function valid(array $extra = []): array
@@ -186,4 +189,26 @@ it('renders blog markdown without raw HTML', function () {
     $post->save();
 
     $this->get('/blog/'.$post->slug)->assertOk()->assertDontSee('<script>alert(1)</script>', false)->assertDontSee('href="javascript', false);
+});
+
+it('emails staff about a new inquiry only when an address is configured, without the message body', function () {
+    Mail::fake();
+    $p = Property::factory()->published()->create();
+
+    $this->post('/inquiry', valid(['property_id' => $p->id, 'phone' => '01711111111']));
+    Mail::assertNothingSent();
+
+    app(SettingsService::class)->set('leads.notify_email', 'team@example.com');
+    $this->post('/inquiry', valid(['property_id' => $p->id, 'phone' => '01722222222']));
+
+    Mail::assertSent(NewInquiryMail::class, fn ($m) => $m->hasTo('team@example.com') && ! str_contains($m->render(), 'Please call me'));
+});
+
+it('still saves the lead when the alert mail fails', function () {
+    app(SettingsService::class)->set('leads.notify_email', 'team@example.com');
+    Mail::shouldReceive('to')->andThrow(new RuntimeException('smtp down'));
+    $p = Property::factory()->published()->create();
+
+    $this->post('/inquiry', valid(['property_id' => $p->id]))->assertSessionHas('status');
+    expect(Lead::count())->toBe(1);
 });

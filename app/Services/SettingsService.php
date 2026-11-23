@@ -31,6 +31,7 @@ class SettingsService
         'analytics.meta_pixel_id' => [null, true],
         'seo.default_description' => [null, true],
         'leads.sla_minutes' => [30, false],
+        'leads.notify_email' => [null, false],
     ];
 
     public function get(string $key, mixed $default = null): mixed
