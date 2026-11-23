@@ -6,6 +6,8 @@ use App\Enums\LocationType;
 use App\Enums\ProjectStatus;
 use App\Enums\PublishStatus;
 use App\Models\Amenity;
+use App\Models\BlogCategory;
+use App\Models\BlogPost;
 use App\Models\Developer;
 use App\Models\Location;
 use App\Models\Project;
@@ -159,6 +161,20 @@ class DemoSeeder extends Seeder
             if ($i % 3 === 0) {
                 $p->markVerified($staff, 'DEMO DATA', 'Placeholder record — not a real verification.');
             }
+        }
+
+        $cats = collect(['Buying guides', 'Investment', 'Location guides'])->map(fn ($n) => BlogCategory::firstOrCreate(['name' => $n]));
+        foreach ([
+            ['What to check before you buy an apartment', 0, "Buying a home is a big decision. This demo article shows how guides look on the site.\n\n## Before you start\n\n- Confirm the **developer** and the project approvals.\n- Compare the price per sqft with similar listings.\n- Visit the site and the surrounding area.\n\n## Ask for documents\n\nAlways ask to see the relevant documents and have them reviewed by a qualified professional.\n\n*Demo content — not real advice.*"],
+            ['Understanding payment plans and handover dates', 1, "Payment plans differ between projects. This is demo content illustrating an investment article.\n\n## Key questions\n\n1. What is due at booking?\n2. How are instalments scheduled during construction?\n3. What happens if the handover date moves?\n\n*Demo content — not real advice.*"],
+            ['A short guide to choosing a neighbourhood', 2, "Commute, schools, healthcare and budget all matter. This demo article shows a location guide layout.\n\n## Think about daily life\n\nVisit at different times of day and talk to residents.\n\n*Demo content — not real advice.*"],
+        ] as $i => [$title, $ci, $body]) {
+            $post = new BlogPost(['title' => $title, 'excerpt' => 'Demo article — illustrative content for previewing the blog layout.', 'body' => $body, 'blog_category_id' => $cats[$ci]->id]);
+            $post->publish_status = PublishStatus::Published;
+            $post->published_at = now()->subDays($i + 1);
+            $post->author_id = $staff->id;
+            $post->save();
+            $img->store(DemoArt::render(700 + $i, ['skyline', 'tower', 'house'][$i]), $post, 'gallery', alt: 'Illustrative artwork (demo)', demo: true);
         }
 
         $this->command?->info('Demo data created: '.Property::count().' properties, '.Project::count().' projects, '.Developer::count().' developers.');

@@ -6,13 +6,20 @@ namespace App\Providers;
 
 use App\Enums\RoleName;
 use App\Models\Amenity;
+use App\Models\BlogCategory;
+use App\Models\BlogPost;
 use App\Models\Developer;
+use App\Models\Faq;
+use App\Models\Lead;
 use App\Models\Location;
 use App\Models\Project;
 use App\Models\Property;
+use App\Models\PropertyReport;
 use App\Models\PropertyType;
 use App\Models\User;
 use App\Policies\CatalogPolicy;
+use App\Policies\ContentPolicy;
+use App\Policies\LeadPolicy;
 use App\Policies\ListingPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -20,7 +27,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\ViewErrorBag;
 use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
@@ -45,15 +54,31 @@ class AppServiceProvider extends ServiceProvider
         foreach ([Developer::class, Project::class, Property::class] as $model) {
             Gate::policy($model, ListingPolicy::class);
         }
+        Gate::policy(Lead::class, LeadPolicy::class);
+        foreach ([Faq::class, BlogPost::class, BlogCategory::class] as $model) {
+            Gate::policy($model, ContentPolicy::class);
+        }
+        Gate::policy(PropertyReport::class, ListingPolicy::class);
         foreach ([Location::class, PropertyType::class, Amenity::class] as $model) {
             Gate::policy($model, CatalogPolicy::class);
         }
+
+        // Error pages render before the session middleware runs, so $errors may be absent.
+        View::composer('partials.footer', function ($view) {
+            if (! array_key_exists('errors', $view->getData())) {
+                $view->with('errors', new ViewErrorBag);
+            }
+        });
 
         $this->configureRateLimiting();
     }
 
     private function configureRateLimiting(): void
     {
+        RateLimiter::for('inquiry', fn (Request $r) => [
+            Limit::perHour(10)->by('ip:'.$r->ip()),
+            Limit::perHour(4)->by('phone:'.preg_replace('/\D/', '', (string) $r->input('phone', $r->ip()))),
+        ]);
         RateLimiter::for('register', fn (Request $r) => Limit::perHour(5)->by($r->ip()));
         RateLimiter::for('password-reset', fn (Request $r) => Limit::perHour(5)->by($r->ip()));
         RateLimiter::for('verification', fn (Request $r) => Limit::perMinute(6)->by($r->user()?->id ?: $r->ip()));

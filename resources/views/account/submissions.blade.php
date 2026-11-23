@@ -1,0 +1,6 @@
+<x-account-shell :title="__('My submissions')">
+    @forelse ($properties as $p)<div class="mb-3 flex flex-wrap items-center gap-4 rounded-card border border-warm-100 bg-white p-4"><div class="h-16 w-24 shrink-0 overflow-hidden rounded-lg"><x-picture :media="$p->coverMedia" :alt="$p->title" sizes="120px" /></div><div class="min-w-0 flex-1"><p class="truncate font-semibold text-navy-900">{{ $p->title }}</p><p class="text-sm text-warm-500">{{ $p->public_code }} · {{ $p->created_at->format('M j, Y') }}</p></div><span class="chip {{ $p->publish_status->value === 'published' ? 'bg-brand-600 text-white' : 'bg-gold-500/20 text-navy-900' }}">{{ $p->publish_status === \App\Enums\PublishStatus::PendingReview ? __('Under review') : $p->publish_status->label() }}</span>@if ($p->isPublished())<a class="text-sm font-semibold text-brand-700" href="{{ route('properties.show', $p->slug) }}">{{ __('View') }}</a>@endif</div>
+    @empty <div class="rounded-card border border-dashed border-warm-300 bg-warm-50 p-10 text-center text-warm-700">{{ __('You have not submitted a property yet.') }}<p class="mt-4"><x-ui.button :href="route('forms.submit')">{{ __('Submit a property') }}</x-ui.button></p></div>
+    @endforelse
+    {{ $properties->links() }}
+</x-account-shell>

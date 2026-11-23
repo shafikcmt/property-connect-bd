@@ -28,12 +28,17 @@ final class Permissions
 
     public const CATALOG_MANAGE = 'catalog.manage';
 
+    public const LEADS_MANAGE = 'leads.manage';
+
+    public const CONTENT_MANAGE = 'content.manage';
+
     /** @return list<string> */
     public static function all(): array
     {
         return [
             self::USERS_MANAGE, self::ROLES_MANAGE, self::SETTINGS_MANAGE, self::AUDIT_VIEW,
             self::LISTINGS_VIEW, self::LISTINGS_MANAGE, self::LISTINGS_PUBLISH, self::LISTINGS_VERIFY, self::CATALOG_MANAGE,
+            self::LEADS_MANAGE, self::CONTENT_MANAGE,
         ];
     }
 

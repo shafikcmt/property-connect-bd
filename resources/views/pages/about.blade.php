@@ -1,0 +1,12 @@
+@php $site = app(\App\Services\SettingsService::class)->get('general.site_name'); @endphp
+<x-layouts.app title="About us" description="Property Connect BD is an independent real estate marketing and sales platform connecting buyers, owners and developers." :breadcrumbs="[['Home', route('home')], ['About', null]]">
+    <x-page-hero eyebrow="About us" title="Connecting properties, people & opportunities" sub="We are an independent real estate marketing and sales platform built around transparency and service." />
+    <div class="container-x grid gap-12 py-16 lg:grid-cols-[1.2fr_1fr]">
+        <div class="prose-pc text-lg"><h2>{{ __('Who we are') }}</h2><p>{{ $site }} {{ __('helps people find property they can trust. We bring together verified listings, partner developers and a team that supports you from your first search to your site visit and beyond.') }}</p>
+            <h2>{{ __('How we work') }}</h2><p>{{ __('We are independent: we are not a developer and we do not own the properties listed. That lets us present options from multiple developers and owners honestly, and focus on matching the right property with the right buyer.') }}</p>
+            <h2>{{ __('What “Verified” means') }}</h2><p>{{ __('A Verified badge appears only when our team has recorded how and when a listing, project or developer was checked. If we have not verified something, we do not label it as verified.') }}</p></div>
+        <div class="space-y-4">@foreach ([['badge', 'Transparency', 'Clear prices, dates and sources — and no fabricated numbers.'], ['user', 'Privacy', 'Your contact details are used only to respond to you and are never shown publicly.'], ['handshake', 'Partnership', 'We work with developers and owners under written agreements.'], ['clock', 'Responsiveness', 'We aim to respond to every inquiry promptly.']] as $i => [$ic, $t, $d])
+            <div class="reveal flex gap-4 rounded-card border border-warm-100 bg-white p-5" style="--i: {{ $i }}"><x-ic :name="$ic" class="h-7 w-7 shrink-0 text-brand-600" /><div><h3 class="font-semibold text-navy-900">{{ __($t) }}</h3><p class="text-sm text-warm-700">{{ __($d) }}</p></div></div>@endforeach
+            @if ($stats['properties'] + $stats['projects'] > 0)<p class="rounded-card bg-navy-900 p-5 text-warm-100">{{ __('Currently listing') }} <strong class="text-white">{{ $stats['properties'] }}</strong> {{ __('properties and') }} <strong class="text-white">{{ $stats['projects'] }}</strong> {{ __('projects.') }}</p>@endif</div>
+    </div>
+</x-layouts.app>

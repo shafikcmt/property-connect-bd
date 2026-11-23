@@ -31,7 +31,7 @@ Start with [`CLAUDE.md`](CLAUDE.md), then:
 | [22 Workflow](docs/22-DEVELOPMENT-WORKFLOW.md) · [23 Acceptance](docs/23-ACCEPTANCE-CRITERIA.md) · [24 Changelog](docs/24-CHANGELOG.md) | Process |
 
 ## Current status
-See [docs/19-PROGRESS-TRACKER.md](docs/19-PROGRESS-TRACKER.md) for the live status. At the time of writing: **Phase 0 complete; Phase 1 (application foundation) implemented and in review.**
+See [docs/19-PROGRESS-TRACKER.md](docs/19-PROGRESS-TRACKER.md) for the live status. At the time of writing: **Phases 0–2 complete; the public website (Phases 3–7) is built and in review — launch needs owner inputs (hosting, domain, real content, legal review). CRM and later phases follow after launch.** See [docs/25-DEPLOYMENT-GUIDE.md](docs/25-DEPLOYMENT-GUIDE.md).
 
 ## Setup instructions
 Prerequisites: PHP 8.3+ (with `pdo_pgsql`, `intl`, `gd`, `mbstring`, `zip`), Composer 2, Node.js 22, PostgreSQL 16.
@@ -52,7 +52,9 @@ sudo -u postgres psql -c "CREATE USER pcbd WITH PASSWORD 'change-me' CREATEDB;" 
 ```bash
 php artisan migrate --seed          # schema + roles/permissions (no demo data, no default users)
 php artisan pcbd:create-super-admin # prompts for a password; no default credentials exist
+php artisan db:seed --class=DemoSeeder   # optional, local only: clearly-labelled demo listings and artwork
 npm install && npm run build
+php artisan storage:link
 php artisan serve                   # public site: /   ·   admin panel: /admin
 ```
 

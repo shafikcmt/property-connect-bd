@@ -51,3 +51,9 @@ it('creates a super admin through the console command', function () {
     $user = User::firstWhere('email', 'owner@example.com');
     expect($user->hasRole(RoleName::SuperAdmin->value))->toBeTrue()->and($user->hasVerifiedEmail())->toBeTrue();
 });
+
+it('fails the production preflight when the environment is unsafe', function () {
+    config(['app.debug' => true]);
+
+    $this->artisan('pcbd:preflight')->assertFailed();
+});

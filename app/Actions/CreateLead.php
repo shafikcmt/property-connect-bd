@@ -1,0 +1,55 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Actions;
+
+use App\Enums\RequestType;
+use App\Models\Lead;
+use App\Support\Phone;
+use Illuminate\Http\Request;
+
+/**
+ * Single entry point for every public form (ADR-0007). Normalises contact data, records
+ * consent and attribution, and de-duplicates rapid repeat submissions.
+ */
+class CreateLead
+{
+    public const CONSENT_VERSION = '2026-11';
+
+    /** @param array<string, mixed> $data validated: name, phone, email?, message?, + targets */
+    public function __invoke(RequestType $type, array $data, Request $request, array $meta = []): Lead
+    {
+        $phone = Phone::normalize((string) $data['phone']) ?? $data['phone'];
+        $utm = (array) $request->session()->get('utm', []);
+
+        $recent = Lead::query()->where('phone', $phone)->where('request_type', $type->value)
+            ->where('property_id', $data['property_id'] ?? null)->where('project_id', $data['project_id'] ?? null)
+            ->where('created_at', '>', now()->subMinutes(10))->first();
+        if ($recent && $type !== RequestType::SiteVisit) {
+            return $recent;
+        }
+
+        return Lead::create([
+            'user_id' => $request->user()?->id,
+            'name' => trim((string) $data['name']),
+            'phone' => $phone,
+            'email' => isset($data['email']) ? mb_strtolower(trim((string) $data['email'])) ?: null : null,
+            'message' => $data['message'] ?? null,
+            'request_type' => $type,
+            'property_id' => $data['property_id'] ?? null,
+            'project_id' => $data['project_id'] ?? null,
+            'developer_id' => $data['developer_id'] ?? null,
+            'meta' => $meta ?: null,
+            'consent_given_at' => now(),
+            'consent_text_version' => self::CONSENT_VERSION,
+            'marketing_consent' => (bool) ($data['marketing_consent'] ?? false),
+            'utm_source' => $utm['utm_source'] ?? null, 'utm_medium' => $utm['utm_medium'] ?? null, 'utm_campaign' => $utm['utm_campaign'] ?? null,
+            'utm_term' => $utm['utm_term'] ?? null, 'utm_content' => $utm['utm_content'] ?? null,
+            'landing_url' => $utm['landing_url'] ?? null, 'referrer' => $utm['referrer'] ?? null,
+            // IP kept only as a keyed hash for abuse analysis (docs/14).
+            'ip_hash' => $request->ip() ? hash_hmac('sha256', $request->ip(), (string) config('app.key')) : null,
+            'user_agent' => mb_substr((string) $request->userAgent(), 0, 255),
+        ]);
+    }
+}

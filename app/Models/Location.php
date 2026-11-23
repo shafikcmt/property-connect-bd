@@ -75,16 +75,9 @@ class Location extends Model
         return $q->where(fn ($w) => $w->where('path', $root->path)->orWhere('path', 'like', $root->path.'/%'));
     }
 
-    /** "Gulshan, Dhaka" style label built from ancestors (callers eager-load parent chains if needed). */
+    /** "Gulshan, Dhaka" — this location plus its direct parent (callers eager-load `parent`). */
     public function fullName(): string
     {
-        $names = [$this->name];
-        $p = $this->parent;
-        while ($p && count($names) < 3) {
-            $names[] = $p->name;
-            $p = $p->parent;
-        }
-
-        return implode(', ', $names);
+        return $this->parent ? $this->name.', '.$this->parent->name : $this->name;
     }
 }

@@ -1,11 +1,6 @@
-<x-layouts.app :title="__('My account')" robots="noindex,nofollow">
-    <div class="mx-auto max-w-3xl px-4 py-14">
-        <h1 class="font-display text-3xl font-semibold">{{ __('Welcome, :name', ['name' => $user->name]) }}</h1>
-        <div class="mt-6"><x-ui.flash /></div>
-        <p class="mt-4 text-warm-700">{{ __('Favorites, saved searches and your inquiries will appear here.') }}</p>
-        @if ($user->canAccessPanel(\Filament\Facades\Filament::getPanel('admin')))
-            <p class="mt-6"><x-ui.button variant="secondary" href="/admin">{{ __('Go to admin panel') }}</x-ui.button></p>
-        @endif
-        <form method="POST" action="{{ route('logout') }}" class="mt-8">@csrf<x-ui.button variant="ghost" type="submit">{{ __('Log out') }}</x-ui.button></form>
-    </div>
-</x-layouts.app>
+<x-account-shell :title="__('Welcome, :name', ['name' => explode(' ', $user->name)[0]])">
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">@foreach ([['account.favorites', 'Saved', $favorites, 'heart'], ['account.inquiries', 'Inquiries', $inquiries, 'mail'], ['account.visits', 'Site visits', $visits, 'calendar'], ['account.searches', 'Saved searches', $searches, 'search'], ['account.submissions', 'Submissions', $submissions, 'key']] as [$r, $l, $n, $ic])
+        <a href="{{ route($r) }}" class="rounded-card border border-warm-100 bg-white p-5 lift"><x-ic :name="$ic" class="h-6 w-6 text-brand-600" /><p class="mt-3 font-display text-3xl font-semibold text-navy-900">{{ $n }}</p><p class="text-sm text-warm-700">{{ __($l) }}</p></a>@endforeach</div>
+    <p class="mt-8 flex flex-wrap gap-3"><x-ui.button :href="route('properties.index')">{{ __('Browse properties') }}</x-ui.button><x-ui.button variant="secondary" :href="route('forms.submit')">{{ __('Submit a property') }}</x-ui.button>
+        @if ($user->canAccessPanel(\Filament\Facades\Filament::getPanel('admin')))<x-ui.button variant="ghost" href="/admin">{{ __('Admin panel') }}</x-ui.button>@endif</p>
+</x-account-shell>

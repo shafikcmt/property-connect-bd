@@ -4,6 +4,15 @@ Format: newest first; grouped by date/phase. Only significant changes (architect
 
 ## [Unreleased]
 
+## 2026-11-23 — Website-first: Phases 3–7
+### Added
+- Public site: home (animated hero, smart search, featured/latest/projects/locations/developers/blog/CTAs), properties (filters, sort, grid/list, saved searches), property details (gallery + lightbox, specs, similar, inquiry, visit, report), projects, developers, locations, services, about, contact, FAQ, blog, legal pages, sell/rent-out/valuation/assistance/submit-property forms, search with autosuggest, favorites, compare, sitemap + robots, JSON-LD, breadcrumbs.
+- Buyer features: guest+member favorites (merge on login), compare (≤4), recently viewed, inquiries and site-visit requests (leads), account area, saved searches, owner submissions moderated as `pending_review`.
+- Lead capture (`CreateLead`): consent, UTM attribution, honeypot, time trap, rate limits, dedupe; admin Inquiries inbox, FAQ and Blog resources; permissions `leads.manage`, `content.manage`.
+- Deployment: `pcbd:preflight`, `scripts/deploy.sh`, `scripts/backup-db.sh`, `.env.production.example`, `docs/25-DEPLOYMENT-GUIDE.md`.
+### Changed
+- Public disk URLs are relative (`/storage`); `Location::fullName()` is "Area, City".
+
 ## 2026-11-23 — Phase 2: Property & Project Foundation
 ### Added
 - Roadmap re-planned website-first (ADR-0016); custom media layer replaces Spatie Media Library, which needs PHP 8.4 (ADR-0017).
