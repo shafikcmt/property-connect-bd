@@ -39,3 +39,7 @@ Website pages and flows, admin panel, search/filters, favorites/compare/inquirie
 - Desktop Lighthouse numbers (70–88 on the dev server) rise to 86–98 once nginx gzip/caching is in place (measured with a gzip proxy); **re-measure on the real server**.
 - CSP is report-only; enforcing it is a post-launch hardening step after watching real traffic.
 - Map view is a link to OpenStreetMap (no embedded map) to avoid paid APIs.
+
+## F. Before real launch
+- If `PCBD_ALLOW_DEMO=true` was used for a preview: run `php artisan pcbd:demo-clear`, set `PCBD_ALLOW_DEMO=false`, redeploy, confirm `pcbd:preflight` shows no demo warnings.
+

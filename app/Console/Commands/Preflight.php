@@ -47,8 +47,10 @@ class Preflight extends Command
             DB::select('select 1');
             $check(true, 'Database connection works');
             $check(User::whereHas('roles', fn ($q) => $q->where('name', 'super-admin'))->exists(), 'A Super Admin exists (php artisan pcbd:create-super-admin)');
-            $check(! Media::where('is_demo', true)->exists(), 'No demo media present');
-            $check(! Developer::where('name', 'like', 'Demo %')->exists(), 'No demo developers present');
+            $preview = (bool) config('pcbd.allow_demo');
+            $check(! Media::where('is_demo', true)->exists(), 'No demo media present (php artisan pcbd:demo-clear)', $preview ? false : true);
+            $check(! Developer::where('name', 'like', 'Demo %')->exists(), 'No demo developers present (php artisan pcbd:demo-clear)', $preview ? false : true);
+            $check(! $preview, 'Demo preview mode is off (PCBD_ALLOW_DEMO)', false);
         } catch (\Throwable) {
             $check(false, 'Database connection works');
         }

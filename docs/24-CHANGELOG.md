@@ -4,6 +4,8 @@ Format: newest first; grouped by date/phase. Only significant changes (architect
 
 ## [Unreleased]
 ### Added
+- Pre-launch preview mode: `PCBD_ALLOW_DEMO=true` lets DemoSeeder run on the production-mode server (visible demo banner, preflight warns instead of failing); `php artisan pcbd:demo-clear` removes all demo content and demo areas and leaves real records untouched. Test added (172).
+### Added
 - Docker/Cloudflare-Tunnel production stack (`docker-compose.prod.yml`, `deploy/`, `scripts/deploy-docker.sh`, `scripts/backup-docker.sh`, manual `deploy.yml` workflow for a self-hosted runner), read-only `scripts/server-audit.sh`; ADR-0018. Not yet built or run on the server.
 ### Added
 - Optional staff email alert on new inquiries (Settings → "Email new inquiries to"); no message body in the mail; failures are logged and never lose the lead. Tests: 171.

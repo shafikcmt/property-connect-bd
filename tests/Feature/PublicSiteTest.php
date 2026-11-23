@@ -1,7 +1,15 @@
 <?php
 
 use App\Enums\RoleName;
+use App\Models\BlogPost;
+use App\Models\Developer;
+use App\Models\Location;
+use App\Models\Media;
+use App\Models\Project;
+use App\Models\Property;
 use App\Models\User;
+use Database\Seeders\DemoSeeder;
+use Database\Seeders\ReferenceDataSeeder;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Support\Facades\Route;
 
@@ -62,4 +70,21 @@ it('sends a report-only CSP on public pages but not on the admin panel', functio
     $this->get('/')->assertHeader('Content-Security-Policy-Report-Only');
     expect($this->get('/')->headers->get('Content-Security-Policy-Report-Only'))->toContain("object-src 'none'")->toContain("frame-ancestors 'self'");
     $this->get('/admin/login')->assertHeaderMissing('Content-Security-Policy-Report-Only');
+});
+
+it('removes demo content with pcbd:demo-clear and leaves real records alone', function () {
+    $this->seed(ReferenceDataSeeder::class);
+    $this->seed(DemoSeeder::class);
+    $real = Developer::factory()->create(['name' => 'Real Builders Ltd']);
+    expect(Property::count())->toBeGreaterThan(5)->and(Media::where('is_demo', true)->count())->toBeGreaterThan(0);
+
+    $this->artisan('pcbd:demo-clear', ['--force' => true])->assertSuccessful();
+
+    expect(Property::withTrashed()->count())->toBe(0)
+        ->and(Project::withTrashed()->count())->toBe(0)
+        ->and(Media::where('is_demo', true)->count())->toBe(0)
+        ->and(BlogPost::withTrashed()->count())->toBe(0)
+        ->and(Developer::pluck('name')->all())->toBe(['Real Builders Ltd'])
+        ->and(Location::where('name', 'Gulshan')->exists())->toBeFalse()
+        ->and(Location::where('name', 'Bangladesh')->exists())->toBeTrue();
 });

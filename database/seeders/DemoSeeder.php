@@ -21,7 +21,7 @@ use RuntimeException;
 
 /**
  * Clearly-labelled DEMO content so the site can be built and reviewed before real
- * listings exist. Refuses to run in production. Images are procedural artwork,
+ * listings exist. Refuses to run in production unless PCBD_ALLOW_DEMO=true (pre-launch preview); `pcbd:demo-clear` removes it all. Images are procedural artwork,
  * flagged is_demo; developer names say "Demo"; contact details use reserved
  * example domains/numbers. Nothing here is a real listing, price or verification.
  */
@@ -29,8 +29,8 @@ class DemoSeeder extends Seeder
 {
     public function run(): void
     {
-        if (app()->isProduction()) {
-            throw new RuntimeException('DemoSeeder must never run in production.');
+        if (app()->isProduction() && ! config('pcbd.allow_demo')) {
+            throw new RuntimeException('DemoSeeder must never run in production (set PCBD_ALLOW_DEMO=true only for a pre-launch preview, then run pcbd:demo-clear).');
         }
         if (Developer::where('name', 'like', 'Demo %')->exists()) {
             $this->command?->info('Demo data already present — skipping.');

@@ -10,7 +10,7 @@
     if ($breadcrumbs) {
         $ld[] = ['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => collect($breadcrumbs)->values()->map(fn ($b, $i) => ['@type' => 'ListItem', 'position' => $i + 1, 'name' => $b[0], 'item' => $b[1] ?? $canon])->all()];
     }
-    $demo = ! app()->isProduction() && cache()->remember('pcbd.demo-active', 60, fn () => \App\Models\Media::where('is_demo', true)->exists());
+    $demo = (! app()->isProduction() || config('pcbd.allow_demo')) && cache()->remember('pcbd.demo-active', 60, fn () => \App\Models\Media::where('is_demo', true)->exists());
     $favCount = app(\App\Services\Favorites::class)->count(request());
     $cmpCount = count(session('compare', []));
     $wa = \App\Support\Phone::whatsapp($settings->get('contact.whatsapp'));
@@ -40,7 +40,7 @@
 </head>
 <body class="flex min-h-screen flex-col bg-white">
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-input focus:bg-white focus:px-4 focus:py-2">{{ __('Skip to content') }}</a>
-    @if ($demo)<div class="bg-gold-500 px-4 py-1.5 text-center text-xs font-semibold text-navy-900">Demo content — illustrative listings, artwork and figures. Not real properties. (Visible outside production only.)</div>@endif
+    @if ($demo)<div class="bg-gold-500 px-4 py-1.5 text-center text-xs font-semibold text-navy-900">Demo content — illustrative listings, artwork and figures. Not real properties.</div>@endif
     @include('partials.header', ['favCount' => $favCount])
     <main id="main" class="flex-1">
         @if (session('status') && ! session('form'))<div class="container-x pt-6"><x-ui.flash /></div>@endif
