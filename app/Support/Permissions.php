@@ -30,6 +30,12 @@ final class Permissions
 
     public const LEADS_MANAGE = 'leads.manage';
 
+    /** Work only the leads assigned to you. */
+    public const LEADS_WORK = 'leads.work';
+
+    /** Assign leads to staff (managers). */
+    public const LEADS_ASSIGN = 'leads.assign';
+
     public const CONTENT_MANAGE = 'content.manage';
 
     /** @return list<string> */
@@ -38,7 +44,7 @@ final class Permissions
         return [
             self::USERS_MANAGE, self::ROLES_MANAGE, self::SETTINGS_MANAGE, self::AUDIT_VIEW,
             self::LISTINGS_VIEW, self::LISTINGS_MANAGE, self::LISTINGS_PUBLISH, self::LISTINGS_VERIFY, self::CATALOG_MANAGE,
-            self::LEADS_MANAGE, self::CONTENT_MANAGE,
+            self::LEADS_MANAGE, self::LEADS_WORK, self::LEADS_ASSIGN, self::CONTENT_MANAGE,
         ];
     }
 

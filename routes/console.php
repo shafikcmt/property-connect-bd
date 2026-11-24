@@ -11,3 +11,4 @@ Artisan::command('inspire', function () {
 // Keep guest-facing caches fresh (sitemap is cached for an hour; this guarantees it never lingers).
 Schedule::call(fn () => cache()->forget('pcbd.sitemap'))->daily();
 Schedule::command('queue:prune-failed --hours=168')->daily();
+Schedule::command('pcbd:crm-reminders')->hourly()->withoutOverlapping();

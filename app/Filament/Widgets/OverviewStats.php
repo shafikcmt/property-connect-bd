@@ -35,6 +35,15 @@ class OverviewStats extends StatsOverviewWidget
             $stats[] = Stat::make('New inquiries', Lead::where('status', 'new')->count())->icon('heroicon-o-inbox-arrow-down')->color('success');
             $stats[] = Stat::make('Site visit requests', SiteVisit::where('status', 'requested')->count())->icon('heroicon-o-calendar');
         }
+        if ($user?->can(Permissions::LEADS_MANAGE) || $user?->can(Permissions::LEADS_WORK)) {
+            $mine = Lead::visibleTo($user);
+            $stats[] = Stat::make('Follow-ups overdue', (clone $mine)->followUpOverdue()->count())->icon('heroicon-o-clock')->color('danger')->description('Open leads past their follow-up time');
+            $stats[] = Stat::make('Response overdue', (clone $mine)->slaBreached()->count())->icon('heroicon-o-bell-alert')->color('danger')->description('New leads not contacted in time');
+            $stats[] = Stat::make('Needs attention', (clone $mine)->stale()->count())->icon('heroicon-o-exclamation-triangle')->color('warning')->description('No activity for 14 days');
+        }
+        if ($user?->can(Permissions::LEADS_ASSIGN)) {
+            $stats[] = Stat::make('Unassigned leads', Lead::unassigned()->count())->icon('heroicon-o-user-plus')->color('warning');
+        }
 
         return $stats;
     }
@@ -43,6 +52,6 @@ class OverviewStats extends StatsOverviewWidget
     {
         $user = auth()->user();
 
-        return (bool) ($user?->can(Permissions::LISTINGS_VIEW) || $user?->can(Permissions::LEADS_MANAGE));
+        return (bool) ($user?->can(Permissions::LISTINGS_VIEW) || $user?->can(Permissions::LEADS_MANAGE) || $user?->can(Permissions::LEADS_WORK));
     }
 }

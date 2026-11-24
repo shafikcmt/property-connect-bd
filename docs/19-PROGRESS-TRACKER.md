@@ -15,7 +15,7 @@ Statuses: Not Started · In Progress · Review · Completed · Blocked. Update a
 | 5 | Premium UI/UX & Animation | Completed | 95 | Self-hosted fonts, motion, skeleton image placeholders. Open: brand logo/fonts from owner |
 | 6 | Website QA | Completed | 100 | See QA report below |
 | 7 | Deployment | Ready (not executed) | 85 | Scripts, preflight, runbook done and exercised on a scratch production-mode DB. Blocked on owner inputs → [26](26-LAUNCH-CHECKLIST.md) |
-| 8 | CRM & Lead Management | Not Started (post-launch) | 0 | |
+| 8 | CRM & Lead Management | In Progress (slice 1 done 2026-11-25) | 40 | Done: assignment, priority, status rules, timeline, follow-ups + reminders, SLA/stale flags, agent scoping. Next: 90-day duplicate merge, budget fields, site-visit workflow, email/WhatsApp notifications, KPIs |
 | 9 | Sales & Commission | Not Started (post-launch) | 0 | |
 | 10 | Marketing & Analytics | Not Started (post-launch) | 0 | |
 | 11 | Partner & Agent Features | Not Started (post-launch) | 0 | |
@@ -84,3 +84,9 @@ Keyboard: skip link first, visible focus on all tested stops, menus/search/light
 
 ### Deployment blockers
 All owner-side: hosting, domain, SMTP, content/photos, legal review, contact details — see [26](26-LAUNCH-CHECKLIST.md).
+
+## Phase 8 — slice 1 (CRM core), 2026-11-25
+- Built: `leads` assignment/priority/follow-up/response fields, `lead_activities`, `lead_status_histories`, `lead_follow_ups`; `LeadWorkflow` service enforcing docs/13 transition rules (reasons, duplicate original, manager-only conversion/reopen/backwards moves with audit); `leads.work` (agents see only assigned leads) and `leads.assign` permissions; Filament inbox with assign/change status/log activity/schedule follow-up actions, timeline and follow-up managers, filters (mine, unassigned, overdue, response overdue, stale); dashboard CRM counts; in-app (bell) alerts to managers on new inquiries and to assignees; hourly `pcbd:crm-reminders`; `notifications.data` converted to jsonb for Filament.
+- Verified: 206 automated tests pass; admin list/edit/dashboard checked in a browser.
+- Not yet: 90-day duplicate merge, budget/preferred-location fields, site-visit scheduling workflow, email/WhatsApp/SMS notifications (needs SMTP/WhatsApp provider), KPI reports, round-robin assignment.
+

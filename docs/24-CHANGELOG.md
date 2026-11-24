@@ -4,6 +4,10 @@ Format: newest first; grouped by date/phase. Only significant changes (architect
 
 ## [Unreleased]
 ### Added
+- CRM core (Phase 8, slice 1): lead assignment, priority, status rules with history, activity timeline, follow-ups with hourly reminders, response-time (SLA) and stale-lead flags, agents see only their assigned leads (`leads.work`), managers assign (`leads.assign`), in-app notifications, dashboard CRM counts. Tests: 206.
+### Changed
+- Sales agents can now open the inquiry inbox (assigned leads only). `notifications.data` is jsonb. Lead edit page no longer edits status directly; use "Change status".
+### Added
 - Ops: container log size caps, dangling-image cleanup after each deploy, `scripts/restore-test-docker.sh` (backup restore proof) and `scripts/live-check.sh` (live health check).
 ### Added
 - Bangla/English public site: language switch (header, mobile drawer, branded pages; choice kept in an unencrypted `pcbd_locale` cookie; `PCBD_DEFAULT_LOCALE` sets the default, `en` for now). Admin stays English.

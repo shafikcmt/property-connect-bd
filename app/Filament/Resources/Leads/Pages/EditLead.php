@@ -2,8 +2,9 @@
 
 namespace App\Filament\Resources\Leads\Pages;
 
-use App\Enums\LeadStatus;
+use App\Enums\LeadPriority;
 use App\Filament\Resources\Leads\LeadResource;
+use App\Filament\Support\LeadActions;
 use App\Services\AuditLogger;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
@@ -12,17 +13,28 @@ class EditLead extends EditRecord
 {
     protected static string $resource = LeadResource::class;
 
-    /** Only status + notes are editable; contact fields are read-only (status is not mass-assignable on purpose). */
+    protected function getHeaderActions(): array
+    {
+        return LeadActions::all();
+    }
+
+    /** phone/email are hidden from serialisation on purpose, so the read-only fields are filled from the model here. */
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        $lead = $this->record;
+
+        return array_merge($data, [
+            'phone' => $lead->phone, 'email' => $lead->email, 'request_type' => $lead->request_type->label(),
+            'status' => $lead->status->label(), 'assignee' => $lead->assignee?->name ?? 'Unassigned', 'priority' => $lead->priority->value,
+        ]);
+    }
+
+    /** Only priority + notes are editable here; status, assignment and follow-ups go through LeadWorkflow actions. */
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
-        $old = $record->status;
-        $record->status = LeadStatus::from($data['status']);
+        $record->priority = LeadPriority::from($data['priority']);
         $record->internal_notes = $data['internal_notes'] ?? null;
         $record->save();
-
-        if ($old !== $record->status) {
-            app(AuditLogger::class)->log('lead.status_changed', $record, ['status' => $old->value], ['status' => $record->status->value]);
-        }
 
         return $record;
     }
