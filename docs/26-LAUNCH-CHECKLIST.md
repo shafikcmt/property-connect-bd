@@ -43,3 +43,10 @@ Website pages and flows, admin panel, search/filters, favorites/compare/inquirie
 ## F. Before real launch
 - If `PCBD_ALLOW_DEMO=true` was used for a preview: run `php artisan pcbd:demo-clear`, set `PCBD_ALLOW_DEMO=false`, redeploy, confirm `pcbd:preflight` shows no demo warnings.- Set `PCBD_NOINDEX=false` (it hides the site from search engines) and redeploy; submit `sitemap.xml` afterwards.
 
+## G. Right after the server went live (Docker + Cloudflare Tunnel)
+1. Run `bash scripts/live-check.sh https://pcbd.shafiqul.dev` from your computer — pages, headers, Bangla switch.
+2. On the server run `bash scripts/restore-test-docker.sh` once — proves the nightly backup restores (uses a scratch database, never the live one).
+3. Add `https://pcbd.shafiqul.dev/up` to a free uptime monitor (UptimeRobot/BetterStack) with email alerts.
+4. Copy `/home/deploy/pcbd/backups` off the server on a schedule (destination decision pending).
+5. Fill Admin → Settings (phone, WhatsApp, email, address, social) and the "Email new inquiries to" address.
+

@@ -25,3 +25,7 @@ dc exec -T app php artisan queue:restart || true
 
 echo "==> Preflight"
 dc exec -T app php artisan pcbd:preflight
+
+# Old images pile up on every deploy; this removes only dangling (untagged, unused) images, never tagged or running ones.
+echo "==> Tidy unused images"
+docker image prune --force --filter "label!=keep" >/dev/null 2>&1 || true

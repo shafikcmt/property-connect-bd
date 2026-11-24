@@ -2,10 +2,16 @@
 # No ports are published: the only way in is the outbound Cloudflare Tunnel, so this never conflicts with other sites on the host.
 name: pcbd
 
+# Cap container log size so logs can never fill the shared disk.
+x-logging: &logging
+  driver: json-file
+  options: { max-size: "10m", max-file: "3" }
+
 x-app: &app
   image: pcbd-app:latest
   env_file: ${PCBD_ENV_FILE:-/home/deploy/pcbd/.env}
   restart: unless-stopped
+  logging: *logging
   depends_on: { db: { condition: service_healthy } }
   volumes:
     - storage:/var/www/html/storage
@@ -25,12 +31,14 @@ services:
     build: { context: ., dockerfile: deploy/Dockerfile, target: web }
     image: pcbd-web:latest
     restart: unless-stopped
+    logging: *logging
     depends_on: [app]
     volumes:
       - public_storage:/var/www/html/public/storage:ro
   db:
     image: postgres:16-alpine
     restart: unless-stopped
+    logging: *logging
     environment:
       POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USERNAME}
@@ -45,6 +53,7 @@ services:
   cloudflared:
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
+    logging: *logging
     command: tunnel --no-autoupdate run
     environment:
       TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}

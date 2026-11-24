@@ -4,6 +4,8 @@ Format: newest first; grouped by date/phase. Only significant changes (architect
 
 ## [Unreleased]
 ### Added
+- Ops: container log size caps, dangling-image cleanup after each deploy, `scripts/restore-test-docker.sh` (backup restore proof) and `scripts/live-check.sh` (live health check).
+### Added
 - Bangla/English public site: language switch (header, mobile drawer, branded pages; choice kept in an unencrypted `pcbd_locale` cookie; `PCBD_DEFAULT_LOCALE` sets the default, `en` for now). Admin stays English.
 - `lang/bn.json` (~680 strings), `lang/bn/{auth,passwords,pagination,validation}.php`, Bangla legal pages (draft, needs legal review), Bangla digits and month names in visible text (`LocalizeDigits`), lakh/crore units in Bangla, self-hosted Noto Sans/Serif Bengali (loaded only when Bengali text is shown).
 - Optional Bangla content fields (`*_bn`) for properties, projects, developers, installments, updates, FAQs and blog posts, with English fallback (`HasBangla::tr`), editable in the admin; location names use `name_bn`.
