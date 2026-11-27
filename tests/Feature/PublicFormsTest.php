@@ -71,7 +71,7 @@ it('collapses rapid duplicate inquiries into one lead', function () {
 it('creates a site visit with a lead and validates the date window', function () {
     $p = Property::factory()->published()->create();
     $this->post('/site-visit', valid(['property_id' => $p->id, 'preferred_date' => now()->addDays(3)->toDateString(), 'preferred_window' => 'morning']))->assertSessionHas('status');
-    expect(SiteVisit::count())->toBe(1)->and(SiteVisit::first()->status)->toBe('requested')->and(Lead::first()->request_type->value)->toBe('site_visit');
+    expect(SiteVisit::count())->toBe(1)->and(SiteVisit::first()->status->value)->toBe('requested')->and(Lead::first()->request_type->value)->toBe('site_visit');
 
     $this->post('/site-visit', valid(['property_id' => $p->id, 'preferred_date' => now()->toDateString(), 'preferred_window' => 'morning']))->assertSessionHasErrors('preferred_date');
     $this->post('/site-visit', valid(['property_id' => $p->id, 'preferred_date' => now()->addDays(90)->toDateString(), 'preferred_window' => 'noon']))->assertSessionHasErrors(['preferred_date', 'preferred_window']);

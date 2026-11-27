@@ -16,11 +16,13 @@ use App\Models\Project;
 use App\Models\Property;
 use App\Models\PropertyReport;
 use App\Models\PropertyType;
+use App\Models\SiteVisit;
 use App\Models\User;
 use App\Policies\CatalogPolicy;
 use App\Policies\ContentPolicy;
 use App\Policies\LeadPolicy;
 use App\Policies\ListingPolicy;
+use App\Policies\SiteVisitPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
@@ -55,6 +57,7 @@ class AppServiceProvider extends ServiceProvider
             Gate::policy($model, ListingPolicy::class);
         }
         Gate::policy(Lead::class, LeadPolicy::class);
+        Gate::policy(SiteVisit::class, SiteVisitPolicy::class);
         foreach ([Faq::class, BlogPost::class, BlogCategory::class] as $model) {
             Gate::policy($model, ContentPolicy::class);
         }

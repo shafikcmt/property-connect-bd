@@ -15,7 +15,7 @@ Statuses: Not Started · In Progress · Review · Completed · Blocked. Update a
 | 5 | Premium UI/UX & Animation | Completed | 95 | Self-hosted fonts, motion, skeleton image placeholders. Open: brand logo/fonts from owner |
 | 6 | Website QA | Completed | 100 | See QA report below |
 | 7 | Deployment | Ready (not executed) | 85 | Scripts, preflight, runbook done and exercised on a scratch production-mode DB. Blocked on owner inputs → [26](26-LAUNCH-CHECKLIST.md) |
-| 8 | CRM & Lead Management | In Progress (slice 1 done 2026-11-25) | 40 | Done: assignment, priority, status rules, timeline, follow-ups + reminders, SLA/stale flags, agent scoping. Next: 90-day duplicate merge, budget fields, site-visit workflow, email/WhatsApp notifications, KPIs |
+| 8 | CRM & Lead Management | In Progress (slices 1–2 done) | 70 | Done: assignment, priority, status rules, timeline, follow-ups + reminders, SLA/stale flags, agent scoping, repeat-inquiry merge (90 days), site-visit workflow. Next: budget/preferred-location fields, email/WhatsApp notifications (needs providers), KPI reports, round-robin |
 | 9 | Sales & Commission | Not Started (post-launch) | 0 | |
 | 10 | Marketing & Analytics | Not Started (post-launch) | 0 | |
 | 11 | Partner & Agent Features | Not Started (post-launch) | 0 | |
@@ -89,4 +89,8 @@ All owner-side: hosting, domain, SMTP, content/photos, legal review, contact det
 - Built: `leads` assignment/priority/follow-up/response fields, `lead_activities`, `lead_status_histories`, `lead_follow_ups`; `LeadWorkflow` service enforcing docs/13 transition rules (reasons, duplicate original, manager-only conversion/reopen/backwards moves with audit); `leads.work` (agents see only assigned leads) and `leads.assign` permissions; Filament inbox with assign/change status/log activity/schedule follow-up actions, timeline and follow-up managers, filters (mine, unassigned, overdue, response overdue, stale); dashboard CRM counts; in-app (bell) alerts to managers on new inquiries and to assignees; hourly `pcbd:crm-reminders`; `notifications.data` converted to jsonb for Filament.
 - Verified: 206 automated tests pass; admin list/edit/dashboard checked in a browser.
 - Not yet: 90-day duplicate merge, budget/preferred-location fields, site-visit scheduling workflow, email/WhatsApp/SMS notifications (needs SMTP/WhatsApp provider), KPI reports, round-robin assignment.
+
+## Phase 8 — slice 2 (2026-11-27)
+- Repeat inquiries from the same phone are merged into the buyer's open lead (≤ 90 days, not closed): timeline entry, inquiry counter, priority normal → high, assignee (or managers) alerted. Identical requests within 10 minutes are still ignored as double clicks.
+- Site-visit workflow (`SiteVisitWorkflow`, Site visits board, lead tab): confirm/reschedule (future time, agent, meeting point; lead moves to Site visit and is assigned), complete (feedback, only after the visit time, auto follow-up), cancel (reason), no-show (auto re-engagement follow-up). Agents see their own visits only. Tests: 214.
 

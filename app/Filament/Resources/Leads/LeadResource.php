@@ -9,6 +9,7 @@ use App\Filament\Resources\Leads\Pages\EditLead;
 use App\Filament\Resources\Leads\Pages\ListLeads;
 use App\Filament\Resources\Leads\RelationManagers\ActivitiesRelationManager;
 use App\Filament\Resources\Leads\RelationManagers\FollowUpsRelationManager;
+use App\Filament\Resources\Leads\RelationManagers\SiteVisitsRelationManager;
 use App\Filament\Support\LeadActions;
 use App\Models\Lead;
 use BackedEnum;
@@ -77,6 +78,7 @@ class LeadResource extends Resource
                 TextColumn::make('created_at')->label('Received')->since()->sortable(),
                 TextColumn::make('name')->searchable()->weight('medium'),
                 TextColumn::make('phone')->searchable()->copyable(),
+                TextColumn::make('inquiry_count')->label('Asked')->badge()->color(fn (int $state) => $state > 1 ? 'warning' : 'gray')->formatStateUsing(fn (int $state) => $state.'×')->toggleable(),
                 TextColumn::make('request_type')->badge()->formatStateUsing(fn ($state) => $state->label()),
                 TextColumn::make('subject')->label('About')->state(fn (Lead $l) => $l->property?->title ?? $l->project?->name ?? '—')->limit(30),
                 TextColumn::make('status')->badge()->formatStateUsing(fn ($state) => $state->label())->color(fn ($state) => $state === LeadStatus::New ? 'warning' : 'gray'),
@@ -106,7 +108,7 @@ class LeadResource extends Resource
 
     public static function getRelations(): array
     {
-        return [ActivitiesRelationManager::class, FollowUpsRelationManager::class];
+        return [ActivitiesRelationManager::class, FollowUpsRelationManager::class, SiteVisitsRelationManager::class];
     }
 
     public static function getPages(): array

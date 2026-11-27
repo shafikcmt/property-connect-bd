@@ -4,6 +4,10 @@ Format: newest first; grouped by date/phase. Only significant changes (architect
 
 ## [Unreleased]
 ### Added
+- CRM slice 2: repeat inquiries merge into the open lead; site-visit board and workflow (confirm, reschedule, complete, cancel, no-show) with timeline, follow-ups and agent notifications; `leads.inquiry_count`, new `site_visits` columns. Tests: 214.
+### Changed
+- A new request from a phone number that already has an open lead (≤ 90 days) no longer creates a second lead.
+### Added
 - CRM core (Phase 8, slice 1): lead assignment, priority, status rules with history, activity timeline, follow-ups with hourly reminders, response-time (SLA) and stale-lead flags, agents see only their assigned leads (`leads.work`), managers assign (`leads.assign`), in-app notifications, dashboard CRM counts. Tests: 206.
 ### Changed
 - Sales agents can now open the inquiry inbox (assigned leads only). `notifications.data` is jsonb. Lead edit page no longer edits status directly; use "Change status".

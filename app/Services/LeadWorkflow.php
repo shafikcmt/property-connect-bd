@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enums\LeadActivityType;
+use App\Enums\LeadPriority;
 use App\Enums\LeadStatus;
+use App\Enums\RequestType;
 use App\Models\Lead;
 use App\Models\LeadActivity;
 use App\Models\LeadFollowUp;
@@ -13,7 +15,9 @@ use App\Models\LeadStatusHistory;
 use App\Models\User;
 use App\Support\Permissions;
 use Carbon\CarbonInterface;
+use Filament\Actions\Action;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -99,7 +103,7 @@ class LeadWorkflow
 
     public function logActivity(Lead $lead, LeadActivityType $type, string $body, User $by): LeadActivity
     {
-        throw_if(in_array($type, [LeadActivityType::StatusChange, LeadActivityType::Assignment, LeadActivityType::FollowUp], true), LeadRuleViolation::class, 'That activity type is recorded automatically.');
+        throw_if(in_array($type, [LeadActivityType::StatusChange, LeadActivityType::Assignment, LeadActivityType::FollowUp, LeadActivityType::Inquiry], true), LeadRuleViolation::class, 'That activity type is recorded automatically.');
         $body = trim($body);
         throw_if($body === '', LeadRuleViolation::class, 'Write a short note about what happened.');
 
@@ -121,7 +125,7 @@ class LeadWorkflow
         throw_if($dueAt->lt(now()->subMinutes(5)), LeadRuleViolation::class, 'Pick a follow-up time in the future.');
 
         return DB::transaction(function () use ($lead, $dueAt, $note, $by, $owner) {
-            $followUp = LeadFollowUp::create(['lead_id' => $lead->id, 'user_id' => ($owner ?? $lead->assignee ?? $by)->id, 'due_at' => $dueAt, 'note' => $note ? mb_substr(trim($note), 0, 255) : null]);
+            $followUp = LeadFollowUp::create(['lead_id' => $lead->id, 'user_id' => ($owner ?? $lead->loadMissing('assignee')->assignee ?? $by)->id, 'due_at' => $dueAt, 'note' => $note ? mb_substr(trim($note), 0, 255) : null]);
             $this->record($lead, LeadActivityType::FollowUp, 'Follow-up scheduled for '.$dueAt->format('d M Y H:i').($note ? ": {$note}" : ''), $by);
             $this->syncNextFollowUp($lead);
 
@@ -143,6 +147,46 @@ class LeadWorkflow
 
             return $followUp;
         });
+    }
+
+    /**
+     * The same buyer asked again while their lead is still open: record it on that lead instead of creating a duplicate
+     * (docs/13 §3). A repeat means a keen buyer, so normal priority rises to high, and the assignee (or, if nobody has
+     * the lead yet, the managers) is alerted.
+     */
+    public function appendInquiry(Lead $lead, RequestType $type, ?string $subject, ?string $message): Lead
+    {
+        DB::transaction(function () use ($lead, $type, $subject, $message) {
+            $message = trim((string) $message);
+            $body = 'New '.strtolower($type->label()).' request'.($subject ? " about {$subject}" : '').($message !== '' ? ': '.mb_substr($message, 0, 500) : '');
+            $lead->forceFill(['inquiry_count' => $lead->inquiry_count + 1, 'last_activity_at' => now()]);
+            if ($lead->priority === LeadPriority::Normal) {
+                $lead->priority = LeadPriority::High;
+            }
+            $lead->save();
+            LeadActivity::create(['lead_id' => $lead->id, 'user_id' => null, 'type' => LeadActivityType::Inquiry, 'body' => $body]);
+        });
+
+        $this->notifyTeam($lead, 'Repeat inquiry', $lead->name.' asked again ('.$lead->inquiry_count.' inquiries)', $lead->loadMissing('assignee')->assignee ? collect([$lead->assignee]) : $this->managers());
+
+        return $lead;
+    }
+
+    /** People who assign leads, plus super admins. @return \Illuminate\Support\Collection<int, User> */
+    public function managers(): Collection
+    {
+        return User::query()->where('status', 'active')
+            ->where(fn ($q) => $q->permission(Permissions::LEADS_ASSIGN)->orWhereHas('roles', fn ($r) => $r->where('name', 'super-admin')))->get();
+    }
+
+    /** In-app (bell) alert with a link to the lead. Never includes contact details. */
+    public function notifyTeam(Lead $lead, string $title, string $body, Collection $recipients): void
+    {
+        if ($recipients->isEmpty()) {
+            return;
+        }
+        Notification::make()->title($title)->body($body)->warning()
+            ->actions([Action::make('open')->label('Open')->url('/admin/leads/'.$lead->id.'/edit')])->sendToDatabase($recipients);
     }
 
     /** Keeps leads.next_follow_up_at equal to the earliest open follow-up. */

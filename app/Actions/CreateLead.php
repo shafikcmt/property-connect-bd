@@ -7,12 +7,11 @@ namespace App\Actions;
 use App\Enums\RequestType;
 use App\Mail\NewInquiryMail;
 use App\Models\Lead;
-use App\Models\User;
+use App\Models\Project;
+use App\Models\Property;
+use App\Services\LeadWorkflow;
 use App\Services\SettingsService;
-use App\Support\Permissions;
 use App\Support\Phone;
-use Filament\Actions\Action;
-use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -37,6 +36,14 @@ class CreateLead
             ->where('created_at', '>', now()->subMinutes(10))->first();
         if ($recent && $type !== RequestType::SiteVisit) {
             return $recent;
+        }
+
+        // The same buyer already has an open lead: add this request to it rather than creating a duplicate (docs/13 §3).
+        $open = Lead::query()->where('phone', $phone)->openPipeline()->where('created_at', '>', now()->subDays(90))->latest('id')->first();
+        if ($open) {
+            $subject = isset($data['property_id']) ? Property::find($data['property_id'])?->title : (isset($data['project_id']) ? Project::find($data['project_id'])?->name : null);
+
+            return app(LeadWorkflow::class)->appendInquiry($open, $type, $subject, $data['message'] ?? null);
         }
 
         $lead = Lead::create([
@@ -87,10 +94,7 @@ class CreateLead
     private function notifyManagers(Lead $lead): void
     {
         try {
-            $managers = User::query()->where('status', 'active')
-                ->where(fn ($q) => $q->permission(Permissions::LEADS_ASSIGN)->orWhereHas('roles', fn ($r) => $r->where('name', 'super-admin')))->get();
-            Notification::make()->title('New inquiry')->body($lead->request_type->label())->warning()
-                ->actions([Action::make('open')->label('Open')->url('/admin/leads/'.$lead->id.'/edit')])->sendToDatabase($managers);
+            app(LeadWorkflow::class)->notifyTeam($lead, 'New inquiry', $lead->request_type->label(), app(LeadWorkflow::class)->managers());
         } catch (Throwable $e) {
             Log::warning('In-app lead alert failed', ['lead_id' => $lead->id, 'error' => $e::class]);
         }

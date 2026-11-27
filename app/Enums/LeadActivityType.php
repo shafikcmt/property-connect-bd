@@ -15,6 +15,7 @@ enum LeadActivityType: string
     case StatusChange = 'status_change';
     case Assignment = 'assignment';
     case FollowUp = 'follow_up';
+    case Inquiry = 'inquiry';
 
     public function label(): string
     {
