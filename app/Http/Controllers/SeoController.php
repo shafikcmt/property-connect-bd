@@ -36,7 +36,7 @@ class SeoController extends Controller
     public function robots(): Response
     {
         $lines = app()->environment('production') && ! config('pcbd.noindex')
-            ? ['User-agent: *', 'Disallow: /admin', 'Disallow: /account', 'Disallow: /search', 'Disallow: /compare', 'Disallow: /favorites', 'Disallow: /login', 'Disallow: /register', 'Allow: /', '', 'Sitemap: '.url('/sitemap.xml')]
+            ? ['User-agent: *', 'Disallow: /admin', 'Disallow: /erp', 'Disallow: /account', 'Disallow: /search', 'Disallow: /compare', 'Disallow: /favorites', 'Disallow: /login', 'Disallow: /register', 'Allow: /', '', 'Sitemap: '.url('/sitemap.xml')]
             : ['User-agent: *', 'Disallow: /'];
 
         return response(implode("\n", $lines)."\n", 200, ['Content-Type' => 'text/plain']);

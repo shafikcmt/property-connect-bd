@@ -4,6 +4,11 @@ Format: newest first; grouped by date/phase. Only significant changes (architect
 
 ## [Unreleased]
 ### Added
+- Developer ERP at `/erp` (ADR-0019): developer staff accounts and roles, shares and shareholders, share sales with generated instalment schedules, append-only payments with reversals and sequential receipts, overdue tracking, dashboard, printable receipts and statements. Platform admins link a user to a developer in Users. Tests: 241.
+### Changed
+- Public project share counts (total, sold) now follow the ERP register once a project uses it.
+- `/erp` is excluded from search engines, the public CSP and the language switch (like `/admin`).
+### Added
 - CRM slice 3: buyer needs on leads (budget, area, type, purpose, timeline) with qualification rules; CRM reports page for managers. Tests: 221.
 ### Changed
 - Marking a lead Qualified or Interested now requires the needs/interest to be recorded first.

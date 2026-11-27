@@ -14,7 +14,7 @@ class SetLocale
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->is('admin', 'admin/*', 'livewire*', 'livewire-*/*')) {
+        if ($request->is('admin', 'admin/*', 'erp', 'erp/*', 'livewire*', 'livewire-*/*')) {
             app()->setLocale('en');
             Carbon::setLocale('en');
 

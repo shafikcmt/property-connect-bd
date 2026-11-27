@@ -11,28 +11,11 @@ use App\Filament\Widgets\OverviewStats;
 use App\Models\AuditLog;
 use App\Models\Lead;
 use App\Models\Property;
-use App\Models\User;
 use App\Services\LeadRuleViolation;
-use App\Services\LeadWorkflow;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
-
-function wf(): LeadWorkflow
-{
-    return app(LeadWorkflow::class);
-}
-
-function manager(): User
-{
-    return userWithRole(RoleName::SalesManager);
-}
-
-function agent(): User
-{
-    return userWithRole(RoleName::SalesAgent);
-}
 
 it('moves a lead forward through the pipeline and records history, activity and audit', function () {
     $lead = Lead::factory()->create(['budget_max' => 20_000_000]);

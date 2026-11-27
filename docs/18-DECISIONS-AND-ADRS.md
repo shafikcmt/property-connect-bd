@@ -93,3 +93,11 @@ Format: ID · Date · Status (Accepted / Proposed / Superseded) · Context · De
 - **Alternatives:** install PHP/Nginx on the host (needs root, port conflict); add a vhost to the other project's Nginx (overwritten by its deploys, risks its downtime).
 - **Consequences:** Isolated from the other project; Docker is now a production dependency (still optional for local dev); depends on Cloudflare availability; real client IP comes from `CF-Connecting-IP`.
 
+---
+### ADR-0019 — Developer ERP as a second panel with developer-scoped data (extends ADR-0005, docs/27)
+- **Date:** 2026-11-28 · **Status:** Accepted (owner asked to build it; defaults chosen, owner can still change)
+- **Context:** A partner developer runs land-share projects (shares → registered deeds → instalments → flats) and needs to manage them. Their staff must never see the platform's CRM, other developers' data or site settings.
+- **Decision:** (1) A second Filament panel `erp` at `/erp` with its own login, 2FA (mandatory for owner and accountant) and branding; developer users cannot enter `/admin`. (2) `users.developer_id` links a user to one developer; every ERP table carries `developer_id` and a global scope (`BelongsToDeveloper`) filters by the signed-in user's developer, with policies as a second check. (3) Roles `developer-owner`, `developer-accountant`, `developer-sales` and permissions `erp.view|sell|collect|manage`. (4) Money is `decimal(14,2)`; payments are **append-only** (enforced by a PostgreSQL trigger); corrections are reversal rows; receipt numbers are sequential per developer. (5) ERP records data only — it does not process payments. (6) No SaaS features (sign-up, billing, packages): still one database and one deployment; the `developer_id` boundary keeps a later move to SaaS possible.
+- **Alternatives:** same `/admin` panel with role filtering (too easy to leak platform data); separate application (duplicates auth, deploys and data).
+- **Consequences:** more tables and tests; the platform Super Admin can technically read everything (must be stated in the agreement with the developer); email-based invitations need SMTP, so admins create accounts and mark emails verified until then.
+

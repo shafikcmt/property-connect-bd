@@ -10,16 +10,27 @@ use App\Models\BlogCategory;
 use App\Models\BlogPost;
 use App\Models\Developer;
 use App\Models\Faq;
+use App\Models\InstalmentPlanItem;
 use App\Models\Lead;
 use App\Models\Location;
+use App\Models\Payment;
 use App\Models\Project;
+use App\Models\ProjectShare;
 use App\Models\Property;
 use App\Models\PropertyReport;
 use App\Models\PropertyType;
+use App\Models\Shareholder;
+use App\Models\ShareHolding;
+use App\Models\ShareInstalment;
 use App\Models\SiteVisit;
 use App\Models\User;
 use App\Policies\CatalogPolicy;
 use App\Policies\ContentPolicy;
+use App\Policies\ErpManagePolicy;
+use App\Policies\ErpPaymentPolicy;
+use App\Policies\ErpPlanItemPolicy;
+use App\Policies\ErpSalesPolicy;
+use App\Policies\ErpViewOnlyPolicy;
 use App\Policies\LeadPolicy;
 use App\Policies\ListingPolicy;
 use App\Policies\SiteVisitPolicy;
@@ -58,6 +69,13 @@ class AppServiceProvider extends ServiceProvider
         }
         Gate::policy(Lead::class, LeadPolicy::class);
         Gate::policy(SiteVisit::class, SiteVisitPolicy::class);
+        // Developer ERP (ADR-0019): who may see and who may change each kind of record.
+        Gate::policy(ProjectShare::class, ErpManagePolicy::class);
+        Gate::policy(InstalmentPlanItem::class, ErpPlanItemPolicy::class);
+        Gate::policy(Shareholder::class, ErpSalesPolicy::class);
+        Gate::policy(ShareHolding::class, ErpSalesPolicy::class);
+        Gate::policy(ShareInstalment::class, ErpViewOnlyPolicy::class);
+        Gate::policy(Payment::class, ErpPaymentPolicy::class);
         foreach ([Faq::class, BlogPost::class, BlogCategory::class] as $model) {
             Gate::policy($model, ContentPolicy::class);
         }

@@ -63,6 +63,16 @@ class Project extends Model
         return $this->hasMany(ProjectUnit::class);
     }
 
+    public function shares(): HasMany
+    {
+        return $this->hasMany(ProjectShare::class)->orderBy('number');
+    }
+
+    public function planItems(): HasMany
+    {
+        return $this->hasMany(InstalmentPlanItem::class)->orderBy('sort_order')->orderBy('id');
+    }
+
     public function installments(): HasMany
     {
         return $this->hasMany(ProjectInstallment::class)->orderBy('sort_order')->orderBy('id');

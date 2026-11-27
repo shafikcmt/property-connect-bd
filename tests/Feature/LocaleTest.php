@@ -30,6 +30,8 @@ it('rejects unknown languages and never redirects to another site', function () 
 it('follows the visitor language on error pages and keeps the admin panel English', function () {
     $this->withUnencryptedCookies(bn())->get('/no-such-page')->assertNotFound()->assertSee('lang="bn"', false);
     $this->withUnencryptedCookies(bn())->get('/admin/login')->assertOk()->assertSee('lang="en"', false);
+    $this->withUnencryptedCookies(bn())->get('/erp/login')->assertOk()->assertSee('lang="en"', false);
+    $this->get('/robots.txt')->assertOk();
 });
 
 it('can default to Bangla through PCBD_DEFAULT_LOCALE', function () {

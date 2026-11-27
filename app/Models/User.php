@@ -15,6 +15,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -47,9 +48,21 @@ class User extends Authenticatable implements FilamentUser, HasAppAuthentication
     /** Admin panel access: active, verified, and holding at least one staff role. */
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->isActive()
-            && $this->hasVerifiedEmail()
-            && $this->hasAnyRole(RoleName::adminPanelRoles());
+        if (! $this->isActive() || ! $this->hasVerifiedEmail()) {
+            return false;
+        }
+
+        // The Developer ERP (ADR-0019) is for a developer's own staff only; platform staff use /admin.
+        if ($panel->getId() === 'erp') {
+            return $this->developer_id !== null && $this->hasAnyRole(RoleName::erpRoles());
+        }
+
+        return $this->hasAnyRole(RoleName::adminPanelRoles());
+    }
+
+    public function developer(): BelongsTo
+    {
+        return $this->belongsTo(Developer::class);
     }
 
     public function requiresMfa(): bool

@@ -38,6 +38,15 @@ final class Permissions
 
     public const CONTENT_MANAGE = 'content.manage';
 
+    /** Developer ERP (ADR-0019): see data / sell shares / record payments / manage plan, cancellations and reversals. */
+    public const ERP_VIEW = 'erp.view';
+
+    public const ERP_SELL = 'erp.sell';
+
+    public const ERP_COLLECT = 'erp.collect';
+
+    public const ERP_MANAGE = 'erp.manage';
+
     /** @return list<string> */
     public static function all(): array
     {
@@ -45,6 +54,7 @@ final class Permissions
             self::USERS_MANAGE, self::ROLES_MANAGE, self::SETTINGS_MANAGE, self::AUDIT_VIEW,
             self::LISTINGS_VIEW, self::LISTINGS_MANAGE, self::LISTINGS_PUBLISH, self::LISTINGS_VERIFY, self::CATALOG_MANAGE,
             self::LEADS_MANAGE, self::LEADS_WORK, self::LEADS_ASSIGN, self::CONTENT_MANAGE,
+            self::ERP_VIEW, self::ERP_SELL, self::ERP_COLLECT, self::ERP_MANAGE,
         ];
     }
 

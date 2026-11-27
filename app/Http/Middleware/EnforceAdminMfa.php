@@ -31,7 +31,9 @@ class EnforceAdminMfa
 
         $profile = Filament::getProfileUrl();
 
-        if ($request->url() === $profile || $request->routeIs('filament.admin.auth.*', 'livewire.*')) {
+        $panel = Filament::getCurrentPanel()?->getId() ?? 'admin';
+
+        if ($request->url() === $profile || $request->routeIs("filament.{$panel}.auth.*", 'livewire.*')) {
             return $next($request);
         }
 

@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Users\Schemas;
 
 use App\Enums\RoleName;
 use App\Enums\UserStatus;
+use App\Models\Developer;
 use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -32,6 +33,9 @@ class UserForm
                 Select::make('status')->options(collect(UserStatus::cases())->mapWithKeys(fn ($state) => [$state->value => ucfirst($state->value)]))
                     ->required()->default(UserStatus::Active->value)
                     ->disabled(fn (?User $record) => $record?->is(auth()->user())), // cannot suspend yourself
+                Select::make('developer_id')->label(__('Developer company'))->searchable()->placeholder(__('None (platform staff or buyer)'))
+                    ->options(fn () => Developer::query()->orderBy('name')->pluck('name', 'id')->all())
+                    ->helperText(__('Only for developer staff using the Developer ERP at /erp. They cannot enter /admin.')),
                 Select::make('roles')->relationship('roles', 'name', fn (Builder $query) => auth()->user()?->hasRole(RoleName::SuperAdmin->value)
                     ? $query
                     : $query->where('name', '!=', RoleName::SuperAdmin->value))

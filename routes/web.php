@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CompareController;
 use App\Http\Controllers\DeveloperController;
+use App\Http\Controllers\ErpDocumentController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\HomeController;
@@ -69,6 +70,11 @@ Route::post('/compare/clear', [CompareController::class, 'clear'])->name('compar
 
 // SEO
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
+// Developer ERP documents (ADR-0019): signed-in developer staff only; records of other companies resolve to 404.
+Route::middleware(['auth', 'throttle:120,1'])->prefix('erp')->group(function () {
+    Route::get('/receipts/{payment}', [ErpDocumentController::class, 'receipt'])->name('erp.receipt');
+    Route::get('/statements/{holding}', [ErpDocumentController::class, 'statement'])->name('erp.statement');
+});
 Route::get('/language/{locale}', [LocaleController::class, 'switch'])->middleware('throttle:60,1')->name('locale.switch');
 Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
 

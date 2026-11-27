@@ -50,3 +50,9 @@ Website pages and flows, admin panel, search/filters, favorites/compare/inquirie
 4. Copy `/home/deploy/pcbd/backups` off the server on a schedule (destination decision pending).
 5. Fill Admin → Settings (phone, WhatsApp, email, address, social) and the "Email new inquiries to" address.
 
+## H. Before the developer uses the ERP for real
+1. Their accountant reviews the rules (payments are append-only; mistakes are reversed; receipts are sequential; overdue = instalments due before today minus payments, oldest first).
+2. Agree in writing who owns the data and who can see it (the platform Super Admin technically can read the database), backups, and what happens on exit. Lawyer review recommended.
+3. Create their accounts in Admin → Users (role, developer company, mark email verified, they enrol 2FA at first login).
+4. Import or enter the existing shareholders, shares and payments; check totals against their books before going live.
+

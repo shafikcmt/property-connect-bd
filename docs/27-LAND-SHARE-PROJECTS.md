@@ -44,6 +44,8 @@ Goal: a developer can run the whole project in the platform.
 
 Rules carried over from the project: money is `decimal`, payments append-only, every sensitive change audited, no buyer data exposed publicly, consent recorded, data minimised. NID numbers and similar identifiers are stored only when strictly required, encrypted, and shown masked.
 
+**Built 2026-11-28 (slices 1–2):** see ADR-0019 and the tracker. Remaining: deeds and mutation, allocation and construction, reports.
+
 ## 4. Sequencing
 1. Website launch with the first partner developer (ordinary project model + share summary/instalment table/branded page/Bangla as approved).
 2. Phase 8 CRM → Phase 9 sales/payments (reused for instalments) → Phase 11 developer portal (this document's ERP) → Phase 12 multi-tenant if several developers join.

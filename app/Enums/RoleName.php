@@ -13,6 +13,9 @@ enum RoleName: string
     case SalesAgent = 'sales-agent';
     case ContentManager = 'content-manager';
     case Buyer = 'buyer';
+    case DeveloperOwner = 'developer-owner';
+    case DeveloperAccountant = 'developer-accountant';
+    case DeveloperSales = 'developer-sales';
 
     public function label(): string
     {
@@ -24,6 +27,9 @@ enum RoleName: string
             self::SalesAgent => 'Sales Agent',
             self::ContentManager => 'Content Manager',
             self::Buyer => 'Buyer',
+            self::DeveloperOwner => 'Developer owner',
+            self::DeveloperAccountant => 'Developer accountant',
+            self::DeveloperSales => 'Developer sales',
         };
     }
 
@@ -40,9 +46,15 @@ enum RoleName: string
         ];
     }
 
-    /** Roles that must use two-factor authentication. */
+    /** Roles for a developer's own staff (Developer ERP only). */
+    public static function erpRoles(): array
+    {
+        return [self::DeveloperOwner->value, self::DeveloperAccountant->value, self::DeveloperSales->value];
+    }
+
+    /** Roles that must use two-factor authentication (staff with platform power or access to money). */
     public static function mfaRequiredRoles(): array
     {
-        return [self::SuperAdmin->value, self::Admin->value];
+        return [self::SuperAdmin->value, self::Admin->value, self::DeveloperOwner->value, self::DeveloperAccountant->value];
     }
 }

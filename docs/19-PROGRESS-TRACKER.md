@@ -18,7 +18,7 @@ Statuses: Not Started · In Progress · Review · Completed · Blocked. Update a
 | 8 | CRM & Lead Management | In Progress (slices 1–3 done) | 85 | Done: assignment, priority, status rules, timeline, follow-ups + reminders, SLA/stale flags, agent scoping, repeat-inquiry merge (90 days), site-visit workflow, buyer needs (budget/area/type/purpose/timeline), CRM reports. Next: email/WhatsApp notifications (needs providers), round-robin, report exports |
 | 9 | Sales & Commission | Not Started (post-launch) | 0 | |
 | 10 | Marketing & Analytics | Not Started (post-launch) | 0 | |
-| 11 | Partner & Agent Features | Not Started (post-launch) | 0 | |
+| 11 | Partner & Agent Features | In Progress (Developer ERP, slice 1–2) | 25 | Done: /erp panel, roles, shares, shareholders, sales, instalments, payments, receipts, statements. Next: deeds & mutation, allocation & construction, reports & shareholder statements |
 | 12 | SaaS architecture | Not Started (on demand) | 0 | |
 
 ## Phase 1 verification record (2026-11-22)
@@ -97,4 +97,10 @@ All owner-side: hosting, domain, SMTP, content/photos, legal review, contact det
 ## Phase 8 — slice 3 (2026-11-27)
 - Buyer needs on leads (budget range, preferred area, property type, purpose, timeline); a lead can be Qualified only with a budget or preferred area, Interested only with a property/project or needs; assistance-form budget and type are copied onto the lead; DB CHECK keeps min ≤ max.
 - CRM reports page (managers): new/contacted/waiting, median first response and % within SLA, pipeline stages reached, visits by status, lost reasons, sources, per-agent numbers, most-asked properties/projects, for 7/30/90/365 days. All figures come from recorded data. Tests: 221.
+
+## Developer ERP — slices 1–2 (2026-11-28)
+- ADR-0019 (second Filament panel `/erp`, developer-scoped data, append-only payments). Defaults chosen where the owner had not answered: one developer for now, 2FA mandatory for owner and accountant, SaaS-ready `developer_id` boundary but no SaaS features.
+- Built: roles `developer-owner|accountant|sales`, permissions `erp.view|sell|collect|manage`; `users.developer_id` (set by platform admins with consistency checks; "Mark email as verified" until SMTP exists); `BelongsToDeveloper` scope + policies; tables `project_shares`, `shareholders` (NID encrypted, masked), `share_holdings`, `instalment_plan_items`, `share_instalments`, `payments` (PostgreSQL trigger blocks update/delete; reversals; sequential receipts); services `ShareSale`, `PaymentRecorder`, `HoldingLedger` (oldest-first allocation, integer poisha), `ErpSummary`; panel screens for projects (add shares, instalment plan, sell), shareholders, share sales (record payment, reverse, cancel), payments, dashboard (collected, outstanding, overdue list); printable receipt and statement; public project counts follow the register.
+- Tests: 241 pass. Browser-checked login, dashboard, sale page.
+- Open: owner answers to docs plan questions 1–7 (instalment shape, payment methods, cancellation/refund rules, shareholder login, existing data import, SMS), accountant review of the rules before real use, deeds/mutation (slice 3), allocation and construction (slice 4), reports and Excel export (slice 5), CSV import of existing shareholders.
 
