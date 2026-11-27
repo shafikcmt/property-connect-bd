@@ -50,6 +50,12 @@ class LeadWorkflow
             throw_unless($reason !== null && mb_strlen($reason) >= 5, LeadRuleViolation::class, 'Add a note explaining the sale before marking the lead converted.');
             $override = true;
         }
+        if ($to === LeadStatus::Qualified) {
+            throw_unless($lead->hasNeeds(), LeadRuleViolation::class, 'Record the buyer’s budget or preferred area before marking the lead qualified.');
+        }
+        if ($to === LeadStatus::Interested) {
+            throw_unless($lead->property_id || $lead->project_id || $lead->hasNeeds(), LeadRuleViolation::class, 'Record what the buyer is interested in (a property, project, budget or area) first.');
+        }
         if (in_array($to, [LeadStatus::Lost, LeadStatus::NotInterested, LeadStatus::Invalid], true)) {
             throw_unless($reason, LeadRuleViolation::class, 'A reason is required to close a lead as '.strtolower($to->label()).'.');
         }
@@ -187,6 +193,31 @@ class LeadWorkflow
         }
         Notification::make()->title($title)->body($body)->warning()
             ->actions([Action::make('open')->label('Open')->url('/admin/leads/'.$lead->id.'/edit')])->sendToDatabase($recipients);
+    }
+
+    /**
+     * Saves what the buyer is looking for. Only these fields change; the audit entry holds ids and numbers, no contact data.
+     *
+     * @param  array<string, mixed>  $data  budget_min, budget_max, preferred_location_id, property_type_id, purpose, buy_timeline
+     */
+    public function updateNeeds(Lead $lead, array $data, User $by): Lead
+    {
+        $fields = ['budget_min', 'budget_max', 'preferred_location_id', 'property_type_id', 'purpose', 'buy_timeline'];
+        $clean = [];
+        foreach ($fields as $f) {
+            $clean[$f] = ($data[$f] ?? null) === '' ? null : ($data[$f] ?? null);
+        }
+        throw_if($clean['budget_min'] !== null && $clean['budget_max'] !== null && (float) $clean['budget_min'] > (float) $clean['budget_max'], LeadRuleViolation::class, 'The minimum budget cannot be higher than the maximum.');
+        throw_if($clean['purpose'] !== null && ! in_array($clean['purpose'], ['sale', 'rent'], true), LeadRuleViolation::class, 'Purpose must be sale or rent.');
+
+        $old = $lead->only($fields);
+        $lead->forceFill($clean)->save();
+        if ($old !== $lead->only($fields)) {
+            $this->record($lead, LeadActivityType::Note, 'Buyer needs updated', $by);
+            $this->audit->log('lead.needs_updated', $lead, array_map(fn ($v) => $v instanceof \BackedEnum ? $v->value : $v, $old), array_map(fn ($v) => $v instanceof \BackedEnum ? $v->value : $v, $lead->only($fields)), $by->id);
+        }
+
+        return $lead;
     }
 
     /** Keeps leads.next_follow_up_at equal to the earliest open follow-up. */

@@ -4,6 +4,10 @@ Format: newest first; grouped by date/phase. Only significant changes (architect
 
 ## [Unreleased]
 ### Added
+- CRM slice 3: buyer needs on leads (budget, area, type, purpose, timeline) with qualification rules; CRM reports page for managers. Tests: 221.
+### Changed
+- Marking a lead Qualified or Interested now requires the needs/interest to be recorded first.
+### Added
 - CRM slice 2: repeat inquiries merge into the open lead; site-visit board and workflow (confirm, reschedule, complete, cancel, no-show) with timeline, follow-ups and agent notifications; `leads.inquiry_count`, new `site_visits` columns. Tests: 214.
 ### Changed
 - A new request from a phone number that already has an open lead (≤ 90 days) no longer creates a second lead.

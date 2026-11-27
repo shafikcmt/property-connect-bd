@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\BuyTimeline;
 use App\Enums\LeadPriority;
 use App\Enums\LeadStatus;
 use App\Enums\RequestType;
@@ -34,6 +35,7 @@ class Lead extends Model
             'status' => LeadStatus::class, 'priority' => LeadPriority::class, 'request_type' => RequestType::class, 'meta' => 'array',
             'consent_given_at' => 'datetime', 'marketing_consent' => 'boolean', 'assigned_at' => 'datetime',
             'next_follow_up_at' => 'datetime', 'last_activity_at' => 'datetime', 'first_contacted_at' => 'datetime',
+            'budget_min' => 'decimal:2', 'budget_max' => 'decimal:2', 'buy_timeline' => BuyTimeline::class,
         ];
     }
 
@@ -65,6 +67,22 @@ class Lead extends Model
     public function siteVisits(): HasMany
     {
         return $this->hasMany(SiteVisit::class);
+    }
+
+    public function preferredLocation(): BelongsTo
+    {
+        return $this->belongsTo(Location::class, 'preferred_location_id');
+    }
+
+    public function propertyType(): BelongsTo
+    {
+        return $this->belongsTo(PropertyType::class);
+    }
+
+    /** Budget or preferred area known: the minimum to call a lead qualified (docs/13 §1). */
+    public function hasNeeds(): bool
+    {
+        return $this->budget_min !== null || $this->budget_max !== null || $this->preferred_location_id !== null;
     }
 
     public function assignee(): BelongsTo

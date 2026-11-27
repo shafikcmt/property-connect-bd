@@ -15,7 +15,7 @@ Statuses: Not Started · In Progress · Review · Completed · Blocked. Update a
 | 5 | Premium UI/UX & Animation | Completed | 95 | Self-hosted fonts, motion, skeleton image placeholders. Open: brand logo/fonts from owner |
 | 6 | Website QA | Completed | 100 | See QA report below |
 | 7 | Deployment | Ready (not executed) | 85 | Scripts, preflight, runbook done and exercised on a scratch production-mode DB. Blocked on owner inputs → [26](26-LAUNCH-CHECKLIST.md) |
-| 8 | CRM & Lead Management | In Progress (slices 1–2 done) | 70 | Done: assignment, priority, status rules, timeline, follow-ups + reminders, SLA/stale flags, agent scoping, repeat-inquiry merge (90 days), site-visit workflow. Next: budget/preferred-location fields, email/WhatsApp notifications (needs providers), KPI reports, round-robin |
+| 8 | CRM & Lead Management | In Progress (slices 1–3 done) | 85 | Done: assignment, priority, status rules, timeline, follow-ups + reminders, SLA/stale flags, agent scoping, repeat-inquiry merge (90 days), site-visit workflow, buyer needs (budget/area/type/purpose/timeline), CRM reports. Next: email/WhatsApp notifications (needs providers), round-robin, report exports |
 | 9 | Sales & Commission | Not Started (post-launch) | 0 | |
 | 10 | Marketing & Analytics | Not Started (post-launch) | 0 | |
 | 11 | Partner & Agent Features | Not Started (post-launch) | 0 | |
@@ -93,4 +93,8 @@ All owner-side: hosting, domain, SMTP, content/photos, legal review, contact det
 ## Phase 8 — slice 2 (2026-11-27)
 - Repeat inquiries from the same phone are merged into the buyer's open lead (≤ 90 days, not closed): timeline entry, inquiry counter, priority normal → high, assignee (or managers) alerted. Identical requests within 10 minutes are still ignored as double clicks.
 - Site-visit workflow (`SiteVisitWorkflow`, Site visits board, lead tab): confirm/reschedule (future time, agent, meeting point; lead moves to Site visit and is assigned), complete (feedback, only after the visit time, auto follow-up), cancel (reason), no-show (auto re-engagement follow-up). Agents see their own visits only. Tests: 214.
+
+## Phase 8 — slice 3 (2026-11-27)
+- Buyer needs on leads (budget range, preferred area, property type, purpose, timeline); a lead can be Qualified only with a budget or preferred area, Interested only with a property/project or needs; assistance-form budget and type are copied onto the lead; DB CHECK keeps min ≤ max.
+- CRM reports page (managers): new/contacted/waiting, median first response and % within SLA, pipeline stages reached, visits by status, lost reasons, sources, per-agent numbers, most-asked properties/projects, for 7/30/90/365 days. All figures come from recorded data. Tests: 221.
 

@@ -35,7 +35,7 @@ function agent(): User
 }
 
 it('moves a lead forward through the pipeline and records history, activity and audit', function () {
-    $lead = Lead::factory()->create();
+    $lead = Lead::factory()->create(['budget_max' => 20_000_000]);
     $by = agent();
 
     wf()->changeStatus($lead, LeadStatus::Qualified, $by);

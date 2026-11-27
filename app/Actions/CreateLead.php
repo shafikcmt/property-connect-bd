@@ -9,6 +9,7 @@ use App\Mail\NewInquiryMail;
 use App\Models\Lead;
 use App\Models\Project;
 use App\Models\Property;
+use App\Models\PropertyType;
 use App\Services\LeadWorkflow;
 use App\Services\SettingsService;
 use App\Support\Phone;
@@ -46,7 +47,13 @@ class CreateLead
             return app(LeadWorkflow::class)->appendInquiry($open, $type, $subject, $data['message'] ?? null);
         }
 
-        $lead = Lead::create([
+        // The assistance form asks what the buyer wants, so that part of the request already tells us their needs.
+        $needs = $type === RequestType::Assistance ? array_filter([
+            'budget_max' => isset($meta['expected_price']) && is_numeric($meta['expected_price']) ? $meta['expected_price'] : null,
+            'property_type_id' => isset($meta['property_type']) ? PropertyType::where('name', $meta['property_type'])->value('id') : null,
+        ], fn ($v) => $v !== null) : [];
+
+        $lead = Lead::create($needs + [
             'user_id' => $request->user()?->id,
             'name' => trim((string) $data['name']),
             'phone' => $phone,

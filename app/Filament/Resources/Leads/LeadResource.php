@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Leads;
 
+use App\Enums\BuyTimeline;
 use App\Enums\LeadPriority;
 use App\Enums\LeadStatus;
 use App\Enums\RequestType;
@@ -12,6 +13,8 @@ use App\Filament\Resources\Leads\RelationManagers\FollowUpsRelationManager;
 use App\Filament\Resources\Leads\RelationManagers\SiteVisitsRelationManager;
 use App\Filament\Support\LeadActions;
 use App\Models\Lead;
+use App\Models\Location;
+use App\Models\PropertyType;
 use BackedEnum;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\EditAction;
@@ -60,6 +63,15 @@ class LeadResource extends Resource
                 TextInput::make('name')->disabled(), TextInput::make('phone')->disabled(), TextInput::make('email')->disabled(),
                 TextInput::make('request_type')->disabled(),
                 Textarea::make('message')->disabled()->rows(4)->columnSpanFull(),
+            ]),
+            Section::make('What the buyer wants')->columns(3)->description('Needed before a lead can be marked qualified: a budget or a preferred area.')->schema([
+                TextInput::make('budget_min')->numeric()->minValue(0)->prefix('৳'),
+                TextInput::make('budget_max')->numeric()->minValue(0)->prefix('৳')->gte('budget_min'),
+                Select::make('purpose')->options(['sale' => 'Buy', 'rent' => 'Rent'])->placeholder('Not known'),
+                Select::make('preferred_location_id')->label('Preferred area')->searchable()->placeholder('Not known')
+                    ->options(fn () => Location::query()->with('parent')->whereIn('type', ['city', 'area', 'sector'])->orderBy('path')->get()->mapWithKeys(fn (Location $l) => [$l->id => $l->fullName()])->all()),
+                Select::make('property_type_id')->label('Property type')->placeholder('Not known')->options(fn () => PropertyType::active()->orderBy('name')->pluck('name', 'id')->all()),
+                Select::make('buy_timeline')->label('When')->options(BuyTimeline::options())->placeholder('Not known'),
             ]),
             Section::make('Handling')->columns(2)->schema([
                 TextInput::make('status')->disabled()->helperText('Change it with the “Change status” button.'),
