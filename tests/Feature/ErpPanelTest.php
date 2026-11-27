@@ -31,6 +31,9 @@ function erpPanel(): void
 }
 use App\Filament\Erp\Resources\DeedBatches\Pages\ListDeedBatches;
 use App\Filament\Erp\Resources\DeedBatches\Pages\ViewDeedBatch;
+use App\Filament\Erp\Resources\FlatAllocations\Pages\ListFlatAllocations;
+use App\Filament\Erp\Resources\Projects\RelationManagers\MilestonesRelationManager;
+use App\Services\Erp\ConstructionLog;
 use App\Services\Erp\DeedRegistry;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Spatie\Permission\Models\Role;
@@ -215,4 +218,19 @@ it('shows the deeds screens to the owner only for their own company', function (
 
     $this->actingAs($other);
     Livewire::test(ListDeedBatches::class)->assertCanNotSeeTableRecords([$batch]);
+});
+
+it('renders flats and construction screens for the owner and hides them from sales staff actions', function () {
+    $this->seed(RolesAndPermissionsSeeder::class);
+    $owner = erpUser(RoleName::DeveloperOwner);
+    $project = erpProject($owner->developer);
+    $m = app(ConstructionLog::class)->add($project, 'Foundation', 10, now()->subDay(), null, false, $owner);
+
+    $this->actingAs($owner);
+    erpPanel();
+    Livewire::test(ListFlatAllocations::class)->assertSuccessful()->assertActionVisible('allocate');
+    Livewire::test(MilestonesRelationManager::class, ['ownerRecord' => $project, 'pageClass' => ViewErpProject::class])->assertSuccessful()->assertCanSeeTableRecords([$m]);
+
+    $this->actingAs(erpUser(RoleName::DeveloperSales, $owner->developer));
+    Livewire::test(ListFlatAllocations::class)->assertActionHidden('allocate');
 });

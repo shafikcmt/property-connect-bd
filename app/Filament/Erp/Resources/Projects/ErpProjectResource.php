@@ -4,6 +4,7 @@ namespace App\Filament\Erp\Resources\Projects;
 
 use App\Filament\Erp\Resources\Projects\Pages\ListErpProjects;
 use App\Filament\Erp\Resources\Projects\Pages\ViewErpProject;
+use App\Filament\Erp\Resources\Projects\RelationManagers\MilestonesRelationManager;
 use App\Filament\Erp\Resources\Projects\RelationManagers\PlanItemsRelationManager;
 use App\Filament\Erp\Resources\Projects\RelationManagers\SharesRelationManager;
 use App\Models\Project;
@@ -95,7 +96,7 @@ class ErpProjectResource extends Resource
 
     public static function getRelations(): array
     {
-        return [SharesRelationManager::class, PlanItemsRelationManager::class];
+        return [SharesRelationManager::class, PlanItemsRelationManager::class, MilestonesRelationManager::class];
     }
 
     public static function getPages(): array

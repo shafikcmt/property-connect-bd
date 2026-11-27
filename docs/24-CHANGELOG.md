@@ -2,6 +2,9 @@
 
 Format: newest first; grouped by date/phase. Only significant changes (architecture, behaviour, schema, dependencies, security). Follows "Keep a Changelog" categories: Added / Changed / Fixed / Security / Removed.
 
+## 2026-11-30
+- Developer ERP slice 4: flat allocation and handover checklist (Flats & handover), construction milestones on the project page feeding the public progress bar and timeline.
+
 ## 2026-11-29
 - Developer ERP slice 3: deed batches and mutation tracking in `/erp` (Deeds & mutation); public registered-deeds count is computed from registered deeds.
 

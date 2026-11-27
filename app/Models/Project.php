@@ -68,6 +68,11 @@ class Project extends Model
         return $this->hasMany(ProjectShare::class)->orderBy('number');
     }
 
+    public function milestones(): HasMany
+    {
+        return $this->hasMany(ConstructionMilestone::class)->orderByDesc('happened_on')->orderByDesc('id');
+    }
+
     public function planItems(): HasMany
     {
         return $this->hasMany(InstalmentPlanItem::class)->orderBy('sort_order')->orderBy('id');
