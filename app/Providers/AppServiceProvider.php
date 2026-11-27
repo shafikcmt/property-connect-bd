@@ -8,6 +8,8 @@ use App\Enums\RoleName;
 use App\Models\Amenity;
 use App\Models\BlogCategory;
 use App\Models\BlogPost;
+use App\Models\DeedBatch;
+use App\Models\DeedEntry;
 use App\Models\Developer;
 use App\Models\Faq;
 use App\Models\InstalmentPlanItem;
@@ -71,6 +73,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(SiteVisit::class, SiteVisitPolicy::class);
         // Developer ERP (ADR-0019): who may see and who may change each kind of record.
         Gate::policy(ProjectShare::class, ErpManagePolicy::class);
+        Gate::policy(DeedBatch::class, ErpManagePolicy::class);
+        Gate::policy(DeedEntry::class, ErpManagePolicy::class);
         Gate::policy(InstalmentPlanItem::class, ErpPlanItemPolicy::class);
         Gate::policy(Shareholder::class, ErpSalesPolicy::class);
         Gate::policy(ShareHolding::class, ErpSalesPolicy::class);

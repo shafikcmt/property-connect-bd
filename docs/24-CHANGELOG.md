@@ -2,6 +2,9 @@
 
 Format: newest first; grouped by date/phase. Only significant changes (architecture, behaviour, schema, dependencies, security). Follows "Keep a Changelog" categories: Added / Changed / Fixed / Security / Removed.
 
+## 2026-11-29
+- Developer ERP slice 3: deed batches and mutation tracking in `/erp` (Deeds & mutation); public registered-deeds count is computed from registered deeds.
+
 ## [Unreleased]
 ### Added
 - Developer ERP at `/erp` (ADR-0019): developer staff accounts and roles, shares and shareholders, share sales with generated instalment schedules, append-only payments with reversals and sequential receipts, overdue tracking, dashboard, printable receipts and statements. Platform admins link a user to a developer in Users. Tests: 241.

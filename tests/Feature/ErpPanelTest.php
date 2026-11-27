@@ -29,6 +29,10 @@ function erpPanel(): void
 {
     Filament::setCurrentPanel(Filament::getPanel('erp'));
 }
+use App\Filament\Erp\Resources\DeedBatches\Pages\ListDeedBatches;
+use App\Filament\Erp\Resources\DeedBatches\Pages\ViewDeedBatch;
+use App\Services\Erp\DeedRegistry;
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Spatie\Permission\Models\Role;
 
 /** A company with one project, a sold share and some payments, plus its owner signed in. */
@@ -195,4 +199,20 @@ it('lets platform admins create developer accounts safely and mark the email ver
     config(['pcbd.admin_mfa_required' => false]);
     $this->actingAs($user->fresh())->get('/erp')->assertOk();
 
+});
+
+it('shows the deeds screens to the owner only for their own company', function () {
+    $this->seed(RolesAndPermissionsSeeder::class);
+    $owner = erpUser(RoleName::DeveloperOwner);
+    $project = erpProject($owner->developer);
+    $batch = app(DeedRegistry::class)->createBatch($project, null, $owner);
+    $other = erpUser(RoleName::DeveloperOwner);
+
+    $this->actingAs($owner);
+    erpPanel();
+    Livewire::test(ListDeedBatches::class)->assertSuccessful()->assertCanSeeTableRecords([$batch]);
+    Livewire::test(ViewDeedBatch::class, ['record' => $batch->getKey()])->assertSuccessful();
+
+    $this->actingAs($other);
+    Livewire::test(ListDeedBatches::class)->assertCanNotSeeTableRecords([$batch]);
 });

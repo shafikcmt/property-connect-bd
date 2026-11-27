@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Erp;
 
+use App\Models\DeedEntry;
 use App\Models\InstalmentPlanItem;
 use App\Models\Project;
 use App\Models\ProjectShare;
@@ -69,6 +70,7 @@ class ShareSale
     {
         $this->authorize($by, Permissions::ERP_MANAGE, $holding->developer_id);
         throw_unless($holding->isActive(), ErpRuleViolation::class, 'This sale is already cancelled.');
+        throw_if(DeedEntry::query()->where('share_holding_id', $holding->id)->exists(), ErpRuleViolation::class, 'This share is on a deed. Take it off the deed first (draft deeds only); a registered deed needs a legal resolution outside the system.');
         $reason = trim($reason);
         throw_if($reason === '', ErpRuleViolation::class, 'Give a reason for cancelling the sale.');
 
