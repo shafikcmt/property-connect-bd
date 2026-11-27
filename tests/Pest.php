@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\Erp\ShareSale;
 use App\Services\LeadWorkflow;
 use Database\Seeders\RolesAndPermissionsSeeder;
+use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -74,4 +75,10 @@ function erpHolder(Developer $dev, string $name = 'Karim Hasan'): Shareholder
     $holder->save();
 
     return $holder;
+}
+
+/** Livewire component tests do not go through the panel routes, so tell Filament which panel is current. */
+function erpPanel(): void
+{
+    Filament::setCurrentPanel(Filament::getPanel('erp'));
 }

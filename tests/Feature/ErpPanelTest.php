@@ -2,7 +2,11 @@
 
 use App\Enums\PaymentMethod;
 use App\Enums\RoleName;
+use App\Filament\Erp\Resources\DeedBatches\Pages\ListDeedBatches;
+use App\Filament\Erp\Resources\DeedBatches\Pages\ViewDeedBatch;
+use App\Filament\Erp\Resources\FlatAllocations\Pages\ListFlatAllocations;
 use App\Filament\Erp\Resources\Projects\Pages\ViewErpProject;
+use App\Filament\Erp\Resources\Projects\RelationManagers\MilestonesRelationManager;
 use App\Filament\Erp\Resources\Projects\RelationManagers\SharesRelationManager;
 use App\Filament\Erp\Resources\Shareholders\Pages\CreateShareholder;
 use App\Filament\Erp\Resources\Shareholders\Pages\EditShareholder;
@@ -18,24 +22,13 @@ use App\Models\ProjectShare;
 use App\Models\Shareholder;
 use App\Models\ShareHolding;
 use App\Models\User;
-use App\Services\Erp\PaymentRecorder;
-use App\Services\Erp\ShareSale;
-use Filament\Actions\Testing\TestAction;
-use Filament\Facades\Filament;
-use Livewire\Livewire;
-
-/** Livewire component tests do not go through the panel routes, so tell Filament which panel is current. */
-function erpPanel(): void
-{
-    Filament::setCurrentPanel(Filament::getPanel('erp'));
-}
-use App\Filament\Erp\Resources\DeedBatches\Pages\ListDeedBatches;
-use App\Filament\Erp\Resources\DeedBatches\Pages\ViewDeedBatch;
-use App\Filament\Erp\Resources\FlatAllocations\Pages\ListFlatAllocations;
-use App\Filament\Erp\Resources\Projects\RelationManagers\MilestonesRelationManager;
 use App\Services\Erp\ConstructionLog;
 use App\Services\Erp\DeedRegistry;
+use App\Services\Erp\PaymentRecorder;
+use App\Services\Erp\ShareSale;
 use Database\Seeders\RolesAndPermissionsSeeder;
+use Filament\Actions\Testing\TestAction;
+use Livewire\Livewire;
 use Spatie\Permission\Models\Role;
 
 /** A company with one project, a sold share and some payments, plus its owner signed in. */

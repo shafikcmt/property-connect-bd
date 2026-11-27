@@ -18,7 +18,7 @@ Statuses: Not Started · In Progress · Review · Completed · Blocked. Update a
 | 8 | CRM & Lead Management | In Progress (slices 1–3 done) | 85 | Done: assignment, priority, status rules, timeline, follow-ups + reminders, SLA/stale flags, agent scoping, repeat-inquiry merge (90 days), site-visit workflow, buyer needs (budget/area/type/purpose/timeline), CRM reports. Next: email/WhatsApp notifications (needs providers), round-robin, report exports |
 | 9 | Sales & Commission | Not Started (post-launch) | 0 | |
 | 10 | Marketing & Analytics | Not Started (post-launch) | 0 | |
-| 11 | Partner & Agent Features | In Progress (Developer ERP, slice 1–4) | 25 | Done: /erp panel, roles, shares, shareholders, sales, instalments, payments, receipts, statements, deed batches & mutation. Flats & handover, construction milestones. Next: document vault, photos, reports & shareholder statements |
+| 11 | Partner & Agent Features | In Progress (Developer ERP, slice 1–5) | 25 | Done: /erp panel, roles, shares, shareholders, sales, instalments, payments, receipts, statements, deed batches & mutation. Flats & handover, construction milestones. Reports & CSV exports. Next: document vault, photos, CSV import, shareholder statements |
 | 12 | SaaS architecture | Not Started (on demand) | 0 | |
 
 ## Phase 1 verification record (2026-11-22)
